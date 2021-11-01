@@ -1,37 +1,107 @@
-## Welcome to GitHub Pages
+# ReadWriter
 
-You can use the [editor on GitHub](https://github.com/vertesy/ReadWriter/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+Functions to read and write files conveniently. 
+Complements the new [CodeAndRoll2](https://github.com/vertesy/CodeAndRoll2). Many functionalities were part of the formerly used [CodeAndRoll (v1)](https://github.com/vertesy/CodeAndRoll).
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
-### Markdown
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+<br><br>
 
-```markdown
-Syntax highlighted code block
+## Installation
 
-# Header 1
-## Header 2
-### Header 3
+Install directly from **GitHub** via **devtools** with one R command:
 
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+```R
+# install.packages("devtools"); # If you don't have it.
+require("devtools")
+devtools::install_github(repo = "vertesy/ReadWriter")
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+...then simply load the package:
 
-### Jekyll Themes
+```R
+require("ReadWriter")
+```
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/vertesy/ReadWriter/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+Alternatively, you simply source it from the web. 
+*This way function help will not work, and you will have no local copy of the code on your hard drive.*
 
-### Support or Contact
+```r
+source("https://raw.githubusercontent.com/vertesy/ReadWriter/main/R/ReadWriter.R")
+```
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+<br><br>
+
+## List of functions
+
+- #### jjpegA4 
+
+  Setup an A4 size jpeg
+
+- #### extPDF 
+
+  add pdf as extension to a file name
+
+- #### extPNG 
+
+  add png as extension to a file name
+
+- #### FirstCol2RowNames 
+
+  Set First Col to Row Names
+
+- #### read.simple.vec 
+
+  Read each line of a file to an element of a vector (read in new-line separated values, no header!).
+
+- #### read.simple 
+
+  It is essentially read.table() with file/path parsing.
+
+- #### read.simple_char_list 
+
+  Read in a file.
+
+- #### read.simple.table 
+
+  Read in a file. default: header defines colnames, no rownames. For rownames give the col nr. with rownames, eg. 1 The header should start with a TAB / First column name should be empty.
+
+- #### read.simple.tsv 
+
+  Read in a file with excel style data: rownames in col1, headers SHIFTED. The header should start with a TAB / First column name should be empty.
+
+- #### read.simple.csv 
+
+  Read in a file with excel style data: rownames in col1, headers SHIFTED. The header should start with a TAB / First column name should be empty.
+
+- #### read.simple.ssv 
+
+  Space separeted values. Read in a file with excel style data: rownames in col1, headers SHIFTED. The header should start with a TAB / First column name should be empty.
+
+- #### read.simple.tsv.named.vector 
+
+  Read in a file with excel style named vectors, names in col1, headers SHIFTED. The header should start with a TAB / First column name should be empty.
+
+- #### convert.tsv.data 
+
+  Fix NA issue in dataframes imported by the new read.simple.tsv. Set na_rep to NA if you want to keep NA-s
+
+- #### read.simple.xls 
+
+  Read multi-sheet excel files. row_namePos = NULL for automatic names Look into: http://readxl.tidyverse.org/.
+
+- #### write.simple 
+
+  Write out a matrix-like R-object to a file with as tab separated values (.tsv). Your output filename will be either the variable's name. The output file will be located in "OutDir" specified by you at the beginning of the script, or under your current working directory. You can pass the PATH and VARIABLE separately (in order), they will be concatenated to the filename.
+
+- #### write.simple.vec 
+
+  Write out a vector-like R-object to a file with as newline separated values (.vec). Your output filename will be either the variable's name. The output file will be located in "OutDir" specified by you at the beginning of the script, or under your current working directory. You can pass the PATH and VARIABLE separately (in order), they will be concatenated to the filename.
+
+- #### write.simple.xlsx 
+
+  Write out a list of matrices/ data frames WITH ROW- AND COLUMN- NAMES to a file with as an Excel (.xslx) file. Your output filename will be either the variable's name. The output file will be located in "OutDir" specified by you at the beginning of the script, or under your current working directory. You can pass the PATH and VARIABLE separately (in order), they will be concatenated to the filename.
+
+- #### write.simple.append 
+
+  Append an R-object WITHOUT ROWNAMES, to an existing .tsv file of the same number of columns. Your output filename will be either the variable's name. The output file will be located in "OutDir" specified by you at the beginning of the script, or under your current working directory. You can pass the PATH and VARIABLE separately (in order), they will be concatenated to the filename.
