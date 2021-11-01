@@ -38,7 +38,6 @@ FirstCol2RowNames <- function(Tibble, rownamecol = 1, make_names = FALSE) {
 
 
 # -------------------------------------------------------------------------------------------------------------#' @title FUNCTION_TITLE
-#' @title read.simple.vec
 #' @description read.simple.vec
 #' @description Read each line of a file to an element of a vector (read in new-line separated values, no header!).
 #' @param ... Multiple simple variables to parse.
