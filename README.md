@@ -33,15 +33,6 @@ source("https://raw.githubusercontent.com/vertesy/ReadWriter/main/R/ReadWriter.R
 
 ## List of functions
 
-- #### jjpegA4 
-Setup an A4 size jpeg
-
-- #### extPDF 
-add pdf as extension to a file name
-
-- #### extPNG 
-add png as extension to a file name
-
 - #### FirstCol2RowNames 
 Set First Col to Row Names
 
