@@ -31,6 +31,12 @@ source("https://raw.githubusercontent.com/vertesy/ReadWriter/main/R/ReadWriter.R
 
 <br><br>
 
+### Troubleshooting
+
+*If you encounter a **bug**, something doesn't work or unclear, please let me know by raising an issue on [ReadWriter](https://github.com/vertesy/ReadWriter/issues) – Please check if it has been asked.*
+
+
+
 ## List of functions
 
 - #### FirstCol2RowNames 
