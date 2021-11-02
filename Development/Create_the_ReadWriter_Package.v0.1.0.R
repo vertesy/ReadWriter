@@ -7,7 +7,7 @@ rm(list = ls(all.names = TRUE));
 try(dev.off(), silent = TRUE)
 # install.packages("devtools")
 # Functions ------------------------
-try (source('~/GitHub/Packages/CodeAndRoll/CodeAndRoll.R'),silent= FALSE)
+require('CodeAndRoll2')
 
 # irequire("devtools")
 # install_version("devtools", version = "2.0.2", repos = "http://cran.at.r-project.org")
@@ -38,8 +38,7 @@ DESCRIPTION <- list("Title" = "ReadWriter "
     , "Authors@R" = 'person(given = "Abel", family = "Vertesy", email = "a.vertesy@imba.oeaw.ac.at", role =  c("aut", "cre") )'
     , "Description" = "ReadWriter is a set of R functions to read and write files conveniently. Complements CodeAndRoll2."
     , "License" = "GPL-3 + file LICENSE"
-    , "Version" = "0.1.0"
-    # , "Version" = "4.0.0"
+    , "Version" = "0.1.1"
     , "Packaged" =  Sys.time()
     , "Repository" =  "CRAN"
     , "Imports" = "readr, gtools, openxlsx"
