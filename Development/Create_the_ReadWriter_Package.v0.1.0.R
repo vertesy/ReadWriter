@@ -5,22 +5,18 @@
 # source("/Users/abel.vertesy/GitHub/Packages/ReadWriter/Development/Create_the_ReadWriter_Package.v0.1.R")
 rm(list = ls(all.names = TRUE));
 try(dev.off(), silent = TRUE)
-# install.packages("devtools")
+
 # Functions ------------------------
+# install_version("devtools", version = "2.0.2", repos = "http://cran.at.r-project.org") # install.packages("devtools")
+require("devtools")
+require("roxygen2")
+require("stringr")
+
+# devtools::install_github(repo = "vertesy/CodeAndRoll2")
 require('CodeAndRoll2')
+require('Stringendo')
 
-# irequire("devtools")
-# install_version("devtools", version = "2.0.2", repos = "http://cran.at.r-project.org")
-irequire("devtools")
-irequire("roxygen2")
-irequire("stringr")
 
-kollapse <-function(..., print = TRUE) {
-if (print == TRUE) {
-    print(paste0(c(...), collapse = ""))
-  }
-  paste0(c(...), collapse = "")
-}
 
 # Setup ------------------------
 PackageName = 	"ReadWriter"
@@ -41,6 +37,7 @@ DESCRIPTION <- list("Title" = "ReadWriter "
     , "Version" = "0.1.1"
     , "Packaged" =  Sys.time()
     , "Repository" =  "CRAN"
+    , "Depends" =  "Stringendo"
     , "Imports" = "readr, gtools, openxlsx"
     # , "Suggests" = ""
     , "BugReports"= "https://github.com/vertesy/ReadWriter/issues"
@@ -109,3 +106,14 @@ check(RepositoryDir, cran = TRUE)
 #
 # system("cd ~/GitHub/ReadWriter/; ls -a; open .Rbuildignore")
 #
+# Check package dependencies ------------------------------------------------
+depFile = paste0(RepositoryDir, 'Development/Dependencies.R')
+
+(f.deps <- NCmisc::list.functions.in.file(filename = Package_FnP))
+# clipr::write_clip(f.deps)
+
+sink(file = depFile); print(f.deps); sink()
+p.deps <- gsub(x = names(f.deps), pattern = 'package:', replacement = '')
+write(x = p.deps, file = depFile, append = T)
+
+
