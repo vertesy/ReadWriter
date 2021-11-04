@@ -34,11 +34,11 @@ DESCRIPTION <- list("Title" = "ReadWriter "
     , "Authors@R" = 'person(given = "Abel", family = "Vertesy", email = "a.vertesy@imba.oeaw.ac.at", role =  c("aut", "cre") )'
     , "Description" = "ReadWriter is a set of R functions to read and write files conveniently. Complements CodeAndRoll2."
     , "License" = "GPL-3 + file LICENSE"
-    , "Version" = "0.2.1"
+    , "Version" = "0.2.3"
     , "Packaged" =  Sys.time()
     , "Repository" =  "CRAN"
     , "Depends" =  "Stringendo"
-    , "Imports" = "readr, gtools, openxlsx"
+    , "Imports" = "base, CodeAndRoll2, gdata, gtools, openxlsx, readr,  utils"
     # , "Suggests" = ""
     , "BugReports"= "https://github.com/vertesy/ReadWriter/issues"
 )
@@ -117,7 +117,7 @@ sink(file = depFile); print(f.deps); sink()
 p.deps <- gsub(x = names(f.deps), pattern = 'package:', replacement = '')
 write(x = p.deps, file = depFile, append = T)
 p.dep.declared <- trimws(unlist(strsplit(DESCRIPTION$Imports, ",")))
-p.dep.new <- sort(union( p.deps, p.dep.declared))
+(p.dep.new <- sort(union( p.deps, p.dep.declared)))
 # clipr::write_clip(p.dep.new)
 
 

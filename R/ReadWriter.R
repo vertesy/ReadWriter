@@ -388,7 +388,7 @@ write.simple.vec <- function(input_vec, extension = 'vec', ManualName = "", o = 
 # _________________________________________________________________________________________________
 #' @title write.simple.tsv
 #'
-#' @descriptionWrite out a matrix-like R-object WITH ROW- AND COLUMN- NAMES to a file with as tab separated
+#' @description Write out a matrix-like R-object WITH ROW- AND COLUMN- NAMES to a file with as tab separated
 #' values (.tsv). Your output filename will be either the variable's name. The output file will be
 #' located in "OutDir" specified by you at the beginning of the script, or under your current
 #' working directory. You can pass the PATH and VARIABLE separately (in order), they will be
@@ -456,7 +456,7 @@ write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv', Manu
 #' @importFrom openxlsx write.xlsx
 write.simple.xlsx <- function(named_list, ManualName = "", o = FALSE,  ..., TabColor = "darkgoldenrod1", Creator = "Vertesy",
                               HeaderCex = 12, HeaderLineColor = "darkolivegreen3", HeaderCharStyle = c("bold", "italic", "underline")[1]  ) {
-  irequire(openxlsx)
+  Stringendo::irequire(openxlsx)
   fname = if (nchar(ManualName) < 2 ) { fname = substitute(named_list) }
   if (nchar(ManualName)) {FnP = kollapse(ManualName)} else  {FnP =  ww.FnP_parser(fname, "xlsx") }
 
