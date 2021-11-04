@@ -11,7 +11,7 @@
 
 
 
-# -------------------------------------------------------------------------------------------------------------
+# _________________________________________________________________________________________________
 #' @title FirstCol2RowNames
 #' @description Set First Col to Row Names
 #' @param Tibble A dataframe without rownames (tibble style)
@@ -37,7 +37,7 @@ FirstCol2RowNames <- function(Tibble, rownamecol = 1, make_names = FALSE) {
 ### Reading files in -------------------------------------------------------------------------------------------------
 
 
-# -------------------------------------------------------------------------------------------------------------#' @title FUNCTION_TITLE
+# _________________________________________________________________________________________________
 #' @title read.simple.vec
 #' @description read.simple.vec
 #' @description Read each line of a file to an element of a vector (read in new-line separated values, no header!).
@@ -57,7 +57,7 @@ read.simple.vec <- function(...) {
 }
 
 
-# -------------------------------------------------------------------------------------------------------------
+# _________________________________________________________________________________________________
 #' @title read.simple
 #' @description It is essentially read.table() with file/path parsing.
 #' @param ... Multiple simple variables to parse.
@@ -75,7 +75,7 @@ read.simple <- function(...) {
 }
 
 
-# -------------------------------------------------------------------------------------------------------------
+# _________________________________________________________________________________________________
 #' @title read.simple_char_list
 #' @description Read in a file.
 #' @param ... Multiple simple variables to parse.
@@ -94,7 +94,7 @@ read.simple_char_list <- function(...) {
 }
 
 
-# -------------------------------------------------------------------------------------------------------------
+# _________________________________________________________________________________________________
 #' @title read.simple.table
 #' @description Read in a file. default: header defines colnames, no rownames.
 #' For rownames give the col nr. with rownames, eg. 1 The header should start
@@ -125,7 +125,7 @@ read.simple.table <- function(..., colnames = TRUE, coltypes = NULL) {
 
 
 
-# -------------------------------------------------------------------------------------------------------------
+# _________________________________________________________________________________________________
 #' @title read.simple.tsv
 #' @description Read in a file with excel style data: rownames in col1,
 #' headers SHIFTED. The header should start with a TAB / First column name
@@ -160,7 +160,7 @@ read.simple.tsv <- function(..., sep_ = "\t", colnames = TRUE, wRownames = TRUE,
 
 
 
-# -------------------------------------------------------------------------------------------------------------
+# _________________________________________________________________________________________________
 #' @title read.simple.csv
 #' @description Read in a file with excel style data: rownames in col1,
 #' headers SHIFTED. The header should start with a TAB / First column name
@@ -193,7 +193,7 @@ read.simple.csv <- function(...,  colnames = TRUE, coltypes = NULL, wRownames = 
 }
 
 
-# -------------------------------------------------------------------------------------------------------------
+# _________________________________________________________________________________________________
 #' @title read.simple.ssv
 #' @description Space separeted values. Read in a file with excel style data:
 #' rownames in col1, headers SHIFTED. The header should start with a
@@ -227,7 +227,7 @@ read.simple.ssv <- function(..., sep_ = " ", colnames = TRUE, wRownames = TRUE, 
 
 
 
-# -------------------------------------------------------------------------------------------------------------
+# _________________________________________________________________________________________________
 #' @title read.simple.tsv.named.vector
 #' @description Read in a file with excel style named vectors, names in col1,
 #' headers SHIFTED. The header should start with a TAB / First column name
@@ -254,7 +254,7 @@ read.simple.tsv.named.vector <- function(...) {
 }
 
 
-# -------------------------------------------------------------------------------------------------------------
+# _________________________________________________________________________________________________
 #' @title convert.tsv.data
 #' @description Fix NA issue in dataframes imported by the new read.simple.tsv.
 #' Set na_rep to NA if you want to keep NA-s
@@ -281,7 +281,7 @@ convert.tsv.data <- function(df_by_read.simple.tsv, digitz = 2, na_rep = 0 ) {
 
 
 
-# -------------------------------------------------------------------------------------------------------------
+# _________________________________________________________________________________________________
 #' @title read.simple.xls
 #' @description Read multi-sheet excel files. row_namePos = NULL for automatic
 #' names Look into: http://readxl.tidyverse.org/.
@@ -299,7 +299,7 @@ convert.tsv.data <- function(df_by_read.simple.tsv, digitz = 2, na_rep = 0 ) {
 #' @seealso
 #'  \code{\link[gdata]{read.xls}}
 #' @export
-#' @importFrom gdata read.xls
+#' @importFrom gdata read.xls sheetNames
 read.simple.xls <- function(pfn = kollapse(...), row_namePos = NULL, ..., header_ = TRUE, WhichSheets) {
   if (!require("gdata")) { print("Please install gplots: install.packages('gdata')") }
   if (grepl("^~/", pfn)) {
@@ -309,7 +309,7 @@ read.simple.xls <- function(pfn = kollapse(...), row_namePos = NULL, ..., header
 
   if (!require("gdata")) { print("Please install gplots: install.packages('gdata')") }
   # merge path and filename
-  TheSheetNames = sheetNames(pfn, verbose = FALSE);
+  TheSheetNames = gdata::sheetNames(pfn, verbose = FALSE);
   NrSheets = length(TheSheetNames)
   iprint(NrSheets, "sheets in the file.")
   ExpData = list.fromNames(TheSheetNames)
@@ -356,7 +356,7 @@ write.simple <- function(input_df, extension = 'tsv', ManualName = "", o = FALSE
 } # fun
 
 
-# -------------------------------------------------------------------------------------------------------------
+# _________________________________________________________________________________________________
 #' @title write.simple.vec
 #' @description Write out a vector-like R-object to a file with as newline
 #'   separated values (.vec). Your output filename will be either the variable's
@@ -385,7 +385,7 @@ write.simple.vec <- function(input_vec, extension = 'vec', ManualName = "", o = 
 } # fun
 
 
-# -------------------------------------------------------------------------------------------------------------
+# _________________________________________________________________________________________________
 #' @title write.simple.tsv
 #'
 #' @descriptionWrite out a matrix-like R-object WITH ROW- AND COLUMN- NAMES to a file with as tab separated
@@ -427,7 +427,7 @@ write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv', Manu
 # for CSV files to be read by spreadsheets.
 
 
-# -------------------------------------------------------------------------------------------------------------
+# _________________________________________________________________________________________________
 #' @title write.simple.xlsx
 #' @description Write out a list of matrices/ data frames WITH ROW- AND COLUMN-
 #'   NAMES to a file with as an Excel (.xslx) file. Your output filename will be
@@ -470,7 +470,7 @@ write.simple.xlsx <- function(named_list, ManualName = "", o = FALSE,  ..., TabC
 
 
 
-# -------------------------------------------------------------------------------------------------------------
+# _________________________________________________________________________________________________
 #' @title write.simple.append
 #' @description Append an R-object WITHOUT ROWNAMES, to an existing .tsv file of
 #'  the same number of columns. Your output filename will be either the
