@@ -34,7 +34,7 @@ DESCRIPTION <- list("Title" = "ReadWriter "
     , "Authors@R" = 'person(given = "Abel", family = "Vertesy", email = "a.vertesy@imba.oeaw.ac.at", role =  c("aut", "cre") )'
     , "Description" = "ReadWriter is a set of R functions to read and write files conveniently. Complements CodeAndRoll2."
     , "License" = "GPL-3 + file LICENSE"
-    , "Version" = "0.1.1"
+    , "Version" = "0.2.1"
     , "Packaged" =  Sys.time()
     , "Repository" =  "CRAN"
     , "Depends" =  "Stringendo"
@@ -76,7 +76,8 @@ document()
 
 # Install your package ------------------------------------------------
 # # setwd(RepositoryDir)
-install(RepositoryDir)
+install(RepositoryDir, upgrade = F)
+
 # require("ReadWriter")
 # # remove.packages("ReadWriter")
 # # Test your package ------------------------------------------------
@@ -115,5 +116,8 @@ depFile = paste0(RepositoryDir, 'Development/Dependencies.R')
 sink(file = depFile); print(f.deps); sink()
 p.deps <- gsub(x = names(f.deps), pattern = 'package:', replacement = '')
 write(x = p.deps, file = depFile, append = T)
+p.dep.declared <- trimws(unlist(strsplit(DESCRIPTION$Imports, ",")))
+p.dep.new <- sort(union( p.deps, p.dep.declared))
+# clipr::write_clip(p.dep.new)
 
 
