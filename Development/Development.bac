@@ -89,7 +89,8 @@ read.simple <- function(...) {
 read.simple_char_list <- function(...) {
   pfn = kollapse(...) # merge path and filename
   read_in = unlist(read.table( pfn , stringsAsFactors = FALSE ) )
-  iprint("New variable head: ", what(read_in))
+  # iprint("New variable head: ", what(read_in))
+  iprint("New variable head: ", is(read_in), 'range', range(read_in))
   return(read_in)
 }
 
@@ -312,7 +313,10 @@ read.simple.xls <- function(pfn = kollapse(...), row_namePos = NULL, ..., header
   TheSheetNames = gdata::sheetNames(pfn, verbose = FALSE);
   NrSheets = length(TheSheetNames)
   iprint(NrSheets, "sheets in the file.")
-  ExpData = list.fromNames(TheSheetNames)
+  # ExpData = CodeAndRoll2::list.fromNames(TheSheetNames)
+  ExpData = as.list(TheSheetNames)
+  names(ExpData) = TheSheetNames
+
   RangeOfSheets = if (missing(WhichSheets)) 1:NrSheets else WhichSheets
   for (i in RangeOfSheets ) {
     iprint("sheet", i)
