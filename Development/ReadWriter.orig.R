@@ -44,7 +44,7 @@ read.simple <- function(...) { # It is essentially read.table() with file/path p
 read.simple_char_list <- function(...) { # Read in a file.
   pfn = kollapse(...) # merge path and filename
   read_in = unlist(read.table( pfn , stringsAsFactors = FALSE ) )
-  iprint("New variable head: ", what(read_in))
+  iprint("New variable head: ", is(read_in), 'range', range(read_in))
   return(read_in)
 }
 
@@ -119,7 +119,10 @@ read.simple.xls <- function(pfn = kollapse(...), row_namePos = NULL, ..., header
   TheSheetNames = sheetNames(pfn, verbose = FALSE);
   NrSheets = length(TheSheetNames)
   iprint(NrSheets, "sheets in the file.")
-  ExpData = list.fromNames(TheSheetNames)
+  # ExpData = CodeAndRoll2::list.fromNames(TheSheetNames)
+  ExpData = as.list(TheSheetNames)
+  names(ExpData) = TheSheetNames
+
   RangeOfSheets = if (missing(WhichSheets)) 1:NrSheets else WhichSheets
   for (i in RangeOfSheets ) {
     iprint("sheet", i)
@@ -151,7 +154,7 @@ write.simple.vec <- function(input_vec, extension = 'vec', ManualName = "", o = 
 
 write.simple.xlsx <- function(named_list, ManualName = "", o = FALSE,  ..., TabColor = "darkgoldenrod1", Creator = "Vertesy",# Write out a list of matrices/ data frames WITH ROW- AND COLUMN- NAMES to a file with as an Excel (.xslx) file. Your output filename will be either the variable's name. The output file will be located in "OutDir" specified by you at the beginning of the script, or under your current working directory. You can pass the PATH and VARIABLE separately (in order), they will be concatenated to the filename.
                               HeaderCex = 12, HeaderLineColor = "darkolivegreen3", HeaderCharStyle = c("bold", "italic", "underline")[1]  ) {
-  irequire(openxlsx)
+  # require(openxlsx)
   fname = if (nchar(ManualName) < 2 ) { fname = substitute(named_list) }
   if (nchar(ManualName)) {FnP = kollapse(ManualName)} else  {FnP =  ww.FnP_parser(fname, "xlsx") }
 
