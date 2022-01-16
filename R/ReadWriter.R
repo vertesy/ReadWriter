@@ -19,14 +19,13 @@
 #' @param make_names call make.names to remove weird characters, Default: FALSE
 #' @param as.df Convert tibble to data frame? Default: TRUE
 #' @export
-
 FirstCol2RowNames <- function(Tibble, rownamecol = 1, make_names = FALSE, as.df = TRUE) {
 
   rnn <- Tibble[[rownamecol]]
   if (as.df) { Tibble <- as.data.frame(Tibble) }
 
   Tibble <- Tibble[,-rownamecol]
-  if (make_names) {rnn <- make.names(NN, unique = TRUE)}
+  if (make_names) {rnn <- make.names(rnn, unique = TRUE)}
 
   rownames(Tibble) <- rnn
   iprint("Rownames", head(rnn), '...')
@@ -155,7 +154,7 @@ read.simple.table <- function(..., colnames = TRUE, coltypes = NULL) {
 #' @param wRownames With rownames?, Default: TRUE
 #' @param coltypes What type of variables are in columns? Auto-guessing can be very slow., Default: NULL
 #' @param NaReplace Replace NA-values?, Default: TRUE
-#' @param asTibble Tibble or dataframe, Default: FALSE
+#' @param asTibble Load as Tibble or dataframe?, Default: FALSE (=load as df)
 #' @examples
 #' \dontrun{
 #' if(interactive()){
@@ -173,7 +172,7 @@ read.simple.tsv <- function(..., sep_ = "\t", colnames = TRUE, wRownames = TRUE,
   # read_in = read.delim( pfn , stringsAsFactors = FALSE, sep = , sep_, row.names = 1, header = TRUE )
   read_in = suppressWarnings(readr::read_tsv( pfn, col_names = colnames, col_types = coltypes ))
   iprint("New variable dim: ", dim(read_in) - 0:1)
-  if (wRownames) { read_in = FirstCol2RowNames(read_in, Tibble = asTibble ) }
+  if (wRownames) { read_in = FirstCol2RowNames(read_in, as.df = !asTibble ) }
   if (NaReplace) { read_in = as.data.frame(gtools::na.replace(read_in, replace = 0)) }
   return(read_in)
 }

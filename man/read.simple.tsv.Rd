@@ -27,7 +27,7 @@ read.simple.tsv(
 
 \item{NaReplace}{Replace NA-values?, Default: TRUE}
 
-\item{asTibble}{Tibble or dataframe, Default: FALSE}
+\item{asTibble}{Load as Tibble or dataframe?, Default: FALSE (=load as df)}
 }
 \description{
 Read in a file with excel style data: rownames in col1,
