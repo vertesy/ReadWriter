@@ -12,7 +12,7 @@
 
 
 # _________________________________________________________________________________________________
-#' @title FirstCol2RowNames.v2
+#' @title FirstCol2RowNames
 #' @description Set First Col to Row Names
 #' @param Tibble A dataframe without rownames (tibble style)
 #' @param rownamecol rowname column, Default: 1
@@ -20,7 +20,7 @@
 #' @param as.df Convert tibble to data frame? Default: FALSE
 #' @export
 
-FirstCol2RowNames.v2 <- function(Tibble, rownamecol = 1, make_names = FALSE, as.df = FALSE) {
+FirstCol2RowNames <- function(Tibble, rownamecol = 1, make_names = FALSE, as.df = FALSE) {
   rnn <- Tibble[[rownamecol]]
 
   Tibble <- Tibble[,-rownamecol]
@@ -35,14 +35,14 @@ FirstCol2RowNames.v2 <- function(Tibble, rownamecol = 1, make_names = FALSE, as.
 
 
 # _________________________________________________________________________________________________
-#' @title FirstCol2RowNames
+#' @title FirstCol2RowNames.as.df
 #' @description Set First Col to Row Names
 #' @param Tibble A dataframe without rownames (tibble style)
 #' @param rownamecol rowname column, Default: 1
 #' @param make_names call make.names to remove weird characters, Default: FALSE
 #' @export
 
-FirstCol2RowNames <- function(Tibble, rownamecol = 1, make_names = FALSE) {
+FirstCol2RowNames.as.df <- function(Tibble, rownamecol = 1, make_names = FALSE) {
   Tibble = as.data.frame(Tibble)
   NN = Tibble[[rownamecol]]
   rownames(Tibble) = if (make_names) make.names(NN, unique = TRUE) else NN

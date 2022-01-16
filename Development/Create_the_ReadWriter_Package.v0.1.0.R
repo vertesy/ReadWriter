@@ -20,7 +20,7 @@ require('Stringendo')
 
 # Setup ------------------------
 PackageName = 	"ReadWriter"
-package.version = "0.2.4"
+package.version = "0.2.5"
 setwd("~/GitHub/Packages/")
 
 RepositoryDir = kollapse("~/GitHub/Packages/", PackageName, "/")
