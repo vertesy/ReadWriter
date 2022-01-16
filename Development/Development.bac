@@ -17,10 +17,12 @@
 #' @param Tibble A dataframe without rownames (tibble style)
 #' @param rownamecol rowname column, Default: 1
 #' @param make_names call make.names to remove weird characters, Default: FALSE
-#' @param as.df Convert tibble to data frame? Default: FALSE
+#' @param as.df Convert tibble to data frame? Default: TRUE
 #' @export
 
-FirstCol2RowNames <- function(Tibble, rownamecol = 1, make_names = FALSE, as.df = FALSE) {
+FirstCol2RowNames <- function(Tibble, rownamecol = 1, make_names = FALSE, as.df = TRUE) {
+
+  if (as.df) { Tibble <- as.data.frame(Tibble) }
   rnn <- Tibble[[rownamecol]]
 
   Tibble <- Tibble[,-rownamecol]
@@ -28,7 +30,6 @@ FirstCol2RowNames <- function(Tibble, rownamecol = 1, make_names = FALSE, as.df 
 
   rownames(Tibble) <- rnn
   iprint("Rownames", head(rnn), '...')
-  if (as.df) {Tibble <- as.data.frame(Tibble)}
 
   return(Tibble)
 }
@@ -154,6 +155,7 @@ read.simple.table <- function(..., colnames = TRUE, coltypes = NULL) {
 #' @param wRownames With rownames?, Default: TRUE
 #' @param coltypes What type of variables are in columns? Auto-guessing can be very slow., Default: NULL
 #' @param NaReplace Replace NA-values?, Default: TRUE
+#' @param asTibble Tibble or dataframe, Default: FALSE
 #' @examples
 #' \dontrun{
 #' if(interactive()){
@@ -166,12 +168,12 @@ read.simple.table <- function(..., colnames = TRUE, coltypes = NULL) {
 #' @export
 #' @importFrom readr read_tsv
 #' @importFrom gtools na.replace
-read.simple.tsv <- function(..., sep_ = "\t", colnames = TRUE, wRownames = TRUE, coltypes = NULL, NaReplace = TRUE) {
+read.simple.tsv <- function(..., sep_ = "\t", colnames = TRUE, wRownames = TRUE, coltypes = NULL, NaReplace = TRUE, asTibble = FALSE) {
   pfn = kollapse(...) # merge path and filename
   # read_in = read.delim( pfn , stringsAsFactors = FALSE, sep = , sep_, row.names = 1, header = TRUE )
   read_in = suppressWarnings(readr::read_tsv( pfn, col_names = colnames, col_types = coltypes ))
   iprint("New variable dim: ", dim(read_in) - 0:1)
-  if (wRownames) { read_in = FirstCol2RowNames(read_in) }
+  if (wRownames) { read_in = FirstCol2RowNames(read_in, Tibble = asTibble ) }
   if (NaReplace) { read_in = as.data.frame(gtools::na.replace(read_in, replace = 0)) }
   return(read_in)
 }
@@ -427,7 +429,10 @@ write.simple.vec <- function(input_vec, extension = 'vec', ManualName = "", o = 
 #' write.simple.tsv(YourDataFrameWithRowAndColumnNames)
 
 write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv', ManualName = "", o = FALSE,
-                             gzip = FALSE, ...  ) {
+                             gzip = FALSE, converFromTibble = T, ...  ) {
+
+  # if (converFromTibble) { if (tibble::is_tibble(input_df)) { input_df <- as.data.frame(input_df) } }
+
   if (separator %in% c(',', ';')) extension <- 'csv'
   fname = kollapse (..., print = FALSE); if (nchar (fname) < 2 ) { fname = substitute(input_df) }
 

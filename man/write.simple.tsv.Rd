@@ -11,6 +11,7 @@ write.simple.tsv(
   ManualName = "",
   o = FALSE,
   gzip = FALSE,
+  converFromTibble = T,
   ...
 )
 }

@@ -10,7 +10,8 @@ read.simple.tsv(
   colnames = TRUE,
   wRownames = TRUE,
   coltypes = NULL,
-  NaReplace = TRUE
+  NaReplace = TRUE,
+  asTibble = FALSE
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ read.simple.tsv(
 \item{coltypes}{What type of variables are in columns? Auto-guessing can be very slow., Default: NULL}
 
 \item{NaReplace}{Replace NA-values?, Default: TRUE}
+
+\item{asTibble}{Tibble or dataframe, Default: FALSE}
 }
 \description{
 Read in a file with excel style data: rownames in col1,
