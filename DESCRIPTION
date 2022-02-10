@@ -1,6 +1,6 @@
 Package: ReadWriter
 Title: ReadWriter
-Version: 0.2.5
+Version: 0.2.6
 Authors@R: 
     person("Abel", "Vertesy", , "a.vertesy@imba.oeaw.ac.at", role = c("aut", "cre"))
 Author: Abel Vertesy <abel.vertesy@imba.oeaw.ac.at> [aut, cre]
@@ -18,6 +18,6 @@ Imports:
     readr,
     utils
 Encoding: UTF-8
-Packaged: 2022-01-16 21:08:58
+Packaged: 2022-02-10 10:03:29
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2

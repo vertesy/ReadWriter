@@ -481,11 +481,10 @@ write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv', Manu
 #' @importFrom openxlsx write.xlsx
 write.simple.xlsx <- function(named_list, ManualName = "", o = FALSE,  ..., TabColor = "darkgoldenrod1", Creator = "Vertesy",
                               HeaderCex = 12, HeaderLineColor = "darkolivegreen3", HeaderCharStyle = c("bold", "italic", "underline")[1]  ) {
-  MarkdownHelpers::irequire(openxlsx)
   fname = if (nchar(ManualName) < 2 ) { fname = substitute(named_list) }
   if (nchar(ManualName)) {FnP = kollapse(ManualName)} else  {FnP =  ww.FnP_parser(fname, "xlsx") }
 
-  hs <- createStyle(textDecoration = HeaderCharStyle, fontSize = HeaderCex, fgFill = HeaderLineColor)
+  hs <- openxlsx::createStyle(textDecoration = HeaderCharStyle, fontSize = HeaderCex, fgFill = HeaderLineColor)
   setwd(OutDir)
   openxlsx::write.xlsx(named_list, file = ppp(fname,"xlsx"), rowNames = TRUE, firstRow = TRUE, firstCol = TRUE, colWidths = "auto"
                        , headerStyle = hs, tabColour = TabColor, creator = Creator) #
