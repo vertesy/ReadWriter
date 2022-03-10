@@ -24,7 +24,7 @@ FirstCol2RowNames <- function(Tibble, rownamecol = 1, make_names = FALSE, as.df 
   rnn <- Tibble[[rownamecol]]
   if (as.df) { Tibble <- as.data.frame(Tibble) }
 
-  Tibble <- Tibble[,-rownamecol]
+  Tibble <- Tibble[ ,-rownamecol, drop =F]
   if (make_names) {rnn <- make.names(rnn, unique = TRUE)}
 
   rownames(Tibble) <- rnn
