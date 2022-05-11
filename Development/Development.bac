@@ -416,29 +416,37 @@ write.simple.vec <- function(input_vec, extension = 'vec', ManualName = "", o = 
 #' working directory. You can pass the PATH and VARIABLE separately (in order), they will be
 #' concatenated to the filename.
 #' @param input_df Your Dataframe with row- and column-names
+#' @param separator Field separator, such as "," for csv
 #' @param extension e.g.: tsv
 #' @param ManualName Specify full filename if you do not want to name it by the variable name.
+#' @param row_names Write row names? TRUE by default
+#' @param col_names Write column names? NA by default, TRUE if row_names == FALSE
 #' @param o Open the file after saving? FALSE by default
 #' @param gzip Compress the file after saving? FALSE by default
-#' @param separator Field separator, such as "," for csv
 #' @param ... Pass any other argument to the kollapse() function used for file name.
 #' @export
 #' @examples YourDataFrameWithRowAndColumnNames = cbind("A" = rnorm(100), "B" = rpois(100, 8))
 #' rownames(YourDataFrameWithRowAndColumnNames) = letters[1:NROW(YourDataFrameWithRowAndColumnNames)]
 #' write.simple.tsv(YourDataFrameWithRowAndColumnNames)
 
-write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv', ManualName = "", o = FALSE,
-                             gzip = FALSE, converFromTibble = T, ...  ) {
+write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv', ManualName = ""
+                             , row_names = TRUE
+                             , col_names = NA
+                             , o = FALSE, gzip = FALSE
+                             # , converFromTibble = T
+                             , ...  ) {
 
   # if (converFromTibble) { if (tibble::is_tibble(input_df)) { input_df <- as.data.frame(input_df) } }
-
+  if (row_names == FALSE) { col_names = TRUE }
   if (separator %in% c(',', ';')) extension <- 'csv'
   fname = kollapse (..., print = FALSE); if (nchar (fname) < 2 ) { fname = substitute(input_df) }
 
   if (nchar(ManualName)) {FnP = kollapse(ManualName)
   } else { FnP = ww.FnP_parser (fname, extension) }
-  utils::write.table (input_df, file = FnP, sep = separator, row.names = TRUE,
-                      col.names = NA, quote = FALSE  )
+  utils::write.table (input_df, file = FnP, sep = separator
+                      , row.names = row_names
+                      , col.names = col_names
+                      , quote = FALSE  )
   printme = if (length(dim(input_df))) {
     paste0("Dim: ", dim(input_df) )
   }else {
@@ -448,6 +456,7 @@ write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv', Manu
   if (o) { system(paste0("open ", FnP), wait = FALSE) }
   if (gzip) { system(paste0("gzip ", FnP), wait = FALSE) }
 } # fun
+
 # If col.names = NA and row.names = TRUE a blank column name is added, which is the convention used
 # for CSV files to be read by spreadsheets.
 

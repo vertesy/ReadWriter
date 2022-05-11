@@ -9,9 +9,10 @@ write.simple.tsv(
   separator = "\\t",
   extension = "tsv",
   ManualName = "",
+  row_names = TRUE,
+  col_names = NA,
   o = FALSE,
   gzip = FALSE,
-  converFromTibble = T,
   ...
 )
 }
@@ -23,6 +24,10 @@ write.simple.tsv(
 \item{extension}{e.g.: tsv}
 
 \item{ManualName}{Specify full filename if you do not want to name it by the variable name.}
+
+\item{row_names}{Write row names? TRUE by default}
+
+\item{col_names}{Write column names? NA by default, TRUE if row_names == FALSE}
 
 \item{o}{Open the file after saving? FALSE by default}
 

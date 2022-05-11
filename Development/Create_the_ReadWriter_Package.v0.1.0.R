@@ -20,7 +20,7 @@ require('Stringendo')
 
 # Setup ------------------------
 PackageName = 	"ReadWriter"
-package.version = "0.2.7"
+package.version = "0.2.8"
 setwd("~/GitHub/Packages/")
 
 RepositoryDir = kollapse("~/GitHub/Packages/", PackageName, "/")
@@ -75,16 +75,16 @@ getwd()
 document()
 
 
-# Install your package ------------------------------------------------
-# # setwd(RepositoryDir)
-install(RepositoryDir, upgrade = F)
-
 {
   "update cff version"
   citpath <- paste0(RepositoryDir, 'CITATION.cff')
   xfun::gsub_file(file = citpath, perl = T
                   , "^version: v.+", paste0("version: v", package.version))
 }
+
+# Install your package ------------------------------------------------
+# # setwd(RepositoryDir)
+install(RepositoryDir, upgrade = F)
 
 # require("ReadWriter")
 # # remove.packages("ReadWriter")
