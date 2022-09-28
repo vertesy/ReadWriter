@@ -478,6 +478,7 @@ write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv', Manu
 #' @param HeaderCex Header color, Default: 12
 #' @param HeaderLineColor Header line color, Default: 'darkolivegreen3'
 #' @param HeaderCharStyle Header character style, Default: c("bold", "italic", "underline")[1]
+#' @param row_names Have rownames? Default: TRUE
 #' @examples
 #' \dontrun{
 #' if(interactive()){
@@ -495,7 +496,7 @@ write.simple.xlsx <- function(named_list, ManualName = "", o = FALSE,  ..., TabC
 
   hs <- openxlsx::createStyle(textDecoration = HeaderCharStyle, fontSize = HeaderCex, fgFill = HeaderLineColor)
   setwd(OutDir)
-  openxlsx::write.xlsx(named_list, file = ppp(fname,"xlsx"), rowNames = TRUE, firstRow = TRUE, firstCol = TRUE, colWidths = "auto"
+  openxlsx::write.xlsx(named_list, file = ppp(fname,"xlsx"), rowNames = row_names, firstRow = TRUE, firstCol = TRUE, colWidths = "auto"
                        , headerStyle = hs, tabColour = TabColor, creator = Creator) #
 
   if (o) { system(paste0("open ", FnP), wait = FALSE) }
