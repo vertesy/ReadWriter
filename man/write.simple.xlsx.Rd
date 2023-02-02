@@ -13,7 +13,8 @@ write.simple.xlsx(
   Creator = "Vertesy",
   HeaderCex = 12,
   HeaderLineColor = "darkolivegreen3",
-  HeaderCharStyle = c("bold", "italic", "underline")[1]
+  HeaderCharStyle = c("bold", "italic", "underline")[1],
+  row_names = TRUE
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ write.simple.xlsx(
 \item{HeaderLineColor}{Header line color, Default: 'darkolivegreen3'}
 
 \item{HeaderCharStyle}{Header character style, Default: c("bold", "italic", "underline")\link{1}}
+
+\item{row_names}{Have rownames? Default: TRUE}
 }
 \description{
 Write out a list of matrices/ data frames WITH ROW- AND COLUMN-
