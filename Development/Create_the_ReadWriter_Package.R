@@ -1,8 +1,8 @@
 ######################################################################################################
-# Create_the_ReadWriter_Package.v0.1.R
+# Create_the_ReadWriter_Package.R
 # 31 10 2021
 ######################################################################################################
-# source("/Users/abel.vertesy/GitHub/Packages/ReadWriter/Development/Create_the_ReadWriter_Package.v0.1.R")
+# source("/Users/abel.vertesy/GitHub/Packages/ReadWriter/Development/Create_the_ReadWriter_Package.R")
 rm(list = ls(all.names = TRUE));
 try(dev.off(), silent = TRUE)
 
@@ -73,6 +73,7 @@ file.copy(from = Package_FnP, to = BackupOldFile, overwrite = TRUE)
 setwd(RepositoryDir)
 getwd()
 document()
+warnings()
 
 
 {
