@@ -1,6 +1,5 @@
 ######################################################################################################
 # Create_the_ReadWriter_Package.R
-# 31 10 2021
 ######################################################################################################
 # source("/Users/abel.vertesy/GitHub/Packages/ReadWriter/Development/Create_the_ReadWriter_Package.R")
 rm(list = ls(all.names = TRUE));
