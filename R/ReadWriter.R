@@ -13,6 +13,7 @@
 
 # _________________________________________________________________________________________________
 #' @title FirstCol2RowNames
+#'
 #' @description Set First Col to Row Names
 #' @param Tibble A dataframe without rownames (tibble style)
 #' @param rownamecol rowname column, Default: 1
@@ -506,6 +507,7 @@ write.simple.xlsx <- function(named_list, ManualName = "", o = FALSE,  ..., TabC
 
 # _________________________________________________________________________________________________
 #' @title write.simple.append
+#'
 #' @description Append an R-object WITHOUT ROWNAMES, to an existing .tsv file of
 #'  the same number of columns. Your output filename will be either the
 #'  variable's name. The output file will be located in "OutDir" specified by
