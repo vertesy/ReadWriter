@@ -13,6 +13,7 @@
 
 # _________________________________________________________________________________________________
 #' @title FirstCol2RowNames
+#'
 #' @description Set First Col to Row Names
 #' @param Tibble A dataframe without rownames (tibble style)
 #' @param rownamecol rowname column, Default: 1
@@ -320,13 +321,13 @@ convert.tsv.data <- function(df_by_read.simple.tsv, digitz = 2, na_rep = 0 ) {
 #' @export
 #' @importFrom gdata read.xls sheetNames
 read.simple.xls <- function(pfn = kollapse(...), row_namePos = NULL, ..., header_ = TRUE, WhichSheets) {
+
   if (!require("gdata")) { print("Please install gplots: install.packages('gdata')") }
   if (grepl("^~/", pfn)) {
     iprint("You cannot use the ~/ in the file path! It is replaced by '/Users/abel.vertesy/'.")
     pfn = gsub(pattern = "^~/", replacement = "/Users/abel.vertesy/", x = pfn)
   } else {print(pfn)}
 
-  if (!require("gdata")) { print("Please install gplots: install.packages('gdata')") }
   # merge path and filename
   TheSheetNames = gdata::sheetNames(pfn, verbose = FALSE);
   NrSheets = length(TheSheetNames)
@@ -489,23 +490,31 @@ write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv', Manu
 #'  \code{\link[openxlsx]{write.xlsx}}
 #' @export
 #' @importFrom openxlsx write.xlsx
-write.simple.xlsx <- function(named_list, ManualName = "", o = FALSE,  ..., TabColor = "darkgoldenrod1", Creator = "Vertesy",
-                              HeaderCex = 12, HeaderLineColor = "darkolivegreen3", HeaderCharStyle = c("bold", "italic", "underline")[1], row_names = TRUE  ) {
-  fname = if (nchar(ManualName) < 2 ) { fname = substitute(named_list) }
-  if (nchar(ManualName)) {FnP = kollapse(ManualName)} else  {FnP =  ww.FnP_parser(fname, "xlsx") }
+write.simple.xlsx <- function(named_list, ManualName = F, o = FALSE, TabColor = "darkgoldenrod1"
+                              , Creator = "Vertesy", HeaderCex = 12, HeaderLineColor = "darkolivegreen3"
+                              , HeaderCharStyle = c("bold", "italic", "underline")[1]
+                              , row_names = TRUE
+                              , ...) {
 
-  hs <- openxlsx::createStyle(textDecoration = HeaderCharStyle, fontSize = HeaderCex, fgFill = HeaderLineColor)
-  setwd(OutDir)
-  openxlsx::write.xlsx(named_list, file = ppp(fname,"xlsx"), rowNames = row_names, firstRow = TRUE, firstCol = TRUE, colWidths = "auto"
+  if ( !('list' %in% class(named_list))  ) named_list <- list(named_list) # convert to a list if needed
+  fname <- if (isFALSE(ManualName)) substitute(named_list) else ManualName
+  FnP <- kpp(kpps(getwd(), fname), "xlsx")
+  print(FnP)
+
+  hs <- openxlsx::createStyle(textDecoration = HeaderCharStyle, fontSize = HeaderCex
+                              , fgFill = HeaderLineColor)
+
+  openxlsx::write.xlsx(named_list, file = FnP, rowNames = row_names, firstRow = TRUE
+                       , firstCol = TRUE, colWidths = "auto"
                        , headerStyle = hs, tabColour = TabColor, creator = Creator) #
 
-  if (o) { system(paste0("open ", FnP), wait = FALSE) }
+  if (o) { system(paste0("open ", fix_special_characters_bash(FnP)), wait = FALSE) }
 } # fun
-
 
 
 # _________________________________________________________________________________________________
 #' @title write.simple.append
+#'
 #' @description Append an R-object WITHOUT ROWNAMES, to an existing .tsv file of
 #'  the same number of columns. Your output filename will be either the
 #'  variable's name. The output file will be located in "OutDir" specified by

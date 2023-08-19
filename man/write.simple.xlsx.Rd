@@ -6,15 +6,15 @@
 \usage{
 write.simple.xlsx(
   named_list,
-  ManualName = "",
+  ManualName = F,
   o = FALSE,
-  ...,
   TabColor = "darkgoldenrod1",
   Creator = "Vertesy",
   HeaderCex = 12,
   HeaderLineColor = "darkolivegreen3",
   HeaderCharStyle = c("bold", "italic", "underline")[1],
-  row_names = TRUE
+  row_names = TRUE,
+  ...
 )
 }
 \arguments{
@@ -23,8 +23,6 @@ write.simple.xlsx(
 \item{ManualName}{A string for a manually defined filename. Default: ''}
 
 \item{o}{Set to TRUE to open file after writing out using 'system(open ...)' on OS X., Default: FALSE}
-
-\item{...}{Multiple simple variables to parse.}
 
 \item{TabColor}{Tab Color in Excel, Default: 'darkgoldenrod1'}
 
@@ -37,6 +35,8 @@ write.simple.xlsx(
 \item{HeaderCharStyle}{Header character style, Default: c("bold", "italic", "underline")\link{1}}
 
 \item{row_names}{Have rownames? Default: TRUE}
+
+\item{...}{Multiple simple variables to parse.}
 }
 \description{
 Write out a list of matrices/ data frames WITH ROW- AND COLUMN-
