@@ -16,7 +16,6 @@ require('CodeAndRoll2')
 require('Stringendo')
 
 
-
 # Setup ------------------------
 PackageName = 	"ReadWriter"
 package.version = "0.3.0"
@@ -73,7 +72,6 @@ setwd(RepositoryDir)
 getwd()
 document()
 warnings()
-
 
 {
   "update cff version"

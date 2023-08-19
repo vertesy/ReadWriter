@@ -6,12 +6,12 @@
 \usage{
 write.simple.xlsx(
   named_list,
-  ManualName = F,
+  fname = substitute(named_list),
   o = FALSE,
   TabColor = "darkgoldenrod1",
-  Creator = "Vertesy",
-  HeaderCex = 12,
   HeaderLineColor = "darkolivegreen3",
+  HeaderCex = 12,
+  Creator = "Vertesy",
   HeaderCharStyle = c("bold", "italic", "underline")[1],
   row_names = TRUE,
   ...
@@ -20,17 +20,17 @@ write.simple.xlsx(
 \arguments{
 \item{named_list}{A list of data frames to write out}
 
-\item{ManualName}{A string for a manually defined filename. Default: ''}
+\item{fname}{A string for a manually defined filename. Default: substitute(named_list)}
 
 \item{o}{Set to TRUE to open file after writing out using 'system(open ...)' on OS X., Default: FALSE}
 
 \item{TabColor}{Tab Color in Excel, Default: 'darkgoldenrod1'}
 
-\item{Creator}{Creator, Default: 'Vertesy'}
+\item{HeaderLineColor}{Header line color, Default: 'darkolivegreen3'}
 
 \item{HeaderCex}{Header color, Default: 12}
 
-\item{HeaderLineColor}{Header line color, Default: 'darkolivegreen3'}
+\item{Creator}{Creator, Default: 'Vertesy'}
 
 \item{HeaderCharStyle}{Header character style, Default: c("bold", "italic", "underline")\link{1}}
 

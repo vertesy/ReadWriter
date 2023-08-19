@@ -471,15 +471,15 @@ write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv', Manu
 #'   working directory. You can pass the PATH and VARIABLE separately (in
 #'   order), they will be concatenated to the filename.
 #' @param named_list A list of data frames to write out
-#' @param ManualName A string for a manually defined filename. Default: ''
+#' @param fname A string for a manually defined filename. Default: substitute(named_list)
 #' @param o Set to TRUE to open file after writing out using 'system(open ...)' on OS X., Default: FALSE
-#' @param ... Multiple simple variables to parse.
 #' @param TabColor Tab Color in Excel, Default: 'darkgoldenrod1'
 #' @param Creator Creator, Default: 'Vertesy'
 #' @param HeaderCex Header color, Default: 12
 #' @param HeaderLineColor Header line color, Default: 'darkolivegreen3'
 #' @param HeaderCharStyle Header character style, Default: c("bold", "italic", "underline")[1]
 #' @param row_names Have rownames? Default: TRUE
+#' @param ... Multiple simple variables to parse.
 #' @examples
 #' \dontrun{
 #' if(interactive()){
@@ -490,26 +490,64 @@ write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv', Manu
 #'  \code{\link[openxlsx]{write.xlsx}}
 #' @export
 #' @importFrom openxlsx write.xlsx
-write.simple.xlsx <- function(named_list, ManualName = F, o = FALSE, TabColor = "darkgoldenrod1"
-                              , Creator = "Vertesy", HeaderCex = 12, HeaderLineColor = "darkolivegreen3"
+
+write.simple.xlsx <- function(named_list, fname = substitute(named_list), o = FALSE
+                              , TabColor = "darkgoldenrod1", HeaderLineColor = "darkolivegreen3"
+                              , HeaderCex = 12, Creator = "Vertesy"
                               , HeaderCharStyle = c("bold", "italic", "underline")[1]
-                              , row_names = TRUE
-                              , ...) {
+                              , row_names = TRUE, ...) {
 
   if ( !('list' %in% class(named_list))  ) named_list <- list(named_list) # convert to a list if needed
-  fname <- if (isFALSE(ManualName)) substitute(named_list) else ManualName
+
+  # stopifnot( nchar(fname) < 100 )
+  if (nchar(fname) > 100) fname <- kpp('_Output', idate())
   FnP <- kpp(kpps(getwd(), fname), "xlsx")
-  print(FnP)
 
   hs <- openxlsx::createStyle(textDecoration = HeaderCharStyle, fontSize = HeaderCex
                               , fgFill = HeaderLineColor)
 
-  openxlsx::write.xlsx(named_list, file = FnP, rowNames = row_names, firstRow = TRUE
-                       , firstCol = TRUE, colWidths = "auto"
+  openxlsx::write.xlsx(named_list, file = FnP, rowNames = row_names
+                       , firstRow = TRUE, firstCol = TRUE, colWidths = "auto"
                        , headerStyle = hs, tabColour = TabColor, creator = Creator) #
 
   if (o) { system(paste0("open ", fix_special_characters_bash(FnP)), wait = FALSE) }
 } # fun
+
+
+#
+# write.simple.xlsx <- function(named_list, ManualName = substitute(named_list), o = FALSE, TabColor = "darkgoldenrod1"
+#                               , Creator = "Vertesy", HeaderCex = 12, HeaderLineColor = "darkolivegreen3"
+#                               , HeaderCharStyle = c("bold", "italic", "underline")[1]
+#                               , row_names = TRUE
+#                               , ...) {
+#
+#   stopifnot(!isFALSE(ManualName))
+#
+#   if ( !('list' %in% class(named_list))  ) named_list <- list(named_list) # convert to a list if needed
+#   # fname <- if(isFALSE(ManualName)) substitute(named_list) else ManualName
+#   fname <- ManualName
+#   stopifnot(nchar(ManualName)<100)
+#
+#   FnP <- kpp(kpps(getwd(), fname), "xlsx")
+#   print(FnP)
+#
+#   hs <- openxlsx::createStyle(textDecoration = HeaderCharStyle, fontSize = HeaderCex
+#                               , fgFill = HeaderLineColor)
+#
+#
+#   if (row_names) {
+#     FUNX <- function(x)  rownames_to_column(as.data.frame(x), var = "genes")
+#     named_list <- lapply(named_list, FUNX)
+#     # named_list <- rownames_to_column(as.data.frame(named_list), var = "genes")
+#   }
+#   openxlsx::write.xlsx(x = named_list, file = FnP, rowNames = FALSE
+#                        , firstRow = TRUE
+#                        , firstCol = TRUE
+#                        , colWidths = "auto"
+#                        , headerStyle = hs, tabColour = TabColor, creator = Creator)
+#
+#   if (o) { system(paste0("open ", fix_special_characters_bash(FnP)), wait = FALSE) }
+# } # fun
 
 
 # _________________________________________________________________________________________________
