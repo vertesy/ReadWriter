@@ -1,16 +1,16 @@
 Package: ReadWriter
 Title: ReadWriter
 Version: 0.3.0
-Authors@R: 
+Authors@R:
     person("Abel", "Vertesy", , "a.vertesy@imba.oeaw.ac.at", role = c("aut", "cre"))
 Author: Abel Vertesy <abel.vertesy@imba.oeaw.ac.at> [aut, cre]
 Description: ReadWriter is a set of R functions to read and write files
     conveniently. Complements CodeAndRoll2.
 License: GPL-3 + file LICENSE
 BugReports: https://github.com/vertesy/ReadWriter/issues
-Depends: 
+Depends:
     Stringendo
-Imports: 
+Imports:
     base,
     gdata,
     gtools,
@@ -18,6 +18,6 @@ Imports:
     readr,
     utils
 Encoding: UTF-8
-Packaged: 2023-08-19 16:14:32.314403
+Packaged: 2023-08-19 13:40:36.678456
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3

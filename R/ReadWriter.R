@@ -506,12 +506,22 @@ write.simple.xlsx <- function(named_list, fname = substitute(named_list), o = FA
   hs <- openxlsx::createStyle(textDecoration = HeaderCharStyle, fontSize = HeaderCex
                               , fgFill = HeaderLineColor)
 
-  openxlsx::write.xlsx(named_list, file = FnP, rowNames = row_names
-                       , firstRow = TRUE, firstCol = TRUE, colWidths = "auto"
-                       , headerStyle = hs, tabColour = TabColor, creator = Creator) #
+  if (row_names) {
+    FUNX <- function(x)  rownames_to_column(as.data.frame(x), var = "genes")
+    named_list <- lapply(named_list, FUNX)
+    # named_list <- rownames_to_column(as.data.frame(named_list), var = "genes")
+  }
+  print(named_list)
+  print(rownames(named_list))
 
+  openxlsx::write.xlsx(x = named_list, file = FnP, rowNames = FALSE
+                       , firstRow = TRUE
+                       , firstCol = TRUE
+                       , colWidths = "auto"
+                       , headerStyle = hs, tabColour = TabColor, creator = Creator)
   if (o) { system(paste0("open ", fix_special_characters_bash(FnP)), wait = FALSE) }
 } # fun
+
 
 
 #
