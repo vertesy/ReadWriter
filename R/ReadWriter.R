@@ -2,7 +2,8 @@
 # ReadWriter.R
 ######################################################################
 # source('~/GitHub/Packages/ReadWriter/R/ReadWriter.R')
-# rm(list = ls(all.names = TRUE)); try(dev.off(), silent = T)
+# devtools::load_all(path = '~/GitHub/Packages/ReadWriter');
+
 
 ## File handling, export, import [read & write] -------------------------------------------------------------------------------------------------
 
@@ -372,8 +373,11 @@ read.simple.xls <- function(pfn = kollapse(...), row_namePos = NULL, ..., header
 #'  }
 #' }
 #' @export
-write.simple <- function(input_df, extension = 'tsv', ManualName = "", o = FALSE, ...  ) {
-  fname = kollapse(...) ; if (nchar(fname) < 2 ) { fname = Stringendo::sppp(substitute(input_vec), suffix) }
+write.simple <- function(input_df, extension = 'tsv'
+                         , filename = substitute(input_df)
+                         , ManualName = ""
+                         , o = FALSE, ...  ) {
+  fname = kollapse(...) ; if (nchar(fname) < 2 ) { fname = Stringendo::sppp(filename, suffix) }
   if (nchar(ManualName)) {FnP = kollapse(ManualName)} else  {FnP = ww.FnP_parser(fname, extension) }
   write.table(input_df, file = FnP, sep = "\t", row.names = FALSE, col.names = TRUE, quote = FALSE)
   if (o) { system(paste0("open ", FnP), wait = FALSE) }
@@ -404,9 +408,10 @@ write.simple <- function(input_df, extension = 'tsv', ManualName = "", o = FALSE
 #' }
 #' @export
 write.simple.vec <- function(input_vec, extension = 'vec'
+                             , filename = substitute(input_vec)
                              , suffix = NULL, ManualName = ""
                              , o = FALSE, ... ) {
-  fname = kollapse(...) ; if (nchar(fname) < 2 ) { fname = Stringendo::sppp(substitute(input_vec), suffix) }
+  fname = kollapse(...) ; if (nchar(fname) < 2 ) { fname = Stringendo::sppp(filename, suffix) }
   if (nchar(ManualName)) {FnP = kollapse(ManualName)} else  {FnP =  ww.FnP_parser(fname, extension) }
   write.table(input_vec, file = FnP, sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE  )
   iprint("Length: ", length(input_vec))
@@ -438,6 +443,7 @@ write.simple.vec <- function(input_vec, extension = 'vec'
 #' write.simple.tsv(YourDataFrameWithRowAndColumnNames)
 
 write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv'
+                             , filename = substitute(input_df)
                              , suffix = NULL, ManualName = ""
                              , row_names = TRUE
                              , col_names = NA
@@ -448,7 +454,9 @@ write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv'
   # if (converFromTibble) { if (tibble::is_tibble(input_df)) { input_df <- as.data.frame(input_df) } }
   if (row_names == FALSE) { col_names = TRUE }
   if (separator %in% c(',', ';')) extension <- 'csv'
-  fname = kollapse (..., print = FALSE); if (nchar (fname) < 2 ) { fname = Stringendo::sppp(substitute(input_df), suffix) }
+
+  fname = kollapse (..., print = FALSE)
+  if (nchar (fname) < 2 ) { fname <-Stringendo::sppp(filename, suffix) }
 
   if (nchar(ManualName)) {FnP = kollapse(ManualName)
   } else { FnP = ww.FnP_parser(fname, extension) }
@@ -483,7 +491,7 @@ write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv'
 #' @param fname A string for a manually defined filename. Default: substitute(named_list)
 #' @param o Set to TRUE to open file after writing out using 'system(open ...)' on OS X., Default: FALSE
 #' @param TabColor Tab Color in Excel, Default: 'darkgoldenrod1'
-#' @param Creator Creator, Default: 'Vertesy'
+#' @param Creator Creator, Default: ''
 #' @param HeaderCex Header color, Default: 12
 #' @param HeaderLineColor Header line color, Default: 'darkolivegreen3'
 #' @param HeaderCharStyle Header character style, Default: c("bold", "italic", "underline")[1]
@@ -498,17 +506,18 @@ write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv'
 #' @seealso
 #'  \code{\link[openxlsx]{write.xlsx}}
 #' @export
-#' @importFrom openxlsx write.xlsx
+#' @importFrom openxlsx write.xlsx createStyle
 
 write.simple.xlsx <- function(named_list
+                              , filename = substitute(named_list)
                               , suffix = NULL
-                              , fname = Stringendo::sppp(substitute(named_list), suffix)
                               , o = FALSE
                               , TabColor = "darkgoldenrod1", HeaderLineColor = "darkolivegreen3"
-                              , HeaderCex = 12, Creator = "Vertesy"
+                              , HeaderCex = 12, Creator = ""
                               , HeaderCharStyle = c("bold", "italic", "underline")[1]
                               , row_names = TRUE, ...) {
 
+  fname <-Stringendo::sppp(filename, suffix)
   if ( !('list' %in% class(named_list))  ) named_list <- list(named_list) # convert to a list if needed
 
   if (nchar(fname) > 100) fname <- kpp('_Output', idate())
@@ -557,9 +566,10 @@ write.simple.xlsx <- function(named_list
 #' }
 #' @export
 write.simple.append <- function(input_df, extension = 'tsv'
+                                , filename = substitute(input_df)
                                 , suffix = NULL, ManualName = ""
                                 , o = FALSE, ... ) {
-  fname = kollapse(...) ; if (nchar(fname) < 2 ) { fname = Stringendo::sppp(substitute(input_df), suffix) }
+  fname = kollapse(...) ; if (nchar(fname) < 2 ) { fname = Stringendo::sppp(filename, suffix) }
   if (nchar(ManualName)) { FnP = kollapse(ManualName)} else  {FnP =  ww.FnP_parser(fname, extension) }
   write.table(input_df, file = FnP, sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE, append = TRUE  )
   if (o) { system(paste0("open ", FnP), wait = FALSE) }
