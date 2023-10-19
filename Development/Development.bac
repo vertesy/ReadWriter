@@ -491,13 +491,16 @@ write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv', Manu
 #' @export
 #' @importFrom openxlsx write.xlsx
 
-write.simple.xlsx <- function(named_list, ManualName = F, o = FALSE, TabColor = "darkgoldenrod1"
-                              , Creator = "Vertesy", HeaderCex = 12, HeaderLineColor = "darkolivegreen3"
+write.simple.xlsx <- function(named_list, fname = substitute(named_list), o = FALSE
+                              , TabColor = "darkgoldenrod1", HeaderLineColor = "darkolivegreen3"
+                              , HeaderCex = 12, Creator = "Vertesy"
                               , HeaderCharStyle = c("bold", "italic", "underline")[1]
                               , row_names = TRUE, ...) {
 
-  # if ( !('list' %in% class(named_list))  ) named_list <- list(named_list) # convert to a list if needed
-  fname <- if (isFALSE(ManualName)) substitute(named_list) else ManualName
+  if ( !('list' %in% class(named_list))  ) named_list <- list(named_list) # convert to a list if needed
+
+  # stopifnot( nchar(fname) < 100 )
+  if (nchar(fname) > 100) fname <- kpp('_Output', idate())
   FnP <- kpp(kpps(getwd(), fname), "xlsx")
 
   hs <- openxlsx::createStyle(textDecoration = HeaderCharStyle, fontSize = HeaderCex
@@ -516,7 +519,6 @@ write.simple.xlsx <- function(named_list, ManualName = F, o = FALSE, TabColor = 
                        , firstCol = TRUE
                        , colWidths = "auto"
                        , headerStyle = hs, tabColour = TabColor, creator = Creator)
-
   if (o) { system(paste0("open ", fix_special_characters_bash(FnP)), wait = FALSE) }
 } # fun
 

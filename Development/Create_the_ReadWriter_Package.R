@@ -18,7 +18,7 @@ require('Stringendo')
 
 # Setup ------------------------
 PackageName = 	"ReadWriter"
-package.version = "0.3.0"
+package.version = "0.3.1"
 setwd("~/GitHub/Packages/")
 
 RepositoryDir = kollapse("~/GitHub/Packages/", PackageName, "/")
@@ -36,8 +36,8 @@ DESCRIPTION <- list("Title" = "ReadWriter "
     , "Version" = package.version
     , "Packaged" =  Sys.time()
     # , "Repository" =  "CRAN"
-    , "Depends" =  "Stringendo"
-    , "Imports" = "base, gdata, gtools, openxlsx, readr,  utils" # CodeAndRoll2,
+    , "Depends" =  "Stringendo, gdata"
+    , "Imports" = "base, gtools, openxlsx, readr,  utils" # CodeAndRoll2,
     # , "Suggests" = ""
     , "BugReports"= "https://github.com/vertesy/ReadWriter/issues"
 )
