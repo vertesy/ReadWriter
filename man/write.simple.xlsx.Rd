@@ -6,7 +6,8 @@
 \usage{
 write.simple.xlsx(
   named_list,
-  fname = substitute(named_list),
+  suffix = NULL,
+  fname = Stringendo::sppp(substitute(named_list), suffix),
   o = FALSE,
   TabColor = "darkgoldenrod1",
   HeaderLineColor = "darkolivegreen3",
@@ -19,6 +20,8 @@ write.simple.xlsx(
 }
 \arguments{
 \item{named_list}{A list of data frames to write out}
+
+\item{suffix}{A suffix added to the filename, Default: NULL}
 
 \item{fname}{A string for a manually defined filename. Default: substitute(named_list)}
 

@@ -7,6 +7,7 @@
 write.simple.append(
   input_df,
   extension = "tsv",
+  suffix = NULL,
   ManualName = "",
   o = FALSE,
   ...
@@ -16,6 +17,8 @@ write.simple.append(
 \item{input_df}{Data frame to write out.}
 
 \item{extension}{File extension to add, Default: 'tsv'}
+
+\item{suffix}{A suffix added to the filename, Default: NULL}
 
 \item{ManualName}{A string for a manually defined filename. Default: ''}
 

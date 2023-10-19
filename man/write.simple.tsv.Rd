@@ -8,6 +8,7 @@ write.simple.tsv(
   input_df,
   separator = "\\t",
   extension = "tsv",
+  suffix = NULL,
   ManualName = "",
   row_names = TRUE,
   col_names = NA,
@@ -22,6 +23,8 @@ write.simple.tsv(
 \item{separator}{Field separator, such as "," for csv}
 
 \item{extension}{e.g.: tsv}
+
+\item{suffix}{A suffix added to the filename, Default: NULL}
 
 \item{ManualName}{Specify full filename if you do not want to name it by the variable name.}
 

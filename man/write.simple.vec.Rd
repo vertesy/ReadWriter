@@ -4,12 +4,21 @@
 \alias{write.simple.vec}
 \title{write.simple.vec}
 \usage{
-write.simple.vec(input_vec, extension = "vec", ManualName = "", o = FALSE, ...)
+write.simple.vec(
+  input_vec,
+  extension = "vec",
+  suffix = NULL,
+  ManualName = "",
+  o = FALSE,
+  ...
+)
 }
 \arguments{
 \item{input_vec}{Vector to write out.}
 
 \item{extension}{File extension to add, Default: 'vec'}
+
+\item{suffix}{A suffix added to the filename, Default: NULL}
 
 \item{ManualName}{A string for a manually defined filename. Default: ''}
 

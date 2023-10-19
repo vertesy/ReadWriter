@@ -16,6 +16,8 @@ write.simple(input_df, extension = "tsv", ManualName = "", o = FALSE, ...)
 \item{o}{Set to TRUE to open file after writing out using 'system(open ...)' on OS X., Default: FALSE}
 
 \item{...}{Multiple simple variables to parse.}
+
+\item{suffix}{A suffix added to the filename, Default: NULL}
 }
 \description{
 Write out a matrix-like R-object to a file with as tab separated
