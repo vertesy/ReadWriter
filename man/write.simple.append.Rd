@@ -7,6 +7,7 @@
 write.simple.append(
   input_df,
   extension = "tsv",
+  filename = substitute(input_df),
   suffix = NULL,
   ManualName = "",
   o = FALSE,

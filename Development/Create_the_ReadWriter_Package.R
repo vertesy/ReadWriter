@@ -18,12 +18,12 @@ try(dev.off(), silent = TRUE)
 
 # Setup ------------------------
 package.name <- 	"ReadWriter"
-package.version <- "0.3.2"
+package.version <- "0.3.3"
 setwd("~/GitHub/Packages/")
 
-RepositoryDir <- paste0("~/GitHub/Packages/", PackageName, "/")
-fname <-	paste0(PackageName, ".R")
-Package_FnP <-		paste0(RepositoryDir, "R/", fname)
+RepositoryDir <- paste0("~/GitHub/Packages/", package.name, "/")
+fname <-	paste0(package.name, ".R")
+package.FnP <-		paste0(RepositoryDir, "R/", fname)
 
 BackupDir <- "~/GitHub/Packages/ReadWriter/Development/"
 dir.create(BackupDir)
@@ -36,8 +36,8 @@ DESCRIPTION <- list("Title" = "ReadWriter "
     , "Version" = package.version
     , "Packaged" =  Sys.time()
     # , "Repository" =  "CRAN"
-    , "Depends" =  "Stringendo, gdata"
-    , "Imports" = "base, gtools, openxlsx, readr,  utils" # CodeAndRoll2,
+    , "Depends" =  "Stringendo"
+    , "Imports" = "base, gtools, gdata, openxlsx, readr,  utils" # CodeAndRoll2,
     # , "Suggests" = ""
     , "BugReports"= "https://github.com/vertesy/ReadWriter/issues"
 )
@@ -48,24 +48,24 @@ if ( !dir.exists(RepositoryDir) ) { create(path = RepositoryDir, description = D
 } else {
     getwd()
     try(file.remove(c("DESCRIPTION","NAMESPACE", "ReadWriter.Rproj")))
-    create_package(path = RepositoryDir, fields = DESCRIPTION, open = F)
+    usethis::create_package(path = RepositoryDir, fields = DESCRIPTION, open = F)
 }
 
 
 # go and write fun's ------------------------------------------------------------------------
-# file.edit(Package_FnP)
+# file.edit(package.FnP)
 
 # Create Roxygen Skeletons ------------------------
-# RoxygenReady(Package_FnP)
+# RoxygenReady(package.FnP)
 
 # replace output files ------------------------------------------------
 BackupOldFile <-	paste0(BackupDir, "Development", ".bac", print = FALSE)
 AnnotatedFile <-	paste0(BackupDir, "Development", ".annot.R", print = FALSE)
-file.copy(from = Package_FnP, to = BackupOldFile, overwrite = TRUE)
-# file.copy(from = AnnotatedFile, to = Package_FnP, overwrite = TRUE)
+file.copy(from = package.FnP, to = BackupOldFile, overwrite = TRUE)
+# file.copy(from = AnnotatedFile, to = package.FnP, overwrite = TRUE)
 
 # Manual editing of descriptors ------------------------------------------------
-# file.edit(Package_FnP)
+# file.edit(package.FnP)
 
 # Compile a package ------------------------------------------------
 setwd(RepositoryDir)
@@ -116,7 +116,7 @@ check(RepositoryDir, cran = TRUE)
 # Check package dependencies ------------------------------------------------
 depFile = paste0(RepositoryDir, 'Development/Dependencies.R')
 
-(f.deps <- NCmisc::list.functions.in.file(filename = Package_FnP))
+(f.deps <- NCmisc::list.functions.in.file(filename = package.FnP))
 # clipr::write_clip(f.deps)
 
 sink(file = depFile); print(f.deps); sink()
@@ -127,3 +127,13 @@ p.dep.declared <- trimws(unlist(strsplit(DESCRIPTION$Imports, ",")))
 # clipr::write_clip(p.dep.new)
 
 
+if (F) {
+  "check dependency on gdata package"
+  require('gdata'); (fs.gdata <- ls("package:gdata"))
+  intersect(f.deps[[1]], fs.gdata)
+
+  require('Stringendo'); (fs.Stringendo <- ls("package:Stringendo"))
+  intersect(f.deps[[1]], fs.Stringendo)
+  setdiff(f.deps[[1]], c(fs.Stringendo, fs.gdata))
+
+}

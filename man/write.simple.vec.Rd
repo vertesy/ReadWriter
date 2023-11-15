@@ -7,6 +7,7 @@
 write.simple.vec(
   input_vec,
   extension = "vec",
+  filename = substitute(input_vec),
   suffix = NULL,
   ManualName = "",
   o = FALSE,

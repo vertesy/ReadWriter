@@ -8,6 +8,7 @@ write.simple.tsv(
   input_df,
   separator = "\\t",
   extension = "tsv",
+  filename = substitute(input_df),
   suffix = NULL,
   ManualName = "",
   row_names = TRUE,

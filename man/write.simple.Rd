@@ -4,7 +4,14 @@
 \alias{write.simple}
 \title{write.simple}
 \usage{
-write.simple(input_df, extension = "tsv", ManualName = "", o = FALSE, ...)
+write.simple(
+  input_df,
+  extension = "tsv",
+  filename = substitute(input_df),
+  ManualName = "",
+  o = FALSE,
+  ...
+)
 }
 \arguments{
 \item{input_df}{Data frame to write out.}
