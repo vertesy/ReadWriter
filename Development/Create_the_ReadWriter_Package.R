@@ -59,8 +59,8 @@ if ( !dir.exists(RepositoryDir) ) { create(path = RepositoryDir, description = D
 # RoxygenReady(package.FnP)
 
 # replace output files ------------------------------------------------
-BackupOldFile <-	paste0(BackupDir, "Development", ".bac", print = FALSE)
-AnnotatedFile <-	paste0(BackupDir, "Development", ".annot.R", print = FALSE)
+BackupOldFile <-	(paste0(BackupDir, "Development", ".bac"))
+AnnotatedFile <-	(paste0(BackupDir, "Development", ".annot.R"))
 file.copy(from = package.FnP, to = BackupOldFile, overwrite = TRUE)
 # file.copy(from = AnnotatedFile, to = package.FnP, overwrite = TRUE)
 
