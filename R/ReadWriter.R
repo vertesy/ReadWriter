@@ -340,7 +340,10 @@ read.simple.xls <- function(pfn = kollapse(...), row_namePos = NULL, ..., header
   RangeOfSheets = if (missing(WhichSheets)) 1:NrSheets else WhichSheets
   for (i in RangeOfSheets ) {
     iprint("sheet", i)
-    ExpData[[i]] = gdata::read.xls(pfn, sheet = i, row.names = row_namePos, header = header_)
+    # ExpData[[i]] = gdata::read.xls(pfn, sheet = i, row.names = row_namePos, header = header_)
+    ExpData[[i]] = openxlsx::read.xlsx(xlsxFile = pfn, sheet =i, rowNames = row_namePos) # , head = header_
+
+    openxlsx
   } #for
   lapply(ExpData, function(x) print(dimnames(x)) )
   return(ExpData);
