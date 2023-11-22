@@ -88,6 +88,8 @@ devtools::install(RepositoryDir, upgrade = F)
 
 "devtools::install_github('vertesy/ReadWriter', upgrade = F)"
 
+# dev branch
+"devtools::install_github('vertesy/ReadWriter@read_excel', upgrade = F)"
 
 
 # require("ReadWriter")
