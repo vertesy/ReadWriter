@@ -86,7 +86,7 @@ warnings()
 # # setwd(RepositoryDir)
 devtools::install(RepositoryDir, upgrade = F)
 
-devtools::install_github('~/GitHub/Packages/ReadWriter', upgrade = F)
+"devtools::install_github('vertesy/ReadWriter', upgrade = F)"
 
 
 
