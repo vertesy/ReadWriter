@@ -18,7 +18,7 @@ try(dev.off(), silent = TRUE)
 
 # Setup ------------------------
 package.name <- 	"ReadWriter"
-package.version <- "0.3.3"
+package.version <- "1.0.0"
 setwd("~/GitHub/Packages/")
 
 RepositoryDir <- paste0("~/GitHub/Packages/", package.name, "/")
@@ -35,9 +35,11 @@ DESCRIPTION <- list("Title" = "ReadWriter "
     , "License" = "GPL-3 + file LICENSE"
     , "Version" = package.version
     , "Packaged" =  Sys.time()
-    # , "Repository" =  "CRAN"
     , "Depends" =  "Stringendo"
-    , "Imports" = "base, gtools, gdata, openxlsx, readr,  utils" # CodeAndRoll2,
+    , "Remotes" =  "github::vertesy/Stringendo" # https://cran.r-project.org/web/packages/devtools/vignettes/dependencies.html
+    # https://stackoverflow.com/questions/72908510/r-package-how-to-specify-a-dependency-version-that-is-only-available-on-github
+
+    , "Imports" = "readxl, gtools, gdata, readr,  utils"
     # , "Suggests" = ""
     , "BugReports"= "https://github.com/vertesy/ReadWriter/issues"
 )

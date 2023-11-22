@@ -2,13 +2,69 @@
 # ReadWriter.R
 ######################################################################
 # source('~/GitHub/Packages/ReadWriter/R/ReadWriter.R')
-# devtools::load_all(path = '~/GitHub/Packages/ReadWriter');
+# devtools::load_all('~/GitHub/Packages/ReadWriter');
+# devtools::document('~/GitHub/Packages/ReadWriter');
 
 
 ## File handling, export, import [read & write] -------------------------------------------------------------------------------------------------
 
 ### Aux -------------------------------------------------------------------------------------------------
 
+
+#' @title Convert a Column to Row Names in a Tibble or DataFrame
+#'
+#' @description Converts the first column (or a specified column) of a dataframe or tibble into row names.
+#' This function differs from `tibble::column_to_rownames` in that it takes column names or inices and
+#' it offers the option to sanitize row names using `make.names`, provides a warning if there are
+#' duplicated values in the row name column
+#'
+#' @param df A dataframe or tibble without row names.
+#'           Default: No default value, a dataframe must be provided.
+#' @param rowname_col Index of the column to be used as row names.
+#'                    Default: 1.
+#' @param make_names Boolean indicating whether to call `make.names` to sanitize row names.
+#'                   Default: FALSE.
+#' @param as_df Boolean indicating whether to convert the input to a dataframe if it's not already one.
+#'              Default: TRUE.
+#' @param ... Pass arguments to make.names()..
+#' @export
+
+column.2.row.names <- function(tibble, rowname_col = 1, make_names = FALSE, as_df = TRUE) {
+  # Assertions
+  stopifnot(is.data.frame(tibble), is.numeric(rowname_col), rowname_col > 0, rowname_col <= ncol(tibble)
+            , is.logical(make_names), is.logical(as_df))
+
+  if (!is.null(rownames(tibble))) {
+    warning("tibble/df already has row names", immediate. = T)
+    print(head(rownames(tibble)))
+  }
+
+  if (as_df) { tibble <- as.data.frame(tibble) }
+
+  # Extracting the specified column to be used as row names
+  row_names <- tibble[[rowname_col]]
+
+  # Check for duplicated row names
+  if(anyDuplicated(rowname_col)) {
+    is.duplicated <- rowname_col[which(duplicated(rowname_col))]
+    warning(length(is.duplicated), " duplicated entries in: ", substitute(rowname_col)
+            , "\narg make_names = TRUE will enforce uniqueness")
+  }
+
+  # Applying make.names if requested
+  if (make_names) { row_names <- make.names(row_names, unique = TRUE, ...) }
+
+  # Removing the rowname column from the dataframe
+  tibble <- tibble[, -rowname_col, drop = FALSE]
+
+  # Setting the row names
+  rownames(tibble) <- row_names
+
+  # Output assertion
+  stopifnot(is.data.frame(tibble), !is.null(rownames(tibble)))
+
+  return(tibble)
+}
 
 
 
@@ -23,14 +79,16 @@
 #' @export
 FirstCol2RowNames <- function(Tibble, rownamecol = 1, make_names = FALSE, as.df = TRUE) {
 
-  rnn <- Tibble[[rownamecol]]
+  .Deprecated('column.2.row.names')
+
+  row.names <- Tibble[[rownamecol]]
   if (as.df) { Tibble <- as.data.frame(Tibble) }
 
   Tibble <- Tibble[ ,-rownamecol, drop =F]
-  if (make_names) {rnn <- make.names(rnn, unique = TRUE)}
+  if (make_names) { row.names <- make.names(row.names, unique = TRUE) }
 
-  rownames(Tibble) <- rnn
-  iprint("Rownames", head(rnn), '...')
+  rownames(Tibble) <- row.names
+  iprint("Rownames", head(row.names), '...')
 
   return(Tibble)
 }
@@ -45,9 +103,12 @@ FirstCol2RowNames <- function(Tibble, rownamecol = 1, make_names = FALSE, as.df 
 #' @export
 
 FirstCol2RowNames.as.df <- function(Tibble, rownamecol = 1, make_names = FALSE) {
+
+  .Deprecated('column.2.row.names')
+
+  row.names = Tibble[[rownamecol]]
   Tibble = as.data.frame(Tibble)
-  NN = Tibble[[rownamecol]]
-  rownames(Tibble) = if (make_names) make.names(NN, unique = TRUE) else NN
+  rownames(Tibble) = if (make_names) make.names(row.names, unique = TRUE) else row.names
   return(Tibble[, -rownamecol, drop = F])
 }
 
@@ -156,7 +217,7 @@ read.simple.table <- function(..., colnames = TRUE, coltypes = NULL) {
 #' @param wRownames With rownames?, Default: TRUE
 #' @param coltypes What type of variables are in columns? Auto-guessing can be very slow., Default: NULL
 #' @param NaReplace Replace NA-values?, Default: TRUE
-#' @param asTibble Load as Tibble or dataframe?, Default: FALSE (=load as df)
+#' @param asTibble Load as tibble or dataframe?, Default: FALSE (=load as df)
 #' @examples
 #' \dontrun{
 #' if(interactive()){
@@ -275,79 +336,6 @@ read.simple.tsv.named.vector <- function(...) {
 }
 
 
-# _________________________________________________________________________________________________
-#' @title convert.tsv.data
-#' @description Fix NA issue in dataframes imported by the new read.simple.tsv.
-#' Set na_rep to NA if you want to keep NA-s
-#' @param df_by_read.simple.tsv Data frame (e.g. by read.simple.tsv).
-#' @param digitz Number of digits when rounding up, Default: 2
-#' @param na_rep Replace NA?, Default: 0
-#' @examples
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @seealso
-#'  \code{\link[gtools]{na.replace}}
-#' @export
-#' @importFrom gtools na.replace
-convert.tsv.data <- function(df_by_read.simple.tsv, digitz = 2, na_rep = 0 ) {
-  DAT = data.matrix(df_by_read.simple.tsv)
-  SNA = sum(is.na(DAT))
-  try(iprint("Replaced NA values:", SNA, "or", percentage_formatter(SNA/length(DAT))), silent = TRUE)
-  gtools::na.replace(round(DAT, digits = digitz), replace = na_rep)
-}
-
-
-
-
-# _________________________________________________________________________________________________
-#' @title read.simple.xls
-#' @description Read multi-sheet excel files. row_namePos = NULL for automatic
-#' names Look into: http://readxl.tidyverse.org/.
-#' @param pfn Path and File name, Default: kollapse(...)
-#' @param row_namePos Where is the rowname, Default: NULL
-#' @param ... Multiple simple variables to parse.
-#' @param header_ Is there header? Default: TRUE
-#' @param WhichSheets Which sheets to read in
-#' @examples
-#' \dontrun{
-#' if(interactive()){
-#'  # read.simple.xls("path/to/my.file")
-#'  }
-#' }
-#' @seealso
-#'  \code{\link[gdata]{read.xls}}
-#' @export
-#' @importFrom gdata read.xls sheetNames
-read.simple.xls <- function(pfn = kollapse(...), row_namePos = NULL, ..., header_ = TRUE, WhichSheets) {
-
-  if (!require("gdata")) { print("Please install gplots: install.packages('gdata')") }
-  if (grepl("^~/", pfn)) {
-    iprint("You cannot use the ~/ in the file path! It is replaced by '/Users/abel.vertesy/'.")
-    pfn = gsub(pattern = "^~/", replacement = "/Users/abel.vertesy/", x = pfn)
-  } else {print(pfn)}
-
-  # merge path and filename
-  TheSheetNames = gdata::sheetNames(pfn, verbose = FALSE);
-  NrSheets = length(TheSheetNames)
-  iprint(NrSheets, "sheets in the file.")
-  # ExpData = CodeAndRoll2::list.fromNames(TheSheetNames)
-  ExpData = as.list(TheSheetNames)
-  names(ExpData) = TheSheetNames
-
-  RangeOfSheets = if (missing(WhichSheets)) 1:NrSheets else WhichSheets
-  for (i in RangeOfSheets ) {
-    iprint("sheet", i)
-    # ExpData[[i]] = gdata::read.xls(pfn, sheet = i, row.names = row_namePos, header = header_)
-    ExpData[[i]] = openxlsx::read.xlsx(xlsxFile = pfn, sheet =i, rowNames = row_namePos) # , head = header_
-
-    openxlsx
-  } #for
-  lapply(ExpData, function(x) print(dimnames(x)) )
-  return(ExpData);
-}
 
 
 
@@ -520,7 +508,9 @@ write.simple.xlsx <- function(named_list
                               , HeaderCharStyle = c("bold", "italic", "underline")[1]
                               , row_names = TRUE, ...) {
 
-  fname <-Stringendo::sppp(filename, suffix)
+  warning("Switched using from openxlsx to readxl package 2023.11.22")
+
+  fname <- Stringendo::sppp(filename, suffix)
   if ( !('list' %in% class(named_list))  ) named_list <- list(named_list) # convert to a list if needed
 
   if (nchar(fname) > 100) fname <- kpp('_Output', idate())
