@@ -4,10 +4,10 @@
 \alias{FirstCol2RowNames}
 \title{FirstCol2RowNames}
 \usage{
-FirstCol2RowNames(tibble, rownamecol = 1, make_names = FALSE, as.df = TRUE)
+FirstCol2RowNames(Tibble, rownamecol = 1, make_names = FALSE, as.df = TRUE)
 }
 \arguments{
-\item{tibble}{A dataframe without rownames (tibble style)}
+\item{Tibble}{A dataframe without rownames (tibble style)}
 
 \item{rownamecol}{rowname column, Default: 1}
 

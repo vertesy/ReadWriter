@@ -2,12 +2,74 @@
 # ReadWriter.R
 ######################################################################
 # source('~/GitHub/Packages/ReadWriter/R/ReadWriter.R')
-# rm(list = ls(all.names = TRUE)); try(dev.off(), silent = T)
+# devtools::load_all('~/GitHub/Packages/ReadWriter');
+# devtools::document('~/GitHub/Packages/ReadWriter');
+
 
 ## File handling, export, import [read & write] -------------------------------------------------------------------------------------------------
 
 ### Aux -------------------------------------------------------------------------------------------------
 
+
+#' @title Convert a Column to Row Names in a Tibble or DataFrame
+#'
+#' @description Converts the first column (or a specified column) of a dataframe or tibble into row names.
+#' This function differs from `tibble::column_to_rownames` in that it takes column names or inices and
+#' it offers the option to sanitize row names using `make.names`, provides a warning if there are
+#' duplicated values in the row name column
+#'
+#' @param df A dataframe or tibble without row names.
+#'           Default: No default value, a dataframe must be provided.
+#' @param rowname_col Index of the column to be used as row names.
+#'                    Default: 1.
+#' @param make_names Boolean indicating whether to call `make.names` to sanitize row names.
+#'                   Default: FALSE.
+#' @param as_df Boolean indicating whether to convert the input to a dataframe if it's not already one.
+#'              Default: TRUE.
+#' @param warn Warn user if row names pre-exist.
+#' @param ... Pass arguments to make.names()..
+#' @export
+
+column.2.row.names <- function(tibble, rowname_col = 1, make_names = FALSE, as_df = TRUE
+                               , warn = TRUE, ...) {
+
+  # Assertions
+  stopifnot(is.data.frame(tibble), is.numeric(rowname_col), rowname_col > 0, rowname_col <= ncol(tibble)
+            , is.logical(make_names), is.logical(as_df))
+
+  if (!is.null(rownames(tibble))) {
+    if (warn) {
+      warning("tibble/df already has row names (now overwritten):", immediate. = T)
+      print(head(rownames(tibble)))
+    }
+  }
+
+  if (as_df) { tibble <- as.data.frame(tibble) }
+
+  # Extracting the specified column to be used as row names
+  row_names <- tibble[[rowname_col]]
+
+  # Check for duplicated row names
+  if(anyDuplicated(rowname_col)) {
+    is.duplicated <- rowname_col[which(duplicated(rowname_col))]
+    warning(length(is.duplicated), " duplicated entries in: ", substitute(rowname_col)
+            , "\narg make_names = TRUE will enforce uniqueness")
+  }
+
+  # Applying make.names if requested
+  if (make_names) { row_names <- make.names(row_names, unique = TRUE, ...) }
+
+  # Removing the rowname column from the dataframe
+  tibble <- tibble[, -rowname_col, drop = FALSE]
+
+  # Setting the row names
+  rownames(tibble) <- row_names
+
+  # Output assertion
+  stopifnot(is.data.frame(tibble), !is.null(rownames(tibble)))
+
+  return(tibble)
+}
 
 
 
@@ -22,14 +84,16 @@
 #' @export
 FirstCol2RowNames <- function(Tibble, rownamecol = 1, make_names = FALSE, as.df = TRUE) {
 
-  rnn <- Tibble[[rownamecol]]
+  .Deprecated('column.2.row.names')
+
+  row.names <- Tibble[[rownamecol]]
   if (as.df) { Tibble <- as.data.frame(Tibble) }
 
   Tibble <- Tibble[ ,-rownamecol, drop =F]
-  if (make_names) {rnn <- make.names(rnn, unique = TRUE)}
+  if (make_names) { row.names <- make.names(row.names, unique = TRUE) }
 
-  rownames(Tibble) <- rnn
-  iprint("Rownames", head(rnn), '...')
+  rownames(Tibble) <- row.names
+  iprint("Rownames", head(row.names), '...')
 
   return(Tibble)
 }
@@ -44,9 +108,12 @@ FirstCol2RowNames <- function(Tibble, rownamecol = 1, make_names = FALSE, as.df 
 #' @export
 
 FirstCol2RowNames.as.df <- function(Tibble, rownamecol = 1, make_names = FALSE) {
+
+  .Deprecated('column.2.row.names')
+
+  row.names = Tibble[[rownamecol]]
   Tibble = as.data.frame(Tibble)
-  NN = Tibble[[rownamecol]]
-  rownames(Tibble) = if (make_names) make.names(NN, unique = TRUE) else NN
+  rownames(Tibble) = if (make_names) make.names(row.names, unique = TRUE) else row.names
   return(Tibble[, -rownamecol, drop = F])
 }
 
@@ -155,7 +222,7 @@ read.simple.table <- function(..., colnames = TRUE, coltypes = NULL) {
 #' @param wRownames With rownames?, Default: TRUE
 #' @param coltypes What type of variables are in columns? Auto-guessing can be very slow., Default: NULL
 #' @param NaReplace Replace NA-values?, Default: TRUE
-#' @param asTibble Load as Tibble or dataframe?, Default: FALSE (=load as df)
+#' @param asTibble Load as tibble or dataframe?, Default: FALSE (=load as df)
 #' @examples
 #' \dontrun{
 #' if(interactive()){
@@ -274,76 +341,66 @@ read.simple.tsv.named.vector <- function(...) {
 }
 
 
-# _________________________________________________________________________________________________
-#' @title convert.tsv.data
-#' @description Fix NA issue in dataframes imported by the new read.simple.tsv.
-#' Set na_rep to NA if you want to keep NA-s
-#' @param df_by_read.simple.tsv Data frame (e.g. by read.simple.tsv).
-#' @param digitz Number of digits when rounding up, Default: 2
-#' @param na_rep Replace NA?, Default: 0
-#' @examples
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @seealso
-#'  \code{\link[gtools]{na.replace}}
-#' @export
-#' @importFrom gtools na.replace
-convert.tsv.data <- function(df_by_read.simple.tsv, digitz = 2, na_rep = 0 ) {
-  DAT = data.matrix(df_by_read.simple.tsv)
-  SNA = sum(is.na(DAT))
-  try(iprint("Replaced NA values:", SNA, "or", percentage_formatter(SNA/length(DAT))), silent = TRUE)
-  gtools::na.replace(round(DAT, digits = digitz), replace = na_rep)
-}
-
-
-
 
 # _________________________________________________________________________________________________
-#' @title read.simple.xls
-#' @description Read multi-sheet excel files. row_namePos = NULL for automatic
-#' names Look into: http://readxl.tidyverse.org/.
-#' @param pfn Path and File name, Default: kollapse(...)
-#' @param row_namePos Where is the rowname, Default: NULL
-#' @param ... Multiple simple variables to parse.
-#' @param header_ Is there header? Default: TRUE
-#' @param WhichSheets Which sheets to read in
-#' @examples
-#' \dontrun{
-#' if(interactive()){
-#'  # read.simple.xls("path/to/my.file")
-#'  }
-#' }
-#' @seealso
-#'  \code{\link[gdata]{read.xls}}
+#' @title Read a multi-sheet XLSX easily
+#'
+#' @description Reads specified sheets from an XLSX file into a list of data frames.
+#'              It allows customization of column names, row names, and trimming of white spaces.
+#'
+#' @param pfn Path and filename of the XLSX file.
+#'            Default: Constructed using `kollapse(...)`.
+#' @param which_sheets Indices or names of sheets to read from the XLSX file.
+#'                     Default: All sheets.
+#' @param col_names Logical, whether to use the first row as column names.
+#'                  Default: TRUE.
+#' @param row_names Numeric, whether to convert a column to row names.
+#'                  Default: 1. Use 0 for no conversion.
+#' @param ... Pass arguments to read.xlsx().
+#' @return A list of data frames, each representing a sheet from the XLSX file.
+#' @importFrom openxlsx read.xlsx getSheetNames
 #' @export
-#' @importFrom gdata read.xls sheetNames
-read.simple.xls <- function(pfn = kollapse(...), row_namePos = NULL, ..., header_ = TRUE, WhichSheets) {
 
-  if (!require("gdata")) { print("Please install gplots: install.packages('gdata')") }
-  if (grepl("^~/", pfn)) {
-    iprint("You cannot use the ~/ in the file path! It is replaced by '/Users/abel.vertesy/'.")
-    pfn = gsub(pattern = "^~/", replacement = "/Users/abel.vertesy/", x = pfn)
-  } else {print(pfn)}
+read.simple.xlsx <- function(pfn = kollapse(...), which_sheets
+                             , col_names = TRUE, row_names = 0
+                             , trim_ws = TRUE, ...) {
 
-  # merge path and filename
-  TheSheetNames = gdata::sheetNames(pfn, verbose = FALSE);
-  NrSheets = length(TheSheetNames)
-  iprint(NrSheets, "sheets in the file.")
-  # ExpData = CodeAndRoll2::list.fromNames(TheSheetNames)
-  ExpData = as.list(TheSheetNames)
-  names(ExpData) = TheSheetNames
+  # Assertions for input arguments
+  stopifnot(is.character(pfn), length(pfn) > 0)
+  if (!missing(which_sheets)) stopifnot(is.numeric(which_sheets) | is.character(which_sheets))
+  stopifnot(is.logical(col_names), is.logical(trim_ws))
 
-  RangeOfSheets = if (missing(WhichSheets)) 1:NrSheets else WhichSheets
-  for (i in RangeOfSheets ) {
-    iprint("sheet", i)
-    ExpData[[i]] = gdata::read.xls(pfn, sheet = i, row.names = row_namePos, header = header_)
-  } #for
-  lapply(ExpData, function(x) print(dimnames(x)) )
-  return(ExpData);
+  # Check if openxlsx package is installed
+  if (!require("openxlsx")) {
+    stop("Package 'openxlsx' is required but not installed. Please install it using install.packages('openxlsx').")
+  }
+
+  # Read sheet names and count
+  ls.sheet.names = openxlsx::getSheetNames(pfn)
+  nr.sheets = length(ls.sheet.names)
+  stopifnot(nr.sheets > 0) # Assert that there are sheets in the file
+
+  # Prepare sheet index
+  range.of.sheets = if (missing(which_sheets)) 1:nr.sheets else which_sheets
+
+  # Read specified sheets
+  ls.excel.sheets = lapply(range.of.sheets, function(i) {
+    sheet_data <- openxlsx::read.xlsx(pfn, sheet = i, colNames = col_names
+                                      , rowNames =1, ...)
+    if (row_names) {
+      sheet_data <- column.2.row.names(sheet_data, rowname_col = row_names
+                                       , make_names = FALSE, as_df = TRUE)
+    }
+    sheet_data
+  })
+
+  # Output assertions
+  stopifnot(all(sapply(ls.excel.sheets, function(x) is.data.frame(x))))
+
+  names(ls.excel.sheets) <- ls.sheet.names[range.of.sheets]
+  return(ls.excel.sheets)
 }
+
 
 
 
@@ -372,8 +429,11 @@ read.simple.xls <- function(pfn = kollapse(...), row_namePos = NULL, ..., header
 #'  }
 #' }
 #' @export
-write.simple <- function(input_df, extension = 'tsv', ManualName = "", o = FALSE, ...  ) {
-  fname = kollapse(...) ; if (nchar(fname) < 2 ) { fname = Stringendo::sppp(substitute(input_vec), suffix) }
+write.simple <- function(input_df, extension = 'tsv'
+                         , filename = substitute(input_df)
+                         , ManualName = ""
+                         , o = FALSE, ...  ) {
+  fname = kollapse(...) ; if (nchar(fname) < 2 ) { fname = Stringendo::sppp(filename, suffix) }
   if (nchar(ManualName)) {FnP = kollapse(ManualName)} else  {FnP = ww.FnP_parser(fname, extension) }
   write.table(input_df, file = FnP, sep = "\t", row.names = FALSE, col.names = TRUE, quote = FALSE)
   if (o) { system(paste0("open ", FnP), wait = FALSE) }
@@ -404,9 +464,10 @@ write.simple <- function(input_df, extension = 'tsv', ManualName = "", o = FALSE
 #' }
 #' @export
 write.simple.vec <- function(input_vec, extension = 'vec'
+                             , filename = substitute(input_vec)
                              , suffix = NULL, ManualName = ""
                              , o = FALSE, ... ) {
-  fname = kollapse(...) ; if (nchar(fname) < 2 ) { fname = Stringendo::sppp(substitute(input_vec), suffix) }
+  fname = kollapse(...) ; if (nchar(fname) < 2 ) { fname = Stringendo::sppp(filename, suffix) }
   if (nchar(ManualName)) {FnP = kollapse(ManualName)} else  {FnP =  ww.FnP_parser(fname, extension) }
   write.table(input_vec, file = FnP, sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE  )
   iprint("Length: ", length(input_vec))
@@ -438,6 +499,7 @@ write.simple.vec <- function(input_vec, extension = 'vec'
 #' write.simple.tsv(YourDataFrameWithRowAndColumnNames)
 
 write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv'
+                             , filename = substitute(input_df)
                              , suffix = NULL, ManualName = ""
                              , row_names = TRUE
                              , col_names = NA
@@ -448,7 +510,9 @@ write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv'
   # if (converFromTibble) { if (tibble::is_tibble(input_df)) { input_df <- as.data.frame(input_df) } }
   if (row_names == FALSE) { col_names = TRUE }
   if (separator %in% c(',', ';')) extension <- 'csv'
-  fname = kollapse (..., print = FALSE); if (nchar (fname) < 2 ) { fname = Stringendo::sppp(substitute(input_df), suffix) }
+
+  fname = kollapse (..., print = FALSE)
+  if (nchar (fname) < 2 ) { fname <-Stringendo::sppp(filename, suffix) }
 
   if (nchar(ManualName)) {FnP = kollapse(ManualName)
   } else { FnP = ww.FnP_parser(fname, extension) }
@@ -470,68 +534,6 @@ write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv'
 # for CSV files to be read by spreadsheets.
 
 
-# _________________________________________________________________________________________________
-#' @title write.simple.xlsx
-#' @description Write out a list of matrices/ data frames WITH ROW- AND COLUMN-
-#'   NAMES to a file with as an Excel (.xslx) file. Your output filename will be
-#'   either the variable's name. The output file will be located in "OutDir"
-#'   specified by you at the beginning of the script, or under your current
-#'   working directory. You can pass the PATH and VARIABLE separately (in
-#'   order), they will be concatenated to the filename.
-#' @param named_list A list of data frames to write out
-#' @param suffix A suffix added to the filename, Default: NULL
-#' @param fname A string for a manually defined filename. Default: substitute(named_list)
-#' @param o Set to TRUE to open file after writing out using 'system(open ...)' on OS X., Default: FALSE
-#' @param TabColor Tab Color in Excel, Default: 'darkgoldenrod1'
-#' @param Creator Creator, Default: 'Vertesy'
-#' @param HeaderCex Header color, Default: 12
-#' @param HeaderLineColor Header line color, Default: 'darkolivegreen3'
-#' @param HeaderCharStyle Header character style, Default: c("bold", "italic", "underline")[1]
-#' @param row_names Have rownames? Default: TRUE
-#' @param ... Multiple simple variables to parse.
-#' @examples
-#' \dontrun{
-#' if(interactive()){
-#'  # write.simple.xlsx(my.list.of.data.frames)
-#'  }
-#' }
-#' @seealso
-#'  \code{\link[openxlsx]{write.xlsx}}
-#' @export
-#' @importFrom openxlsx write.xlsx
-
-write.simple.xlsx <- function(named_list
-                              , suffix = NULL
-                              , fname = Stringendo::sppp(substitute(named_list), suffix)
-                              , o = FALSE
-                              , TabColor = "darkgoldenrod1", HeaderLineColor = "darkolivegreen3"
-                              , HeaderCex = 12, Creator = "Vertesy"
-                              , HeaderCharStyle = c("bold", "italic", "underline")[1]
-                              , row_names = TRUE, ...) {
-
-  if ( !('list' %in% class(named_list))  ) named_list <- list(named_list) # convert to a list if needed
-
-  if (nchar(fname) > 100) fname <- kpp('_Output', idate())
-  FnP <- kpp(kpps(getwd(), fname), "xlsx")
-
-  hs <- openxlsx::createStyle(textDecoration = HeaderCharStyle, fontSize = HeaderCex
-                              , fgFill = HeaderLineColor)
-
-  if (row_names) {
-    FUNX <- function(x)  rownames_to_column(as.data.frame(x), var = "genes")
-    named_list <- lapply(named_list, FUNX)
-    # named_list <- rownames_to_column(as.data.frame(named_list), var = "genes")
-  }
-  print(named_list)
-  print(rownames(named_list))
-
-  openxlsx::write.xlsx(x = named_list, file = FnP, rowNames = FALSE
-                       , firstRow = TRUE
-                       , firstCol = TRUE
-                       , colWidths = "auto"
-                       , headerStyle = hs, tabColour = TabColor, creator = Creator)
-  if (o) { system(paste0("open ", fix_special_characters_bash(FnP)), wait = FALSE) }
-} # fun
 
 
 # _________________________________________________________________________________________________
@@ -557,11 +559,101 @@ write.simple.xlsx <- function(named_list
 #' }
 #' @export
 write.simple.append <- function(input_df, extension = 'tsv'
+                                , filename = substitute(input_df)
                                 , suffix = NULL, ManualName = ""
                                 , o = FALSE, ... ) {
-  fname = kollapse(...) ; if (nchar(fname) < 2 ) { fname = Stringendo::sppp(substitute(input_df), suffix) }
+  fname = kollapse(...) ; if (nchar(fname) < 2 ) { fname = Stringendo::sppp(filename, suffix) }
   if (nchar(ManualName)) { FnP = kollapse(ManualName)} else  {FnP =  ww.FnP_parser(fname, extension) }
   write.table(input_df, file = FnP, sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE, append = TRUE  )
   if (o) { system(paste0("open ", FnP), wait = FALSE) }
 } # fun
+
+
+# _________________________________________________________________________________________________
+
+# _________________________________________________________________________________________________
+#' @title Write Simple XLSX
+#'
+#' @description Write out a list of matrices or data frames with row and column names
+#'   to an Excel (.xlsx) file. The output filename is generated based on the provided parameters
+#'   and stored in the specified output directory or the current working directory.
+#'   The function offers various styling and formatting options for the Excel file.
+#'
+#' @param named_list A list of data frames or matrices to write out.
+#'                   Default: No default value, a list must be provided.
+#' @param filename The base name for the output file, derived from the 'named_list' variable if not specified.
+#'                 Default: Derived using 'substitute(named_list)'.
+#' @param rowname_col The column name or index to use as row names in the Excel file.
+#'                    Required, no default value.
+#' @param suffix A suffix to be added to the output filename. Default: NULL.
+#' @param o Logical; if TRUE, opens the file after writing using the system's default application.
+#'          Default: FALSE.
+#' @param TabColor Color for the tabs in Excel. Default: 'darkgoldenrod1'.
+#' @param Creator The creator of the Excel document. Default: ''.
+#' @param HeaderCex Font size for the header. Default: 12.
+#' @param HeaderLineColor Color for the header line. Default: 'darkolivegreen3'.
+#' @param HeaderCharStyle Character style for the header (e.g., 'bold', 'italic', 'underline').
+#'                        Default: 'bold'.
+#' @param FreezeFirstRow Logical; if TRUE, freezes the first row in Excel. Default: TRUE.
+#' @param FreezeFirstCol Logical; if TRUE, freezes the first column in Excel. Default: FALSE.
+#' @param has_row_names Logical; if set to FALSE, converts the first column to row names. Default: TRUE
+#' @param ... Additional arguments passed to 'write.xlsx()'.
+#' @examples
+#' \dontrun{
+#'   if (interactive()) {
+#'     # Example usage:
+#'     # write.simple.xlsx(my.list.of.data.frames, rowname_col = "gene")
+#'   }
+#' }
+#' @seealso
+#'   \code{\link[openxlsx]{write.xlsx}}
+#' @export
+#' @importFrom openxlsx write.xlsx createStyle
+
+write.simple.xlsx <- function(named_list
+                              , filename = substitute(named_list)
+                              , rowname_col #  'gene' # for Seurat df.markers
+                              , suffix = NULL
+                              , o = FALSE
+                              , TabColor = "darkgoldenrod1", HeaderLineColor = "darkolivegreen3"
+                              , HeaderCex = 12, Creator = ""
+                              , HeaderCharStyle = c("bold", "italic", "underline")[1]
+                              , FreezeFirstRow = TRUE, FreezeFirstCol = FALSE
+                              , has_row_names = TRUE, ...) {
+
+  # Assertions for input arguments
+  stopifnot(is.list(named_list), all(sapply(named_list, function(x) is.matrix(x) || is.data.frame(x))))
+
+  fname <- Stringendo::sppp(filename, suffix)
+  if ( !('list' %in% class(named_list))  ) named_list <- list(named_list) # convert to a list if needed
+
+  # Further checks and adjustments for filename
+  "This is a very hack solution that should be"
+  if (nchar(fname) > 100) fname <- kpp('_Output', idate())
+  FnP <- kpp(kpps(getwd(), fname), "xlsx")
+
+  # Create header style
+  hs <- openxlsx::createStyle(textDecoration = HeaderCharStyle, fontSize = HeaderCex
+                              , fgFill = HeaderLineColor)
+
+  # assign row names if required
+  if (!has_row_names) {
+    # assignRownames <- function(x) tibble::rownames_to_column(as.data.frame(x), var = "genes")
+    assignRownames <- function(x) column.2.row.names(df, rowname_col = rowname_col, make_names = T)
+    named_list <- lapply(named_list, assignRownames)
+  }
+
+  print(FnP)
+
+  openxlsx::write.xlsx(x = named_list, file = FnP, rowNames = has_row_names
+                       , firstRow = FreezeFirstRow, firstCol = FreezeFirstCol
+                       , headerStyle = hs, tabColour = TabColor
+                       , colWidths = "auto", creator = Creator)
+
+  # Output assertion
+  stopifnot(file.exists(FnP))
+
+  if (o) { system(paste0("open ", fix_special_characters_bash(FnP)), wait = FALSE) }
+} # fun
+
 

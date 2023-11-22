@@ -2,38 +2,36 @@
 % Please edit documentation in R/ReadWriter.R
 \name{read.simple.xlsx}
 \alias{read.simple.xlsx}
-\title{read.simple.xlsx}
+\title{Read a multi-sheet XLSX easily}
 \usage{
 read.simple.xlsx(
   pfn = kollapse(...),
-  row_namePos = NULL,
-  ...,
-  header_ = TRUE,
-  WhichSheets
+  which_sheets,
+  col_names = TRUE,
+  row_names = 0,
+  trim_ws = TRUE,
+  ...
 )
 }
 \arguments{
-\item{pfn}{Path and File name, Default: kollapse(...)}
+\item{pfn}{Path and filename of the XLSX file.
+Default: Constructed using \code{kollapse(...)}.}
 
-\item{row_namePos}{Where is the rowname, Default: NULL}
+\item{which_sheets}{Indices or names of sheets to read from the XLSX file.
+Default: All sheets.}
 
-\item{...}{Multiple simple variables to parse.}
+\item{col_names}{Logical, whether to use the first row as column names.
+Default: TRUE.}
 
-\item{header_}{Is there header? Default: TRUE}
+\item{row_names}{Numeric, whether to convert a column to row names.
+Default: 1. Use 0 for no conversion.}
 
-\item{WhichSheets}{Which sheets to read in}
+\item{...}{Pass arguments to read.xlsx().}
+}
+\value{
+A list of data frames, each representing a sheet from the XLSX file.
 }
 \description{
-Read multi-sheet excel files. row_namePos = NULL for automatic
-names Look into: http://readxl.tidyverse.org/.
-}
-\examples{
-\dontrun{
-if(interactive()){
- # read.simple.xls("path/to/my.file")
- }
-}
-}
-\seealso{
-\code{\link[gdata]{read.xls}}
+Reads specified sheets from an XLSX file into a list of data frames.
+It allows customization of column names, row names, and trimming of white spaces.
 }
