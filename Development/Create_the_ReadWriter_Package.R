@@ -39,8 +39,8 @@ DESCRIPTION <- list("Title" = "ReadWriter "
     , "Remotes" =  "github::vertesy/Stringendo" # https://cran.r-project.org/web/packages/devtools/vignettes/dependencies.html
     # https://stackoverflow.com/questions/72908510/r-package-how-to-specify-a-dependency-version-that-is-only-available-on-github
 
-    , "Imports" = "readxl, gtools, gdata, readr,  utils"
-    # , "Suggests" = ""
+    , "Imports" = "openxlsx, gtools, readr, utils"
+    # , "Suggests" = "gdata"
     , "BugReports"= "https://github.com/vertesy/ReadWriter/issues"
 )
 
@@ -85,6 +85,10 @@ warnings()
 # Install your package ------------------------------------------------
 # # setwd(RepositoryDir)
 devtools::install(RepositoryDir, upgrade = F)
+
+devtools::install_github('~/GitHub/Packages/ReadWriter', upgrade = F)
+
+
 
 # require("ReadWriter")
 # # remove.packages("ReadWriter")

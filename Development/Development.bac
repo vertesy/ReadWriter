@@ -516,7 +516,7 @@ write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv'
 
   if (nchar(ManualName)) {FnP = kollapse(ManualName)
   } else { FnP = ww.FnP_parser(fname, extension) }
-  utils::write.table (input_df, file = FnP, sep = separator
+  utils::write.table(input_df, file = FnP, sep = separator
                       , row.names = row_names
                       , col.names = col_names
                       , quote = FALSE  )
