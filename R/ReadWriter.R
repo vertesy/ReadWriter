@@ -570,30 +570,43 @@ write.simple.append <- function(input_df, extension = 'tsv'
 
 
 # _________________________________________________________________________________________________
-#' @title write.simple.xlsx
-#' @description Write out a list of matrices/ data frames WITH ROW- AND COLUMN-
-#'   NAMES to a file with as an Excel (.xslx) file. Your output filename will be
-#'   either the variable's name. The output file will be located in "OutDir"
-#'   specified by you at the beginning of the script, or under your current
-#'   working directory. You can pass the PATH and VARIABLE separately (in
-#'   order), they will be concatenated to the filename.
-#' @param named_list A list of data frames to write out
-#' @param suffix A suffix added to the filename, Default: NULL
-#' @param fname A string for a manually defined filename. Default: substitute(named_list)
-#' @param o Set to TRUE to open file after writing out using 'system(open ...)' on OS X., Default: FALSE
-#' @param TabColor Tab Color in Excel, Default: 'darkgoldenrod1'
-#' @param Creator Creator, Default: ''
-#' @param HeaderCex Header color, Default: 12
-#' @param HeaderLineColor Header line color, Default: 'darkolivegreen3'
-#' @param HeaderCharStyle Header character style, Default: c("bold", "italic", "underline")[1]
-#' @param row_names Should recreate rownames? Default: 1 (FALSE)
-#' @param ... Pass arguments to write.xlsx().
+
+# _________________________________________________________________________________________________
+#' @title Write Simple XLSX
+#'
+#' @description Write out a list of matrices or data frames with row and column names
+#'   to an Excel (.xlsx) file. The output filename is generated based on the provided parameters
+#'   and stored in the specified output directory or the current working directory.
+#'   The function offers various styling and formatting options for the Excel file.
+#'
+#' @param named_list A list of data frames or matrices to write out.
+#'                   Default: No default value, a list must be provided.
+#' @param filename The base name for the output file, derived from the 'named_list' variable if not specified.
+#'                 Default: Derived using 'substitute(named_list)'.
+#' @param rowname_col The column name or index to use as row names in the Excel file.
+#'                    Required, no default value.
+#' @param suffix A suffix to be added to the output filename. Default: NULL.
+#' @param o Logical; if TRUE, opens the file after writing using the system's default application.
+#'          Default: FALSE.
+#' @param TabColor Color for the tabs in Excel. Default: 'darkgoldenrod1'.
+#' @param Creator The creator of the Excel document. Default: ''.
+#' @param HeaderCex Font size for the header. Default: 12.
+#' @param HeaderLineColor Color for the header line. Default: 'darkolivegreen3'.
+#' @param HeaderCharStyle Character style for the header (e.g., 'bold', 'italic', 'underline').
+#'                        Default: 'bold'.
+#' @param FreezeFirstRow Logical; if TRUE, freezes the first row in Excel. Default: TRUE.
+#' @param FreezeFirstCol Logical; if TRUE, freezes the first column in Excel. Default: FALSE.
+#' @param has_row_names Logical; if set to FALSE, converts the first column to row names. Default: TRUE
+#' @param ... Additional arguments passed to 'write.xlsx()'.
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  # write.simple.xlsx(my.list.of.data.frames)
-#'  }
+#'   if (interactive()) {
+#'     # Example usage:
+#'     # write.simple.xlsx(my.list.of.data.frames, rowname_col = "gene")
+#'   }
 #' }
+#' @seealso
+#'   \code{\link[openxlsx]{write.xlsx}}
 #' @export
 #' @importFrom openxlsx write.xlsx createStyle
 
@@ -605,7 +618,8 @@ write.simple.xlsx <- function(named_list
                               , TabColor = "darkgoldenrod1", HeaderLineColor = "darkolivegreen3"
                               , HeaderCex = 12, Creator = ""
                               , HeaderCharStyle = c("bold", "italic", "underline")[1]
-                              , row_names = 0, ...) {
+                              , FreezeFirstRow = TRUE, FreezeFirstCol = FALSE
+                              , has_row_names = TRUE, ...) {
 
   # Assertions for input arguments
   stopifnot(is.list(named_list), all(sapply(named_list, function(x) is.matrix(x) || is.data.frame(x))))
@@ -614,6 +628,7 @@ write.simple.xlsx <- function(named_list
   if ( !('list' %in% class(named_list))  ) named_list <- list(named_list) # convert to a list if needed
 
   # Further checks and adjustments for filename
+  "This is a very hack solution that should be"
   if (nchar(fname) > 100) fname <- kpp('_Output', idate())
   FnP <- kpp(kpps(getwd(), fname), "xlsx")
 
@@ -622,7 +637,7 @@ write.simple.xlsx <- function(named_list
                               , fgFill = HeaderLineColor)
 
   # assign row names if required
-  if (row_names) {
+  if (!has_row_names) {
     # assignRownames <- function(x) tibble::rownames_to_column(as.data.frame(x), var = "genes")
     assignRownames <- function(x) column.2.row.names(df, rowname_col = rowname_col, make_names = T)
     named_list <- lapply(named_list, assignRownames)
@@ -630,8 +645,8 @@ write.simple.xlsx <- function(named_list
 
   print(FnP)
 
-  openxlsx::write.xlsx(x = named_list, file = FnP, rowNames = FALSE
-                       , firstRow = TRUE, firstCol = TRUE
+  openxlsx::write.xlsx(x = named_list, file = FnP, rowNames = has_row_names
+                       , firstRow = FreezeFirstRow, firstCol = FreezeFirstCol
                        , headerStyle = hs, tabColour = TabColor
                        , colWidths = "auto", creator = Creator)
 
@@ -640,3 +655,5 @@ write.simple.xlsx <- function(named_list
 
   if (o) { system(paste0("open ", fix_special_characters_bash(FnP)), wait = FALSE) }
 } # fun
+
+
