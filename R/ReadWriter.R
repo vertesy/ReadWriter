@@ -354,31 +354,29 @@ read.simple.tsv.named.vector <- function(...) {
 #'                     Default: All sheets.
 #' @param col_names Logical, whether to use the first row as column names.
 #'                  Default: TRUE.
-#' @param row_names Logical, whether to convert the first column to row names.
-#'                  Default: TRUE.
-#' @param trim_ws Logical, whether to trim white spaces from cell values.
-#'                Default: TRUE.
+#' @param row_names Numeric, whether to convert a column to row names.
+#'                  Default: 1. Use 0 for no conversion.
 #' @param ... Pass arguments to read_excel().
 #' @return A list of data frames, each representing a sheet from the XLSX file.
-#' @importFrom readxl excel_sheets read_excel
+#' @importFrom openxlsx read.xlsx getSheetNames
 #' @export
 
 read.simple.xlsx <- function(pfn = kollapse(...), which_sheets
-                             , col_names = TRUE, row_names = TRUE
+                             , col_names = TRUE, row_names = 1
                              , trim_ws = TRUE, ...) {
 
   # Assertions for input arguments
   stopifnot(is.character(pfn), length(pfn) > 0)
   if (!missing(which_sheets)) stopifnot(is.numeric(which_sheets) | is.character(which_sheets))
-  stopifnot(is.logical(col_names), is.logical(row_names), is.logical(trim_ws))
+  stopifnot(is.logical(col_names), is.logical(trim_ws))
 
-  # Check if readxl package is installed
-  if (!requireNamespace("readxl", quietly = TRUE)) {
-    stop("Package 'readxl' is required but not installed. Please install it using install.packages('readxl').")
+  # Check if openxlsx package is installed
+  if (!require("openxlsx")) {
+    stop("Package 'openxlsx' is required but not installed. Please install it using install.packages('openxlsx').")
   }
 
   # Read sheet names and count
-  ls.sheet.names = readxl::excel_sheets(path = pfn)
+  ls.sheet.names = openxlsx::getSheetNames(pfn)
   nr.sheets = length(ls.sheet.names)
   stopifnot(nr.sheets > 0) # Assert that there are sheets in the file
 
@@ -387,7 +385,9 @@ read.simple.xlsx <- function(pfn = kollapse(...), which_sheets
 
   # Read specified sheets
   ls.excel.sheets = lapply(range.of.sheets, function(i) {
-    sheet_data <- readxl::read_excel(path = pfn, sheet = i, col_names = col_names, trim_ws = trim_ws, ...)
+    sheet_data <- openxlsx::read.xlsx(pfn, sheet = i, colNames = col_names
+                                      , rowNames =
+                                        , ...)
     if (row_names) {
       sheet_data <- column.2.row.names(sheet_data, rowname_col = 1, make_names = FALSE, as_df = TRUE)
     }
