@@ -26,17 +26,22 @@
 #'                   Default: FALSE.
 #' @param as_df Boolean indicating whether to convert the input to a dataframe if it's not already one.
 #'              Default: TRUE.
+#' @param warn Warn user if row names pre-exist.
 #' @param ... Pass arguments to make.names()..
 #' @export
 
-column.2.row.names <- function(tibble, rowname_col = 1, make_names = FALSE, as_df = TRUE) {
+column.2.row.names <- function(tibble, rowname_col = 1, make_names = FALSE, as_df = TRUE
+                               , warn = TRUE, ...) {
+
   # Assertions
   stopifnot(is.data.frame(tibble), is.numeric(rowname_col), rowname_col > 0, rowname_col <= ncol(tibble)
             , is.logical(make_names), is.logical(as_df))
 
   if (!is.null(rownames(tibble))) {
-    warning("tibble/df already has row names", immediate. = T)
-    print(head(rownames(tibble)))
+    if (warn) {
+      warning("tibble/df already has row names (now overwritten):", immediate. = T)
+      print(head(rownames(tibble)))
+    }
   }
 
   if (as_df) { tibble <- as.data.frame(tibble) }
@@ -335,6 +340,66 @@ read.simple.tsv.named.vector <- function(...) {
   return(vect)
 }
 
+
+
+# _________________________________________________________________________________________________
+#' @title Read a multi-sheet XLSX easily
+#'
+#' @description Reads specified sheets from an XLSX file into a list of data frames.
+#'              It allows customization of column names, row names, and trimming of white spaces.
+#'
+#' @param pfn Path and filename of the XLSX file.
+#'            Default: Constructed using `kollapse(...)`.
+#' @param which_sheets Indices or names of sheets to read from the XLSX file.
+#'                     Default: All sheets.
+#' @param col_names Logical, whether to use the first row as column names.
+#'                  Default: TRUE.
+#' @param row_names Logical, whether to convert the first column to row names.
+#'                  Default: TRUE.
+#' @param trim_ws Logical, whether to trim white spaces from cell values.
+#'                Default: TRUE.
+#' @param ... Pass arguments to read_excel().
+#' @return A list of data frames, each representing a sheet from the XLSX file.
+#' @importFrom readxl excel_sheets read_excel
+#' @export
+
+read.simple.xlsx <- function(pfn = kollapse(...), which_sheets
+                             , col_names = TRUE, row_names = TRUE
+                             , trim_ws = TRUE, ...) {
+
+  # Assertions for input arguments
+  stopifnot(is.character(pfn), length(pfn) > 0)
+  if (!missing(which_sheets)) stopifnot(is.numeric(which_sheets) | is.character(which_sheets))
+  stopifnot(is.logical(col_names), is.logical(row_names), is.logical(trim_ws))
+
+  # Check if readxl package is installed
+  if (!requireNamespace("readxl", quietly = TRUE)) {
+    stop("Package 'readxl' is required but not installed. Please install it using install.packages('readxl').")
+  }
+
+  # Read sheet names and count
+  ls.sheet.names = readxl::excel_sheets(path = pfn)
+  nr.sheets = length(ls.sheet.names)
+  stopifnot(nr.sheets > 0) # Assert that there are sheets in the file
+
+  # Prepare sheet index
+  range.of.sheets = if (missing(which_sheets)) 1:nr.sheets else which_sheets
+
+  # Read specified sheets
+  ls.excel.sheets = lapply(range.of.sheets, function(i) {
+    sheet_data <- readxl::read_excel(path = pfn, sheet = i, col_names = col_names, trim_ws = trim_ws, ...)
+    if (row_names) {
+      sheet_data <- column.2.row.names(sheet_data, rowname_col = 1, make_names = FALSE, as_df = TRUE)
+    }
+    sheet_data
+  })
+
+  # Output assertions
+  stopifnot(all(sapply(ls.excel.sheets, function(x) is.data.frame(x))))
+
+  names(ls.excel.sheets) <- ls.sheet.names[range.of.sheets]
+  return(ls.excel.sheets)
+}
 
 
 
