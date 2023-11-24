@@ -37,7 +37,7 @@ write.simple.tsv(
 
 \item{gzip}{Compress the file after saving? FALSE by default}
 
-\item{...}{Pass any other argument to the kollapse() function used for file name.}
+\item{...}{Pass any other argument to the Stringendo::kollapse() function used for file name.}
 }
 \description{
 Write out a matrix-like R-object WITH ROW- AND COLUMN- NAMES to a file with as tab separated

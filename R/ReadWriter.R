@@ -141,7 +141,7 @@ FirstCol2RowNames.as.df <- function(Tibble, rownamecol = 1, make_names = FALSE) 
 #' }
 #' @export
 read.simple.vec <- function(...) {
-  pfn = kollapse(...) # merge path and filename
+  pfn = Stringendo::kollapse(...) # merge path and filename
   read_in = as.vector(unlist(read.table( pfn , stringsAsFactors = FALSE, sep = "\n" )) )
   iprint(length(read_in), "elements")
   return(read_in);
@@ -160,7 +160,7 @@ read.simple.vec <- function(...) {
 #' }
 #' @export
 read.simple <- function(...) {
-  pfn = kollapse(...) # merge path and filename
+  pfn = Stringendo::kollapse(...) # merge path and filename
   read_in = read.table( pfn , stringsAsFactors = FALSE)
   return(read_in)
 }
@@ -178,7 +178,7 @@ read.simple <- function(...) {
 #' }
 #' @export
 read.simple_char_list <- function(...) {
-  pfn = kollapse(...) # merge path and filename
+  pfn = Stringendo::kollapse(...) # merge path and filename
   read_in = unlist(read.table( pfn , stringsAsFactors = FALSE ) )
   # iprint("New variable head: ", what(read_in))
   iprint("New variable head: ", is(read_in), 'range', range(read_in))
@@ -207,7 +207,7 @@ read.simple_char_list <- function(...) {
 #' @importFrom readr read_tsv
 #' @importFrom gtools na.replace
 read.simple.table <- function(..., colnames = TRUE, coltypes = NULL) {
-  pfn = kollapse(...) # merge path and filename
+  pfn = Stringendo::kollapse(...) # merge path and filename
   # read_in = read.table( pfn , stringsAsFactors = FALSE, sep = "\t", header = colnames )
   read_in = readr::read_tsv( pfn, col_names = colnames, col_types = coltypes )
   iprint("New variable dim: ", dim(read_in))
@@ -243,7 +243,7 @@ read.simple.table <- function(..., colnames = TRUE, coltypes = NULL) {
 #' @importFrom gtools na.replace
 read.simple.tsv <- function(..., sep_ = "\t", colnames = TRUE, wRownames = TRUE
                             , coltypes = NULL, NaReplace = TRUE, asTibble = FALSE) {
-  pfn = kollapse(...) # merge path and filename
+  pfn = Stringendo::kollapse(...) # merge path and filename
   read_in = suppressWarnings(readr::read_tsv( pfn, col_names = colnames, col_types = coltypes ))
   iprint("New variable dim: ", dim(read_in) - 0:1)
   if (wRownames) { read_in = FirstCol2RowNames(read_in, as.df = !asTibble ) }
@@ -278,7 +278,7 @@ read.simple.tsv <- function(..., sep_ = "\t", colnames = TRUE, wRownames = TRUE
 #' @importFrom gtools na.replace
 read.simple.csv <- function(...,  colnames = TRUE, coltypes = NULL, wRownames = TRUE
                             , NaReplace = TRUE, nmax = Inf) {
-  pfn = kollapse(...) # merge path and filename
+  pfn = Stringendo::kollapse(...) # merge path and filename
   read_in = suppressWarnings(readr::read_csv( pfn, col_names = colnames, col_types = coltypes, n_max = nmax ))
   iprint("New variable dim: ", dim(read_in) - 0:1)
   if (wRownames) { read_in = FirstCol2RowNames(read_in) }
@@ -312,7 +312,7 @@ read.simple.csv <- function(...,  colnames = TRUE, coltypes = NULL, wRownames = 
 #' @importFrom gtools na.replace
 read.simple.ssv <- function(..., sep_ = " ", colnames = TRUE, wRownames = TRUE, NaReplace = TRUE
                             , coltypes = NULL) {
-  pfn = kollapse(...) # merge path and filename
+  pfn = Stringendo::kollapse(...) # merge path and filename
   read_in = suppressWarnings(readr::read_delim( pfn, delim = sep_, col_names = colnames, col_types = coltypes ))
   iprint("New variable dim: ", dim(read_in) - 0:1)
   if (wRownames) { read_in = FirstCol2RowNames(read_in) }
@@ -339,7 +339,7 @@ read.simple.ssv <- function(..., sep_ = " ", colnames = TRUE, wRownames = TRUE, 
 #' @export
 #' @importFrom readr read_tsv
 read.simple.tsv.named.vector <- function(...) {
-  pfn = kollapse(...) # merge path and filename
+  pfn = Stringendo::kollapse(...) # merge path and filename
   # read_in = read.delim( pfn , stringsAsFactors = FALSE, sep = sep_, row.names = 1, header = TRUE )
   read_in = readr::read_tsv( pfn )
   vect = read_in[[2]]
@@ -357,7 +357,7 @@ read.simple.tsv.named.vector <- function(...) {
 #'              It allows customization of column names, row names, and trimming of white spaces.
 #'
 #' @param pfn Path and filename of the XLSX file.
-#'            Default: Constructed using `kollapse(...)`.
+#'            Default: Constructed using `Stringendo::kollapse(...)`.
 #' @param which_sheets Indices or names of sheets to read from the XLSX file.
 #'                     Default: All sheets.
 #' @param col_names Logical, whether to use the first row as column names.
@@ -369,7 +369,7 @@ read.simple.tsv.named.vector <- function(...) {
 #' @importFrom openxlsx read.xlsx getSheetNames
 #' @export
 
-read.simple.xlsx <- function(pfn = kollapse(...), which_sheets
+read.simple.xlsx <- function(pfn = Stringendo::kollapse(...), which_sheets
                              , col_names = TRUE, row_names = 0
                              , trim_ws = TRUE, ...) {
 
@@ -441,8 +441,8 @@ write.simple <- function(input_df, extension = 'tsv'
                          , filename = substitute(input_df)
                          , suffix = NULL, ManualName = ""
                          , o = FALSE, ...  ) {
-  fname = kollapse(...) ; if (nchar(fname) < 2 ) { fname = Stringendo::sppp(filename, suffix) }
-  if (nchar(ManualName)) {FnP = kollapse(ManualName)} else  {FnP = ww.FnP_parser(fname, extension) }
+  fname = Stringendo::kollapse(...) ; if (nchar(fname) < 2 ) { fname = Stringendo::sppp(filename, suffix) }
+  if (nchar(ManualName)) {FnP = Stringendo::kollapse(ManualName)} else {FnP = ww.FnP_parser(fname, extension) }
   write.table(input_df, file = FnP, sep = "\t", row.names = FALSE, col.names = TRUE, quote = FALSE)
   if (o) { system(paste0("open ", FnP), wait = FALSE) }
   iprint("Length: ", length(input_df))
@@ -475,8 +475,8 @@ write.simple.vec <- function(input_vec, extension = 'vec'
                              , filename = substitute(input_vec)
                              , suffix = NULL, ManualName = ""
                              , o = FALSE, ... ) {
-  fname = kollapse(...) ; if (nchar(fname) < 2 ) { fname = Stringendo::sppp(filename, suffix) }
-  if (nchar(ManualName)) {FnP = kollapse(ManualName)} else  {FnP =  ww.FnP_parser(fname, extension) }
+  fname = Stringendo::kollapse(...) ; if (nchar(fname) < 2 ) { fname = Stringendo::sppp(filename, suffix) }
+  if (nchar(ManualName)) {FnP = Stringendo::kollapse(ManualName)} else {FnP =  ww.FnP_parser(fname, extension) }
   write.table(input_vec, file = FnP, sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE  )
   iprint("Length: ", length(input_vec))
   if (o) { system(paste0("open ", FnP), wait = FALSE) }
@@ -500,7 +500,7 @@ write.simple.vec <- function(input_vec, extension = 'vec'
 #' @param col_names Write column names? NA by default, TRUE if row_names == FALSE
 #' @param o Open the file after saving? FALSE by default
 #' @param gzip Compress the file after saving? FALSE by default
-#' @param ... Pass any other argument to the kollapse() function used for file name.
+#' @param ... Pass any other argument to the Stringendo::kollapse() function used for file name.
 #' @export
 #' @examples YourDataFrameWithRowAndColumnNames = cbind("A" = rnorm(100), "B" = rpois(100, 8))
 #' rownames(YourDataFrameWithRowAndColumnNames) = letters[1:NROW(YourDataFrameWithRowAndColumnNames)]
@@ -519,15 +519,15 @@ write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv'
   if (row_names == FALSE) { col_names = TRUE }
   if (separator %in% c(',', ';')) extension <- 'csv'
 
-  fname = kollapse (..., print = FALSE)
+  fname = Stringendo::kollapse (..., print = FALSE)
   if (nchar (fname) < 2 ) { fname <-Stringendo::sppp(filename, suffix) }
 
-  if (nchar(ManualName)) {FnP = kollapse(ManualName)
+  if (nchar(ManualName)) {FnP = Stringendo::kollapse(ManualName)
   } else { FnP = ww.FnP_parser(fname, extension) }
   utils::write.table(input_df, file = FnP, sep = separator
-                      , row.names = row_names
-                      , col.names = col_names
-                      , quote = FALSE  )
+                     , row.names = row_names
+                     , col.names = col_names
+                     , quote = FALSE  )
   printme = if (length(dim(input_df))) {
     paste0("Dim: ", dim(input_df) )
   }else {
@@ -570,8 +570,8 @@ write.simple.append <- function(input_df, extension = 'tsv'
                                 , filename = substitute(input_df)
                                 , suffix = NULL, ManualName = ""
                                 , o = FALSE, ... ) {
-  fname = kollapse(...) ; if (nchar(fname) < 2 ) { fname = Stringendo::sppp(filename, suffix) }
-  if (nchar(ManualName)) { FnP = kollapse(ManualName)} else  {FnP =  ww.FnP_parser(fname, extension) }
+  fname = Stringendo::kollapse(...) ; if (nchar(fname) < 2 ) { fname = Stringendo::sppp(filename, suffix) }
+  if (nchar(ManualName)) { FnP = Stringendo::kollapse(ManualName)} else {FnP =  ww.FnP_parser(fname, extension) }
   write.table(input_df, file = FnP, sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE, append = TRUE  )
   if (o) { system(paste0("open ", FnP), wait = FALSE) }
 } # fun

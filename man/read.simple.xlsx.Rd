@@ -5,7 +5,7 @@
 \title{Read a multi-sheet XLSX easily}
 \usage{
 read.simple.xlsx(
-  pfn = kollapse(...),
+  pfn = Stringendo::kollapse(...),
   which_sheets,
   col_names = TRUE,
   row_names = 0,
@@ -15,7 +15,7 @@ read.simple.xlsx(
 }
 \arguments{
 \item{pfn}{Path and filename of the XLSX file.
-Default: Constructed using \code{kollapse(...)}.}
+Default: Constructed using \code{Stringendo::kollapse(...)}.}
 
 \item{which_sheets}{Indices or names of sheets to read from the XLSX file.
 Default: All sheets.}
