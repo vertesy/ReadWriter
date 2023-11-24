@@ -6,7 +6,7 @@ Complements the new [CodeAndRoll2](https://github.com/vertesy/CodeAndRoll2).
 ## News
 
 - The underlying `gdata` removed `read.xls`, and this is resolved in `v1.0.0` by using `openxlsx`.
-- As of 11/2023 you seem to need `install_github(repo = "vertesy/ReadWriter@main")` instead of `install_github(repo = "vertesy/ReadWriter")` to install the package.
+- As of 11/2023 you may need `install_github(repo = "vertesy/ReadWriter@main")` instead of `install_github(repo = "vertesy/ReadWriter")` to install the package on some platforms.
 
 <br><br>
 
