@@ -7,8 +7,8 @@
 write.simple.xlsx(
   named_list,
   filename = substitute(named_list),
-  rowname_col,
   suffix = NULL,
+  rowname_column,
   o = FALSE,
   TabColor = "darkgoldenrod1",
   HeaderLineColor = "darkolivegreen3",
@@ -28,10 +28,10 @@ Default: No default value, a list must be provided.}
 \item{filename}{The base name for the output file, derived from the 'named_list' variable if not specified.
 Default: Derived using 'substitute(named_list)'.}
 
-\item{rowname_col}{The column name or index to use as row names in the Excel file.
-Required, no default value.}
-
 \item{suffix}{A suffix to be added to the output filename. Default: NULL.}
+
+\item{rowname_column}{The column name or index to use as row names in the Excel file.
+Required, no default value.}
 
 \item{o}{Logical; if TRUE, opens the file after writing using the system's default application.
 Default: FALSE.}
@@ -65,7 +65,7 @@ The function offers various styling and formatting options for the Excel file.
 \dontrun{
   if (interactive()) {
     # Example usage:
-    # write.simple.xlsx(my.list.of.data.frames, rowname_col = "gene")
+    # write.simple.xlsx(my.list.of.data.frames, rowname_column = "gene")
   }
 }
 }

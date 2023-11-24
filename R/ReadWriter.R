@@ -20,7 +20,7 @@
 #'
 #' @param df A dataframe or tibble without row names.
 #'           Default: No default value, a dataframe must be provided.
-#' @param rowname_col Index of the column to be used as row names.
+#' @param rowname_column Index of the column to be used as row names.
 #'                    Default: 1.
 #' @param make_names Boolean indicating whether to call `make.names` to sanitize row names.
 #'                   Default: FALSE.
@@ -30,16 +30,16 @@
 #' @param ... Pass arguments to make.names()..
 #' @export
 
-column.2.row.names <- function(tibble, rowname_col = 1, make_names = FALSE, as_df = TRUE
+column.2.row.names <- function(tibble, rowname_column = 1, make_names = FALSE, as_df = TRUE
                                , warn = TRUE, ...) {
 
   "This is the function that should be used from 11.2023"
 
   # Assertions
   stopifnot(is.data.frame(tibble)
-            , is.numeric(rowname_col)
-            , rowname_col > 0
-            , rowname_col <= ncol(tibble)
+            , is.numeric(rowname_column)
+            , rowname_column > 0
+            , rowname_column <= ncol(tibble)
             , is.logical(make_names), is.logical(as_df))
 
   if (!is.null(rownames(tibble))) {
@@ -52,12 +52,12 @@ column.2.row.names <- function(tibble, rowname_col = 1, make_names = FALSE, as_d
   if (as_df) { tibble <- as.data.frame(tibble) }
 
   # Extracting the specified column to be used as row names
-  row_names <- tibble[[rowname_col]]
+  row_names <- tibble[[rowname_column]]
 
   # Check for duplicated row names
-  if(anyDuplicated(rowname_col)) {
-    is.duplicated <- rowname_col[which(duplicated(rowname_col))]
-    warning(length(is.duplicated), " duplicated entries in: ", substitute(rowname_col)
+  if(anyDuplicated(rowname_column)) {
+    is.duplicated <- rowname_column[which(duplicated(rowname_column))]
+    warning(length(is.duplicated), " duplicated entries in: ", substitute(rowname_column)
             , "\narg make_names = TRUE will enforce uniqueness")
   }
 
@@ -65,7 +65,7 @@ column.2.row.names <- function(tibble, rowname_col = 1, make_names = FALSE, as_d
   if (make_names) { row_names <- make.names(row_names, unique = TRUE, ...) }
 
   # Removing the rowname column from the dataframe
-  tibble <- tibble[, -rowname_col, drop = FALSE]
+  tibble <- tibble[, -rowname_column, drop = FALSE]
 
   # Setting the row names
   rownames(tibble) <- row_names
@@ -396,7 +396,7 @@ read.simple.xlsx <- function(pfn = kollapse(...), which_sheets
     sheet_data <- openxlsx::read.xlsx(pfn, sheet = i, colNames = col_names
                                       , rowNames =1, ...)
     if (row_names) {
-      sheet_data <- column.2.row.names(sheet_data, rowname_col = row_names
+      sheet_data <- column.2.row.names(sheet_data, rowname_column = row_names
                                        , make_names = FALSE, as_df = TRUE)
     }
     sheet_data
@@ -439,7 +439,7 @@ read.simple.xlsx <- function(pfn = kollapse(...), which_sheets
 #' @export
 write.simple <- function(input_df, extension = 'tsv'
                          , filename = substitute(input_df)
-                         , ManualName = ""
+                         , suffix = NULL, ManualName = ""
                          , o = FALSE, ...  ) {
   fname = kollapse(...) ; if (nchar(fname) < 2 ) { fname = Stringendo::sppp(filename, suffix) }
   if (nchar(ManualName)) {FnP = kollapse(ManualName)} else  {FnP = ww.FnP_parser(fname, extension) }
@@ -591,7 +591,7 @@ write.simple.append <- function(input_df, extension = 'tsv'
 #'                   Default: No default value, a list must be provided.
 #' @param filename The base name for the output file, derived from the 'named_list' variable if not specified.
 #'                 Default: Derived using 'substitute(named_list)'.
-#' @param rowname_col The column name or index to use as row names in the Excel file.
+#' @param rowname_column The column name or index to use as row names in the Excel file.
 #'                    Required, no default value.
 #' @param suffix A suffix to be added to the output filename. Default: NULL.
 #' @param o Logical; if TRUE, opens the file after writing using the system's default application.
@@ -610,7 +610,7 @@ write.simple.append <- function(input_df, extension = 'tsv'
 #' \dontrun{
 #'   if (interactive()) {
 #'     # Example usage:
-#'     # write.simple.xlsx(my.list.of.data.frames, rowname_col = "gene")
+#'     # write.simple.xlsx(my.list.of.data.frames, rowname_column = "gene")
 #'   }
 #' }
 #' @seealso
@@ -620,8 +620,8 @@ write.simple.append <- function(input_df, extension = 'tsv'
 
 write.simple.xlsx <- function(named_list
                               , filename = substitute(named_list)
-                              , rowname_col #  'gene' # for Seurat df.markers
                               , suffix = NULL
+                              , rowname_column #  'gene' # for Seurat df.markers
                               , o = FALSE
                               , TabColor = "darkgoldenrod1", HeaderLineColor = "darkolivegreen3"
                               , HeaderCex = 12, Creator = ""
@@ -647,7 +647,7 @@ write.simple.xlsx <- function(named_list
   # assign row names if required
   if (!has_row_names) {
     # assignRownames <- function(x) tibble::rownames_to_column(as.data.frame(x), var = "genes")
-    assignRownames <- function(x) column.2.row.names(df, rowname_col = rowname_col, make_names = T)
+    assignRownames <- function(x) column.2.row.names(df, rowname_column = rowname_column, make_names = T)
     named_list <- lapply(named_list, assignRownames)
   }
 

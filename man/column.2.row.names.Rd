@@ -6,7 +6,7 @@
 \usage{
 column.2.row.names(
   tibble,
-  rowname_col = 1,
+  rowname_column = 1,
   make_names = FALSE,
   as_df = TRUE,
   warn = TRUE,
@@ -14,7 +14,7 @@ column.2.row.names(
 )
 }
 \arguments{
-\item{rowname_col}{Index of the column to be used as row names.
+\item{rowname_column}{Index of the column to be used as row names.
 Default: 1.}
 
 \item{make_names}{Boolean indicating whether to call \code{make.names} to sanitize row names.
