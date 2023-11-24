@@ -2,11 +2,12 @@
 % Please edit documentation in R/ReadWriter.R
 \name{write.simple.xlsx}
 \alias{write.simple.xlsx}
-\title{write.simple.xlsx}
+\title{Write Simple XLSX}
 \usage{
 write.simple.xlsx(
   named_list,
   filename = substitute(named_list),
+  rowname_col,
   suffix = NULL,
   o = FALSE,
   TabColor = "darkgoldenrod1",
@@ -14,46 +15,58 @@ write.simple.xlsx(
   HeaderCex = 12,
   Creator = "",
   HeaderCharStyle = c("bold", "italic", "underline")[1],
-  row_names = TRUE,
+  FreezeFirstRow = TRUE,
+  FreezeFirstCol = FALSE,
+  has_row_names = TRUE,
   ...
 )
 }
 \arguments{
-\item{named_list}{A list of data frames to write out}
+\item{named_list}{A list of data frames or matrices to write out.
+Default: No default value, a list must be provided.}
 
-\item{suffix}{A suffix added to the filename, Default: NULL}
+\item{filename}{The base name for the output file, derived from the 'named_list' variable if not specified.
+Default: Derived using 'substitute(named_list)'.}
 
-\item{o}{Set to TRUE to open file after writing out using 'system(open ...)' on OS X., Default: FALSE}
+\item{rowname_col}{The column name or index to use as row names in the Excel file.
+Required, no default value.}
 
-\item{TabColor}{Tab Color in Excel, Default: 'darkgoldenrod1'}
+\item{suffix}{A suffix to be added to the output filename. Default: NULL.}
 
-\item{HeaderLineColor}{Header line color, Default: 'darkolivegreen3'}
+\item{o}{Logical; if TRUE, opens the file after writing using the system's default application.
+Default: FALSE.}
 
-\item{HeaderCex}{Header color, Default: 12}
+\item{TabColor}{Color for the tabs in Excel. Default: 'darkgoldenrod1'.}
 
-\item{Creator}{Creator, Default: ''}
+\item{HeaderLineColor}{Color for the header line. Default: 'darkolivegreen3'.}
 
-\item{HeaderCharStyle}{Header character style, Default: c("bold", "italic", "underline")\link{1}}
+\item{HeaderCex}{Font size for the header. Default: 12.}
 
-\item{row_names}{Have rownames? Default: TRUE}
+\item{Creator}{The creator of the Excel document. Default: ''.}
 
-\item{...}{Multiple simple variables to parse.}
+\item{HeaderCharStyle}{Character style for the header (e.g., 'bold', 'italic', 'underline').
+Default: 'bold'.}
 
-\item{fname}{A string for a manually defined filename. Default: substitute(named_list)}
+\item{FreezeFirstRow}{Logical; if TRUE, freezes the first row in Excel. Default: TRUE.}
+
+\item{FreezeFirstCol}{Logical; if TRUE, freezes the first column in Excel. Default: FALSE.}
+
+\item{has_row_names}{Logical; if set to FALSE, converts the first column to row names. Default: TRUE}
+
+\item{...}{Additional arguments passed to 'write.xlsx()'.}
 }
 \description{
-Write out a list of matrices/ data frames WITH ROW- AND COLUMN-
-NAMES to a file with as an Excel (.xslx) file. Your output filename will be
-either the variable's name. The output file will be located in "OutDir"
-specified by you at the beginning of the script, or under your current
-working directory. You can pass the PATH and VARIABLE separately (in
-order), they will be concatenated to the filename.
+Write out a list of matrices or data frames with row and column names
+to an Excel (.xlsx) file. The output filename is generated based on the provided parameters
+and stored in the specified output directory or the current working directory.
+The function offers various styling and formatting options for the Excel file.
 }
 \examples{
 \dontrun{
-if(interactive()){
- # write.simple.xlsx(my.list.of.data.frames)
- }
+  if (interactive()) {
+    # Example usage:
+    # write.simple.xlsx(my.list.of.data.frames, rowname_col = "gene")
+  }
 }
 }
 \seealso{
