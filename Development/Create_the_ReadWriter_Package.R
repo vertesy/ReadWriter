@@ -38,9 +38,7 @@ DESCRIPTION <- list("Title" = "ReadWriter "
     , "Depends" =  "Stringendo"
     , "Remotes" =  "github::vertesy/Stringendo" # https://cran.r-project.org/web/packages/devtools/vignettes/dependencies.html
     # https://stackoverflow.com/questions/72908510/r-package-how-to-specify-a-dependency-version-that-is-only-available-on-github
-
     , "Imports" = "openxlsx, gtools, readr, utils"
-    # , "Suggests" = "gdata"
     , "BugReports"= "https://github.com/vertesy/ReadWriter/issues"
 )
 
