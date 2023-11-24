@@ -6,9 +6,9 @@
 # devtools::document('~/GitHub/Packages/ReadWriter');
 
 
-## File handling, export, import [read & write] -------------------------------------------------------------------------------------------------
 
-### Aux -------------------------------------------------------------------------------------------------
+# ____________________________________________________________________________________________ ----
+## Aux -------------------------------------------------------------------------------------------------
 
 
 #' @title Convert a Column to Row Names in a Tibble or DataFrame
@@ -33,8 +33,13 @@
 column.2.row.names <- function(tibble, rowname_col = 1, make_names = FALSE, as_df = TRUE
                                , warn = TRUE, ...) {
 
+  "This is the function that should be used from 11.2023"
+
   # Assertions
-  stopifnot(is.data.frame(tibble), is.numeric(rowname_col), rowname_col > 0, rowname_col <= ncol(tibble)
+  stopifnot(is.data.frame(tibble)
+            , is.numeric(rowname_col)
+            , rowname_col > 0
+            , rowname_col <= ncol(tibble)
             , is.logical(make_names), is.logical(as_df))
 
   if (!is.null(rownames(tibble))) {
@@ -119,7 +124,8 @@ FirstCol2RowNames.as.df <- function(Tibble, rownamecol = 1, make_names = FALSE) 
 
 
 
-### Reading files in -------------------------------------------------------------------------------------------------
+# ____________________________________________________________________________________________ ----
+## Reading files in -------------------------------------------------------------------------------------------------
 
 
 # _________________________________________________________________________________________________
@@ -235,9 +241,9 @@ read.simple.table <- function(..., colnames = TRUE, coltypes = NULL) {
 #' @export
 #' @importFrom readr read_tsv
 #' @importFrom gtools na.replace
-read.simple.tsv <- function(..., sep_ = "\t", colnames = TRUE, wRownames = TRUE, coltypes = NULL, NaReplace = TRUE, asTibble = FALSE) {
+read.simple.tsv <- function(..., sep_ = "\t", colnames = TRUE, wRownames = TRUE
+                            , coltypes = NULL, NaReplace = TRUE, asTibble = FALSE) {
   pfn = kollapse(...) # merge path and filename
-  # read_in = read.delim( pfn , stringsAsFactors = FALSE, sep = , sep_, row.names = 1, header = TRUE )
   read_in = suppressWarnings(readr::read_tsv( pfn, col_names = colnames, col_types = coltypes ))
   iprint("New variable dim: ", dim(read_in) - 0:1)
   if (wRownames) { read_in = FirstCol2RowNames(read_in, as.df = !asTibble ) }
@@ -270,7 +276,8 @@ read.simple.tsv <- function(..., sep_ = "\t", colnames = TRUE, wRownames = TRUE,
 #' @export
 #' @importFrom readr read_csv
 #' @importFrom gtools na.replace
-read.simple.csv <- function(...,  colnames = TRUE, coltypes = NULL, wRownames = TRUE, NaReplace = TRUE, nmax = Inf) {
+read.simple.csv <- function(...,  colnames = TRUE, coltypes = NULL, wRownames = TRUE
+                            , NaReplace = TRUE, nmax = Inf) {
   pfn = kollapse(...) # merge path and filename
   read_in = suppressWarnings(readr::read_csv( pfn, col_names = colnames, col_types = coltypes, n_max = nmax ))
   iprint("New variable dim: ", dim(read_in) - 0:1)
@@ -303,7 +310,8 @@ read.simple.csv <- function(...,  colnames = TRUE, coltypes = NULL, wRownames = 
 #' @export
 #' @importFrom readr read_delim
 #' @importFrom gtools na.replace
-read.simple.ssv <- function(..., sep_ = " ", colnames = TRUE, wRownames = TRUE, NaReplace = TRUE, coltypes = NULL) {
+read.simple.ssv <- function(..., sep_ = " ", colnames = TRUE, wRownames = TRUE, NaReplace = TRUE
+                            , coltypes = NULL) {
   pfn = kollapse(...) # merge path and filename
   read_in = suppressWarnings(readr::read_delim( pfn, delim = sep_, col_names = colnames, col_types = coltypes ))
   iprint("New variable dim: ", dim(read_in) - 0:1)
@@ -403,8 +411,8 @@ read.simple.xlsx <- function(pfn = kollapse(...), which_sheets
 
 
 
-
-### Writing files out ------------------------------------------------------------------------------
+# ____________________________________________________________________________________________ ----
+## Writing files out ------------------------------------------------------------------------------
 
 
 # _________________________________________________________________________________________________
