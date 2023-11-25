@@ -519,12 +519,13 @@ write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv'
   if (row_names == FALSE) { col_names = TRUE }
   if (separator %in% c(',', ';')) extension <- 'csv'
 
-  fname = Stringendo::kollapse (..., print = FALSE)
-  if (nchar (fname) < 2 ) { fname <-Stringendo::sppp(filename, suffix) }
+  fname = Stringendo::kollapse(..., print = FALSE)
+  if (nchar (fname) < 2 ) { fname <- Stringendo::sppp(filename, suffix) }
 
   if (nchar(ManualName)) {FnP = Stringendo::kollapse(ManualName)
   } else { FnP = ww.FnP_parser(fname, extension) }
-  utils::write.table(input_df, file = FnP, sep = separator
+
+  write.table(input_df, file = FnP, sep = separator
                      , row.names = row_names
                      , col.names = col_names
                      , quote = FALSE  )
