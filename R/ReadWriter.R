@@ -130,9 +130,11 @@ FirstCol2RowNames.as.df <- function(Tibble, rownamecol = 1, make_names = FALSE) 
 #'   or defaults to processing a given filename and using the current working directory.
 #'
 #' @param filename The base file name to process. Default: NULL.
+#' @param suffix The file name suffix to be appended. Default: NULL.
+#' @param extension The file extension to be appended. Default: NULL.
+#' @param verbose Print path? Default: TRUE.
 #' @param manualFileName An optional manual specification for the file name. Default: NULL.
 #' @param manualDirectory An optional manual specification for the directory. Default: NULL.
-#' @param extension The file extension to be appended. Default: NULL.
 #' @return A string representing the constructed file path.
 #' @examples
 #' construct.file.path(filename = "report", manualFileName = NULL, manualDirectory = NULL
