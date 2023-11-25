@@ -123,6 +123,44 @@ FirstCol2RowNames.as.df <- function(Tibble, rownamecol = 1, make_names = FALSE) 
 }
 
 
+# __________________________________________________________________________________________________
+#' @title Construct File Path
+#'
+#' @description Constructs a complete file path using either provided manual file name and directory
+#'   or defaults to processing a given filename and using the current working directory.
+#'
+#' @param filename The base file name to process. Default: NULL.
+#' @param manualFileName An optional manual specification for the file name. Default: NULL.
+#' @param manualDirectory An optional manual specification for the directory. Default: NULL.
+#' @param extension The file extension to be appended. Default: NULL.
+#' @return A string representing the constructed file path.
+#' @examples
+#' construct.file.path(filename = "report", manualFileName = NULL, manualDirectory = NULL
+#' , extension = "txt")
+
+construct.file.path <- function(filename = NULL, suffix = NULL, extension = NULL
+                                , manualFileName = NULL, manualDirectory = NULL
+                                , verbose = TRUE) {
+  # Input argument assertions
+  stopifnot(is.null(filename) || is.character(filename),
+            is.null(manualFileName) || is.character(manualFileName),
+            is.null(manualDirectory) || is.character(manualDirectory),
+            is.null(extension) || is.character(extension)
+            )
+
+  fname <- if (!is.null(manualFileName)) manualFileName else Stringendo::sppp(filename, suffix)
+  out_dir <- if (!is.null(manualDirectory)) manualDirectory else getwd()
+
+  # Construct the full file path
+  FnP <- Stringendo::ParseFullFilePath(out_dir, fname, extension)
+
+  # Output assertion
+  stopifnot(is.character(FnP), nzchar(FnP))
+
+  if (verbose) cat(FnP, fill = TRUE)
+  return(FnP)
+}
+
 
 # ____________________________________________________________________________________________ ----
 ## Reading files in -------------------------------------------------------------------------------------------------
@@ -441,8 +479,18 @@ write.simple <- function(input_df, extension = 'tsv'
                          , filename = substitute(input_df)
                          , suffix = NULL, manual_file_name = ""
                          , o = FALSE, ...  ) {
+
   fname = Stringendo::kollapse(...) ; if (nchar(fname) < 2 ) { fname = Stringendo::sppp(filename, suffix) }
   if (nchar(manual_file_name)) {FnP = Stringendo::kollapse(manual_file_name)} else {FnP = ww.FnP_parser(fname, extension) }
+
+  "Continue here, preserve ... feature!"
+
+  "Continue here, preserve ... feature!"
+
+  "Continue here, preserve ... feature!"
+
+  "Continue here, preserve ... feature!"
+
   write.table(input_df, file = FnP, sep = "\t", row.names = FALSE, col.names = TRUE, quote = FALSE)
   if (o) { system(paste0("open ", FnP), wait = FALSE) }
   iprint("Length: ", length(input_df))
@@ -477,6 +525,7 @@ write.simple.vec <- function(input_vec, extension = 'vec'
                              , o = FALSE, ... ) {
   fname = Stringendo::kollapse(...) ; if (nchar(fname) < 2 ) { fname = Stringendo::sppp(filename, suffix) }
   if (nchar(manual_file_name)) {FnP = Stringendo::kollapse(manual_file_name)} else {FnP =  ww.FnP_parser(fname, extension) }
+
   write.table(input_vec, file = FnP, sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE  )
   iprint("Length: ", length(input_vec))
   if (o) { system(paste0("open ", FnP), wait = FALSE) }
@@ -490,7 +539,8 @@ write.simple.vec <- function(input_vec, extension = 'vec'
 #' values (.tsv). Your output filename will be either the variable's name. The output file will be
 #' located in "OutDir" specified by you at the beginning of the script, or under your current
 #' working directory. You can pass the PATH and VARIABLE separately (in order), they will be
-#' concatenated to the filename.
+#' concatenated to the filename. If col.names = NA and row.names = TRUE a blank column name is added,
+#' which is the convention used for CSV files to be read by spreadsheets.
 #' @param input_df Your Dataframe with row- and column-names
 #' @param separator Field separator, such as "," for csv
 #' @param extension e.g.: tsv
@@ -500,27 +550,26 @@ write.simple.vec <- function(input_vec, extension = 'vec'
 #' @param col_names Write column names? NA by default, TRUE if row_names == FALSE
 #' @param o Open the file after saving? FALSE by default
 #' @param gzip Compress the file after saving? FALSE by default
-#' @param ... Pass any other argument to the Stringendo::kollapse() function used for file name.
-#' @export
 #' @examples YourDataFrameWithRowAndColumnNames = cbind("A" = rnorm(100), "B" = rpois(100, 8))
 #' rownames(YourDataFrameWithRowAndColumnNames) = letters[1:NROW(YourDataFrameWithRowAndColumnNames)]
 #' write.simple.tsv(YourDataFrameWithRowAndColumnNames)
-
+#'
+#' @export
 write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv'
-                             , filename = substitute(input_df), suffix = NULL
+                             , filename = substitute(input_df)
+                             , suffix = NULL
                              , manual_file_name = NULL
                              , manual_directory = NULL
                              , row_names = TRUE
                              , col_names = NA
                              , o = FALSE, gzip = FALSE
-                             , ...  ) {
+                             ) {
 
   if (row_names == FALSE) { col_names = TRUE }
   if (separator %in% c(',', ';')) extension <- 'csv'
 
-  fname   <- if (!is.null(manual_file_name)) manual_file_name else Stringendo::sppp(filename, suffix)
-  out_dir <- if (!is.null(manual_directory)) manual_directory else getwd()
-  FnP     <- Stringendo::ParseFullFilePath(out_dir, fname, extension)
+  FnP <- construct.file.path(filename = filename, suffix = suffix, extension = NULL
+                             , manualFileName = manual_file_name, manualDirectory = manual_directory)
 
   write.table(input_df, file = FnP, sep = separator
                      , row.names = row_names
@@ -535,10 +584,7 @@ write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv'
   iprint (printme)
   if (o) { system(paste0("open ", FnP), wait = FALSE) }
   if (gzip) { system(paste0("gzip ", FnP), wait = FALSE) }
-} # fun
-
-# If col.names = NA and row.names = TRUE a blank column name is added, which is the convention used
-# for CSV files to be read by spreadsheets.
+}
 
 
 
@@ -573,7 +619,7 @@ write.simple.append <- function(input_df, extension = 'tsv'
   if (nchar(manual_file_name)) { FnP = Stringendo::kollapse(manual_file_name)} else {FnP =  ww.FnP_parser(fname, extension) }
   write.table(input_df, file = FnP, sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE, append = TRUE  )
   if (o) { system(paste0("open ", FnP), wait = FALSE) }
-} # fun
+}
 
 
 # _________________________________________________________________________________________________
@@ -604,7 +650,6 @@ write.simple.append <- function(input_df, extension = 'tsv'
 #' @param FreezeFirstRow Logical; if TRUE, freezes the first row in Excel. Default: TRUE.
 #' @param FreezeFirstCol Logical; if TRUE, freezes the first column in Excel. Default: FALSE.
 #' @param has_row_names Logical; if set to FALSE, converts the first column to row names. Default: TRUE
-#' @param ... Additional arguments passed to 'write.xlsx()'.
 #' @examples
 #' \dontrun{
 #'   if (interactive()) {
@@ -620,24 +665,20 @@ write.simple.append <- function(input_df, extension = 'tsv'
 write.simple.xlsx <- function(named_list
                               , filename = substitute(named_list)
                               , suffix = NULL
+                              , manual_file_name = NULL
+                              , manual_directory = NULL
                               , rowname_column #  'gene' # for Seurat df.markers
                               , o = FALSE
                               , TabColor = "darkgoldenrod1", HeaderLineColor = "darkolivegreen3"
                               , HeaderCex = 12, Creator = ""
                               , HeaderCharStyle = c("bold", "italic", "underline")[1]
                               , FreezeFirstRow = TRUE, FreezeFirstCol = FALSE
-                              , has_row_names = TRUE, ...) {
+                              , has_row_names = TRUE,) {
 
   # Assertions for input arguments
   stopifnot(is.list(named_list), all(sapply(named_list, function(x) is.matrix(x) || is.data.frame(x))))
 
-  fname <- Stringendo::sppp(filename, suffix)
   if ( !('list' %in% class(named_list))  ) named_list <- list(named_list) # convert to a list if needed
-
-  # Further checks and adjustments for filename
-  "This is a very hack solution that should be"
-  if (nchar(fname) > 100) fname <- kpp('_Output', idate())
-  FnP <- kpp(kpps(getwd(), fname), "xlsx")
 
   # Create header style
   hs <- openxlsx::createStyle(textDecoration = HeaderCharStyle, fontSize = HeaderCex
@@ -650,7 +691,9 @@ write.simple.xlsx <- function(named_list
     named_list <- lapply(named_list, assignRownames)
   }
 
-  print(FnP)
+
+  FnP <- construct.file.path(filename = filename, suffix = suffix, extension = NULL
+                             , manualFileName = manual_file_name, manualDirectory = manual_directory)
 
   openxlsx::write.xlsx(x = named_list, file = FnP, rowNames = has_row_names
                        , firstRow = FreezeFirstRow, firstCol = FreezeFirstCol
