@@ -427,7 +427,7 @@ read.simple.xlsx <- function(pfn = Stringendo::kollapse(...), which_sheets
 #' @param input_df Data frame to write out.
 #' @param extension File extension to add, Default: 'tsv'
 #' @param suffix A suffix added to the filename, Default: NULL
-#' @param ManualName A string for a manually defined filename. Default: ''
+#' @param manual_file_name A string for a manually defined filename. Default: ''
 #' @param o Set to TRUE to open file after writing out using 'system(open ...)' on OS X., Default: FALSE
 #' @param ... Multiple simple variables to parse.
 #' @examples
@@ -439,10 +439,10 @@ read.simple.xlsx <- function(pfn = Stringendo::kollapse(...), which_sheets
 #' @export
 write.simple <- function(input_df, extension = 'tsv'
                          , filename = substitute(input_df)
-                         , suffix = NULL, ManualName = ""
+                         , suffix = NULL, manual_file_name = ""
                          , o = FALSE, ...  ) {
   fname = Stringendo::kollapse(...) ; if (nchar(fname) < 2 ) { fname = Stringendo::sppp(filename, suffix) }
-  if (nchar(ManualName)) {FnP = Stringendo::kollapse(ManualName)} else {FnP = ww.FnP_parser(fname, extension) }
+  if (nchar(manual_file_name)) {FnP = Stringendo::kollapse(manual_file_name)} else {FnP = ww.FnP_parser(fname, extension) }
   write.table(input_df, file = FnP, sep = "\t", row.names = FALSE, col.names = TRUE, quote = FALSE)
   if (o) { system(paste0("open ", FnP), wait = FALSE) }
   iprint("Length: ", length(input_df))
@@ -461,7 +461,7 @@ write.simple <- function(input_df, extension = 'tsv'
 #' @param input_vec Vector to write out.
 #' @param extension File extension to add, Default: 'vec'
 #' @param suffix A suffix added to the filename, Default: NULL
-#' @param ManualName A string for a manually defined filename. Default: ''
+#' @param manual_file_name A string for a manually defined filename. Default: ''
 #' @param o Set to TRUE to open file after writing out using 'system(open ...)' on OS X., Default: FALSE
 #' @param ... Multiple simple variables to parse.
 #' @examples
@@ -473,10 +473,10 @@ write.simple <- function(input_df, extension = 'tsv'
 #' @export
 write.simple.vec <- function(input_vec, extension = 'vec'
                              , filename = substitute(input_vec)
-                             , suffix = NULL, ManualName = ""
+                             , suffix = NULL, manual_file_name = ""
                              , o = FALSE, ... ) {
   fname = Stringendo::kollapse(...) ; if (nchar(fname) < 2 ) { fname = Stringendo::sppp(filename, suffix) }
-  if (nchar(ManualName)) {FnP = Stringendo::kollapse(ManualName)} else {FnP =  ww.FnP_parser(fname, extension) }
+  if (nchar(manual_file_name)) {FnP = Stringendo::kollapse(manual_file_name)} else {FnP =  ww.FnP_parser(fname, extension) }
   write.table(input_vec, file = FnP, sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE  )
   iprint("Length: ", length(input_vec))
   if (o) { system(paste0("open ", FnP), wait = FALSE) }
@@ -495,7 +495,7 @@ write.simple.vec <- function(input_vec, extension = 'vec'
 #' @param separator Field separator, such as "," for csv
 #' @param extension e.g.: tsv
 #' @param suffix A suffix added to the filename, Default: NULL
-#' @param ManualName Specify full filename if you do not want to name it by the variable name.
+#' @param manual_file_name Specify full filename if you do not want to name it by the variable name.
 #' @param row_names Write row names? TRUE by default
 #' @param col_names Write column names? NA by default, TRUE if row_names == FALSE
 #' @param o Open the file after saving? FALSE by default
@@ -507,27 +507,26 @@ write.simple.vec <- function(input_vec, extension = 'vec'
 #' write.simple.tsv(YourDataFrameWithRowAndColumnNames)
 
 write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv'
-                             , filename = substitute(input_df)
-                             , suffix = NULL, ManualName = ""
+                             , filename = substitute(input_df), suffix = NULL
+                             , manual_file_name = NULL
+                             , manual_directory = NULL
                              , row_names = TRUE
                              , col_names = NA
                              , o = FALSE, gzip = FALSE
-                             # , converFromTibble = T
                              , ...  ) {
 
-  # if (converFromTibble) { if (tibble::is_tibble(input_df)) { input_df <- as.data.frame(input_df) } }
   if (row_names == FALSE) { col_names = TRUE }
   if (separator %in% c(',', ';')) extension <- 'csv'
 
-  fname = Stringendo::kollapse (..., print = FALSE)
-  if (nchar (fname) < 2 ) { fname <-Stringendo::sppp(filename, suffix) }
+  fname   <- if (!is.null(manual_file_name)) manual_file_name else Stringendo::sppp(filename, suffix)
+  out_dir <- if (!is.null(manual_directory)) manual_directory else getwd()
+  FnP     <- Stringendo::ParseFullFilePath(out_dir, fname, extension)
 
-  if (nchar(ManualName)) {FnP = Stringendo::kollapse(ManualName)
-  } else { FnP = ww.FnP_parser(fname, extension) }
   write.table(input_df, file = FnP, sep = separator
                      , row.names = row_names
                      , col.names = col_names
                      , quote = FALSE  )
+
   printme = if (length(dim(input_df))) {
     paste0("Dim: ", dim(input_df) )
   }else {
@@ -556,7 +555,7 @@ write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv'
 #' @param input_df Data frame to write out.
 #' @param extension File extension to add, Default: 'tsv'
 #' @param suffix A suffix added to the filename, Default: NULL
-#' @param ManualName A string for a manually defined filename. Default: ''
+#' @param manual_file_name A string for a manually defined filename. Default: ''
 #' @param o Set to TRUE to open file after writing out using 'system(open ...)' on OS X., Default: FALSE
 #' @param ... Multiple simple variables to parse.
 #' @examples
@@ -568,10 +567,10 @@ write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv'
 #' @export
 write.simple.append <- function(input_df, extension = 'tsv'
                                 , filename = substitute(input_df)
-                                , suffix = NULL, ManualName = ""
+                                , suffix = NULL, manual_file_name = ""
                                 , o = FALSE, ... ) {
   fname = Stringendo::kollapse(...) ; if (nchar(fname) < 2 ) { fname = Stringendo::sppp(filename, suffix) }
-  if (nchar(ManualName)) { FnP = Stringendo::kollapse(ManualName)} else {FnP =  ww.FnP_parser(fname, extension) }
+  if (nchar(manual_file_name)) { FnP = Stringendo::kollapse(manual_file_name)} else {FnP =  ww.FnP_parser(fname, extension) }
   write.table(input_df, file = FnP, sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE, append = TRUE  )
   if (o) { system(paste0("open ", FnP), wait = FALSE) }
 } # fun
