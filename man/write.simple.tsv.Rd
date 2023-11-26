@@ -10,12 +10,12 @@ write.simple.tsv(
   extension = "tsv",
   filename = substitute(input_df),
   suffix = NULL,
-  ManualName = "",
+  manual_file_name = NULL,
+  manual_directory = NULL,
   row_names = TRUE,
   col_names = NA,
   o = FALSE,
-  gzip = FALSE,
-  ...
+  gzip = FALSE
 )
 }
 \arguments{
@@ -27,7 +27,7 @@ write.simple.tsv(
 
 \item{suffix}{A suffix added to the filename, Default: NULL}
 
-\item{ManualName}{Specify full filename if you do not want to name it by the variable name.}
+\item{manual_file_name}{Specify full filename if you do not want to name it by the variable name.}
 
 \item{row_names}{Write row names? TRUE by default}
 
@@ -36,18 +36,18 @@ write.simple.tsv(
 \item{o}{Open the file after saving? FALSE by default}
 
 \item{gzip}{Compress the file after saving? FALSE by default}
-
-\item{...}{Pass any other argument to the Stringendo::kollapse() function used for file name.}
 }
 \description{
 Write out a matrix-like R-object WITH ROW- AND COLUMN- NAMES to a file with as tab separated
 values (.tsv). Your output filename will be either the variable's name. The output file will be
 located in "OutDir" specified by you at the beginning of the script, or under your current
 working directory. You can pass the PATH and VARIABLE separately (in order), they will be
-concatenated to the filename.
+concatenated to the filename. If col.names = NA and row.names = TRUE a blank column name is added,
+which is the convention used for CSV files to be read by spreadsheets.
 }
 \examples{
 YourDataFrameWithRowAndColumnNames = cbind("A" = rnorm(100), "B" = rpois(100, 8))
 rownames(YourDataFrameWithRowAndColumnNames) = letters[1:NROW(YourDataFrameWithRowAndColumnNames)]
 write.simple.tsv(YourDataFrameWithRowAndColumnNames)
+
 }

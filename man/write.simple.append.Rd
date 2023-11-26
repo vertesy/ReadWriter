@@ -2,43 +2,46 @@
 % Please edit documentation in R/ReadWriter.R
 \name{write.simple.append}
 \alias{write.simple.append}
-\title{write.simple.append}
+\title{Write Simple Append}
 \usage{
 write.simple.append(
   input_df,
-  extension = "tsv",
   filename = substitute(input_df),
   suffix = NULL,
-  ManualName = "",
-  o = FALSE,
-  ...
+  extension = "tsv",
+  manualFileName = NULL,
+  manualDirectory = NULL,
+  o = FALSE
 )
 }
 \arguments{
-\item{input_df}{Data frame to write out.}
+\item{input_df}{Data frame to write out. Default: None, must be provided.}
 
-\item{extension}{File extension to add, Default: 'tsv'}
+\item{filename}{The base name for the output file. Default: Name of the input data frame.}
 
-\item{suffix}{A suffix added to the filename, Default: NULL}
+\item{suffix}{An optional suffix to add to the filename. Default: NULL.}
 
-\item{ManualName}{A string for a manually defined filename. Default: ''}
+\item{extension}{File extension to use, Default: 'tsv'.}
 
-\item{o}{Set to TRUE to open file after writing out using 'system(open ...)' on OS X., Default: FALSE}
+\item{manualFileName}{Manually defined filename, overrides automatic naming. Default: NULL.}
 
-\item{...}{Multiple simple variables to parse.}
+\item{manualDirectory}{Directory to save the file in, overrides default directory. Default: NULL.}
+
+\item{o}{If TRUE, opens the file after writing on OS X using 'system(open ...)'. Default: FALSE.}
+}
+\value{
+Appends data to an existing .tsv file.
 }
 \description{
-Append an R-object WITHOUT ROWNAMES, to an existing .tsv file of
-the same number of columns. Your output filename will be either the
-variable's name. The output file will be located in "OutDir" specified by
-you at the beginning of the script, or under your current working directory.
-You can pass the PATH and VARIABLE separately (in order), they will be
-concatenated to the filename.
+Appends a data frame without row names to an existing .tsv file with the same number
+of columns. The output filename is auto-generated from the variable's name or manually specified.
+The file is saved in the specified output directory or the current working directory. The path and
+variable name can be passed separately and will be concatenated to form the filename.
 }
 \examples{
 \dontrun{
-if(interactive()){
- # write.simple.append(my.data.frame)
- }
+  if(interactive()){
+    write.simple.append(input_df = myDataFrame)
+  }
 }
 }
