@@ -6,19 +6,12 @@ rm(list = ls(all.names = TRUE));
 try(dev.off(), silent = TRUE)
 
 # Functions ------------------------
-# install_version("devtools", version = "2.0.2", repos = "http://cran.at.r-project.org") # install.packages("devtools")
 # require("devtools")
-# require("roxygen2")
-# require("stringr")
-
-# # devtools::install_github(repo = "vertesy/CodeAndRoll2")
-# require('CodeAndRoll2')
-# require('Stringendo')
 
 
 # Setup ------------------------
 package.name <- 	"ReadWriter"
-package.version <- "1.5.0"
+package.version <- "1.5.1"
 setwd("~/GitHub/Packages/")
 
 RepositoryDir <- paste0("~/GitHub/Packages/", package.name, "/")
@@ -29,8 +22,8 @@ BackupDir <- "~/GitHub/Packages/ReadWriter/Development/"
 dir.create(BackupDir)
 
 DESCRIPTION <- list("Title" = "ReadWriter "
-    , "Author" = person(given = "Abel", family = "Vertesy", email = "abel.vertesy@imba.oeaw.ac.at", role =  c("aut", "cre") )
-    , "Authors@R" = 'person(given = "Abel", family = "Vertesy", email = "a.vertesy@imba.oeaw.ac.at", role =  c("aut", "cre") )'
+    , "Author" = person(given = "Abel", family = "Vertesy", email = "av@imba.oeaw.ac.at", role =  c("aut", "cre") )
+    , "Authors@R" = 'person(given = "Abel", family = "Vertesy", email = "av@imba.oeaw.ac.at", role =  c("aut", "cre") )'
     , "Description" = "ReadWriter is a set of R functions to read and write files conveniently. Complements CodeAndRoll2."
     , "License" = "GPL-3 + file LICENSE"
     , "Version" = package.version
