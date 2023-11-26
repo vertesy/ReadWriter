@@ -2,43 +2,46 @@
 % Please edit documentation in R/ReadWriter.R
 \name{write.simple.vec}
 \alias{write.simple.vec}
-\title{write.simple.vec}
+\title{Write Simple Vector}
 \usage{
 write.simple.vec(
   input_vec,
-  extension = "vec",
   filename = substitute(input_vec),
   suffix = NULL,
-  ManualName = "",
-  o = FALSE,
-  ...
+  extension = "vec",
+  manual_file_name = NULL,
+  manual_directory = NULL,
+  o = FALSE
 )
 }
 \arguments{
-\item{input_vec}{Vector to write out.}
+\item{input_vec}{Vector to write out. Default: None, must be provided.}
 
-\item{extension}{File extension to add, Default: 'vec'}
+\item{filename}{The base name for the output file. Default: Name of the input vector.}
 
-\item{suffix}{A suffix added to the filename, Default: NULL}
+\item{suffix}{An optional suffix to add to the filename. Default: NULL.}
 
-\item{ManualName}{A string for a manually defined filename. Default: ''}
+\item{extension}{File extension to use. Default: 'vec'.}
 
-\item{o}{Set to TRUE to open file after writing out using 'system(open ...)' on OS X., Default: FALSE}
+\item{manual_file_name}{Manually defined filename, overrides automatic naming. Default: NULL.}
 
-\item{...}{Multiple simple variables to parse.}
+\item{manual_directory}{Directory to save the file in, overrides default directory. Default: NULL.}
+
+\item{o}{If TRUE, opens the file after writing on OS X using 'system(open ...)'. Default: FALSE.}
+}
+\value{
+Outputs a .vec file and optionally prints the length of the input vector.
 }
 \description{
-Write out a vector-like R-object to a file with as newline
-separated values (.vec). Your output filename will be either the variable's
-name. The output file will be located in "OutDir" specified by you at the
-beginning of the script, or under your current working directory. You can
-pass the PATH and VARIABLE separately (in order), they will be concatenated
-to the filename.
+Writes a vector-like R object to a file as newline separated values (.vec).
+The output filename can be auto-generated from the variable's name or manually specified. The file
+is saved in the specified output directory or the current working directory. The path and variable
+name can be passed separately and will be concatenated to form the filename.
 }
 \examples{
 \dontrun{
-if(interactive()){
- # write.simple.vec(my.vector)
- }
+  if(interactive()){
+    write.simple.vec(input_vec = myVector)
+  }
 }
 }

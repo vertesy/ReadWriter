@@ -704,7 +704,7 @@ write.simple.xlsx <- function(named_list
                               , HeaderCex = 12, Creator = ""
                               , HeaderCharStyle = c("bold", "italic", "underline")[1]
                               , FreezeFirstRow = TRUE, FreezeFirstCol = FALSE
-                              , has_row_names = TRUE,) {
+                              , has_row_names = TRUE) {
 
   # Assertions for input arguments
   stopifnot(is.list(named_list), all(sapply(named_list, function(x) is.matrix(x) || is.data.frame(x))))

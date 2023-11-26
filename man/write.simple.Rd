@@ -2,43 +2,46 @@
 % Please edit documentation in R/ReadWriter.R
 \name{write.simple}
 \alias{write.simple}
-\title{write.simple}
+\title{Write Simple}
 \usage{
 write.simple(
   input_df,
-  extension = "tsv",
   filename = substitute(input_df),
   suffix = NULL,
-  ManualName = "",
-  o = FALSE,
-  ...
+  extension = "tsv",
+  manual_file_name = NULL,
+  manual_directory = NULL,
+  o = FALSE
 )
 }
 \arguments{
-\item{input_df}{Data frame to write out.}
+\item{input_df}{Data frame to write out. Default: None, must be provided.}
 
-\item{extension}{File extension to add, Default: 'tsv'}
+\item{filename}{The base name for the output file. Default: Name of the input data frame.}
 
-\item{suffix}{A suffix added to the filename, Default: NULL}
+\item{suffix}{An optional suffix to add to the filename. Default: NULL.}
 
-\item{ManualName}{A string for a manually defined filename. Default: ''}
+\item{extension}{File extension to use. Default: 'tsv'.}
 
-\item{o}{Set to TRUE to open file after writing out using 'system(open ...)' on OS X., Default: FALSE}
+\item{manual_file_name}{Manually defined filename, overrides automatic naming. Default: NULL.}
 
-\item{...}{Multiple simple variables to parse.}
+\item{manual_directory}{Directory to save the file in, overrides default directory. Default: NULL.}
+
+\item{o}{If TRUE, opens the file after writing on OS X using 'system(open ...)'. Default: FALSE.}
+}
+\value{
+Outputs a .tsv file and optionally prints the length of the input data frame.
 }
 \description{
-Write out a matrix-like R-object to a file with as tab separated
-values (.tsv). Your output filename will be either the variable's name. The
-output file will be located in "OutDir" specified by you at the beginning
-of the script, or under your current working directory. You can pass the
-PATH and VARIABLE separately (in order), they will be concatenated to the
-filename.
+Writes a matrix-like R object (e.g., a data frame) to a file as tab-separated
+values (.tsv). The output filename can be auto-generated from the variable's name or manually
+specified. The file is saved in the specified output directory or the current working directory.
+The path and variable name can be passed separately and will be concatenated to form the filename.
 }
 \examples{
 \dontrun{
-if(interactive()){
- # write.simple.vec(my.vector)
- }
+  if(interactive()){
+    write.simple(input_df = myDataFrame)
+  }
 }
 }

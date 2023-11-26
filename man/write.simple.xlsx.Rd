@@ -8,6 +8,8 @@ write.simple.xlsx(
   named_list,
   filename = substitute(named_list),
   suffix = NULL,
+  manual_file_name = NULL,
+  manual_directory = NULL,
   rowname_column,
   o = FALSE,
   TabColor = "darkgoldenrod1",
@@ -17,8 +19,7 @@ write.simple.xlsx(
   HeaderCharStyle = c("bold", "italic", "underline")[1],
   FreezeFirstRow = TRUE,
   FreezeFirstCol = FALSE,
-  has_row_names = TRUE,
-  ...
+  has_row_names = TRUE
 )
 }
 \arguments{
@@ -52,8 +53,6 @@ Default: 'bold'.}
 \item{FreezeFirstCol}{Logical; if TRUE, freezes the first column in Excel. Default: FALSE.}
 
 \item{has_row_names}{Logical; if set to FALSE, converts the first column to row names. Default: TRUE}
-
-\item{...}{Additional arguments passed to 'write.xlsx()'.}
 }
 \description{
 Write out a list of matrices or data frames with row and column names
