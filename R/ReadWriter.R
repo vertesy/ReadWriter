@@ -30,17 +30,19 @@
 #' @param ... Pass arguments to make.names()..
 #' @export
 
-column.2.row.names <- function(tibble, rowname_column = 1, make_names = FALSE, as_df = TRUE
-                               , warn = TRUE, ...) {
-
+column.2.row.names <- function(
+    tibble, rowname_column = 1, make_names = FALSE, as_df = TRUE,
+    warn = TRUE, ...) {
   "This is the function that should be used from 11.2023"
 
   # Assertions
-  stopifnot(is.data.frame(tibble)
-            , is.numeric(rowname_column)
-            , rowname_column > 0
-            , rowname_column <= ncol(tibble)
-            , is.logical(make_names), is.logical(as_df))
+  stopifnot(
+    is.data.frame(tibble),
+    is.numeric(rowname_column),
+    rowname_column > 0,
+    rowname_column <= ncol(tibble),
+    is.logical(make_names), is.logical(as_df)
+  )
 
   if (!is.null(rownames(tibble))) {
     if (warn) {
@@ -49,20 +51,26 @@ column.2.row.names <- function(tibble, rowname_column = 1, make_names = FALSE, a
     }
   }
 
-  if (as_df) { tibble <- as.data.frame(tibble) }
+  if (as_df) {
+    tibble <- as.data.frame(tibble)
+  }
 
   # Extracting the specified column to be used as row names
   row_names <- tibble[[rowname_column]]
 
   # Check for duplicated row names
-  if(anyDuplicated(rowname_column)) {
+  if (anyDuplicated(rowname_column)) {
     is.duplicated <- rowname_column[which(duplicated(rowname_column))]
-    warning(length(is.duplicated), " duplicated entries in: ", substitute(rowname_column)
-            , "\narg make_names = TRUE will enforce uniqueness")
+    warning(
+      length(is.duplicated), " duplicated entries in: ", substitute(rowname_column),
+      "\narg make_names = TRUE will enforce uniqueness"
+    )
   }
 
   # Applying make.names if requested
-  if (make_names) { row_names <- make.names(row_names, unique = TRUE, ...) }
+  if (make_names) {
+    row_names <- make.names(row_names, unique = TRUE, ...)
+  }
 
   # Removing the rowname column from the dataframe
   tibble <- tibble[, -rowname_column, drop = FALSE]
@@ -88,17 +96,20 @@ column.2.row.names <- function(tibble, rowname_column = 1, make_names = FALSE, a
 #' @param as.df Convert tibble to data frame? Default: TRUE
 #' @export
 FirstCol2RowNames <- function(Tibble, rownamecol = 1, make_names = FALSE, as.df = TRUE) {
-
-  .Deprecated('column.2.row.names')
+  .Deprecated("column.2.row.names")
 
   row.names <- Tibble[[rownamecol]]
-  if (as.df) { Tibble <- as.data.frame(Tibble) }
+  if (as.df) {
+    Tibble <- as.data.frame(Tibble)
+  }
 
-  Tibble <- Tibble[ ,-rownamecol, drop =F]
-  if (make_names) { row.names <- make.names(row.names, unique = TRUE) }
+  Tibble <- Tibble[, -rownamecol, drop = F]
+  if (make_names) {
+    row.names <- make.names(row.names, unique = TRUE)
+  }
 
   rownames(Tibble) <- row.names
-  iprint("Rownames", head(row.names), '...')
+  iprint("Rownames", head(row.names), "...")
 
   return(Tibble)
 }
@@ -113,12 +124,11 @@ FirstCol2RowNames <- function(Tibble, rownamecol = 1, make_names = FALSE, as.df 
 #' @export
 
 FirstCol2RowNames.as.df <- function(Tibble, rownamecol = 1, make_names = FALSE) {
+  .Deprecated("column.2.row.names")
 
-  .Deprecated('column.2.row.names')
-
-  row.names = Tibble[[rownamecol]]
-  Tibble = as.data.frame(Tibble)
-  rownames(Tibble) = if (make_names) make.names(row.names, unique = TRUE) else row.names
+  row.names <- Tibble[[rownamecol]]
+  Tibble <- as.data.frame(Tibble)
+  rownames(Tibble) <- if (make_names) make.names(row.names, unique = TRUE) else row.names
   return(Tibble[, -rownamecol, drop = F])
 }
 
@@ -138,18 +148,21 @@ FirstCol2RowNames.as.df <- function(Tibble, rownamecol = 1, make_names = FALSE) 
 #' @return A string representing the constructed file path.
 #' @importFrom Stringendo sppp ParseFullFilePath
 #' @examples
-#' construct.file.path(filename = "report", manual_file_name = NULL, manual_directory = NULL
-#' , extension = "txt")
-
-construct.file.path <- function(filename = NULL, suffix = NULL, extension = NULL
-                                , manual_file_name = NULL, manual_directory = NULL
-                                , verbose = TRUE) {
+#' construct.file.path(
+#'   filename = "report", manual_file_name = NULL, manual_directory = NULL,
+#'   extension = "txt"
+#' )
+construct.file.path <- function(
+    filename = NULL, suffix = NULL, extension = NULL,
+    manual_file_name = NULL, manual_directory = NULL,
+    verbose = TRUE) {
   # Input argument assertions
-  stopifnot(is.null(filename) || is.character(filename),
-            is.null(manual_file_name) || is.character(manual_file_name),
-            is.null(manual_directory) || is.character(manual_directory),
-            is.null(extension) || is.character(extension)
-            )
+  stopifnot(
+    is.null(filename) || is.character(filename),
+    is.null(manual_file_name) || is.character(manual_file_name),
+    is.null(manual_directory) || is.character(manual_directory),
+    is.null(extension) || is.character(extension)
+  )
 
   fname <- if (!is.null(manual_file_name)) manual_file_name else Stringendo::sppp(filename, suffix)
   out_dir <- if (!is.null(manual_directory)) manual_directory else getwd()
@@ -176,16 +189,16 @@ construct.file.path <- function(filename = NULL, suffix = NULL, extension = NULL
 #' @param ... Multiple simple variables to parse.
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  # read.simple.vec("path/to/a/single.column.file")
-#'  }
+#' if (interactive()) {
+#'   # read.simple.vec("path/to/a/single.column.file")
+#' }
 #' }
 #' @export
 read.simple.vec <- function(...) {
-  pfn = Stringendo::kollapse(...) # merge path and filename
-  read_in = as.vector(unlist(read.table( pfn , stringsAsFactors = FALSE, sep = "\n" )) )
+  pfn <- Stringendo::kollapse(...) # merge path and filename
+  read_in <- as.vector(unlist(read.table(pfn, stringsAsFactors = FALSE, sep = "\n")))
   iprint(length(read_in), "elements")
-  return(read_in);
+  return(read_in)
 }
 
 
@@ -195,14 +208,14 @@ read.simple.vec <- function(...) {
 #' @param ... Multiple simple variables to parse.
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  # read.simple("path/to/a/file")
-#'  }
+#' if (interactive()) {
+#'   # read.simple("path/to/a/file")
+#' }
 #' }
 #' @export
 read.simple <- function(...) {
-  pfn = Stringendo::kollapse(...) # merge path and filename
-  read_in = read.table( pfn , stringsAsFactors = FALSE)
+  pfn <- Stringendo::kollapse(...) # merge path and filename
+  read_in <- read.table(pfn, stringsAsFactors = FALSE)
   return(read_in)
 }
 
@@ -213,16 +226,16 @@ read.simple <- function(...) {
 #' @param ... Multiple simple variables to parse.
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  # read.simple_char_list("path/to/my.file")
-#'  }
+#' if (interactive()) {
+#'   # read.simple_char_list("path/to/my.file")
+#' }
 #' }
 #' @export
 read.simple_char_list <- function(...) {
-  pfn = Stringendo::kollapse(...) # merge path and filename
-  read_in = unlist(read.table( pfn , stringsAsFactors = FALSE ) )
+  pfn <- Stringendo::kollapse(...) # merge path and filename
+  read_in <- unlist(read.table(pfn, stringsAsFactors = FALSE))
   # iprint("New variable head: ", what(read_in))
-  iprint("New variable head: ", is(read_in), 'range', range(read_in))
+  iprint("New variable head: ", is(read_in), "range", range(read_in))
   return(read_in)
 }
 
@@ -237,9 +250,9 @@ read.simple_char_list <- function(...) {
 #' @param coltypes What type of variables are in columns? Auto-guessing can be very slow. Default: NULL
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  # read.simple.table("path/to/my.file")
-#'  }
+#' if (interactive()) {
+#'   # read.simple.table("path/to/my.file")
+#' }
 #' }
 #' @seealso
 #'  \code{\link[readr]{read_delim}}
@@ -248,11 +261,11 @@ read.simple_char_list <- function(...) {
 #' @importFrom readr read_tsv
 #' @importFrom gtools na.replace
 read.simple.table <- function(..., colnames = TRUE, coltypes = NULL) {
-  pfn = Stringendo::kollapse(...) # merge path and filename
+  pfn <- Stringendo::kollapse(...) # merge path and filename
   # read_in = read.table( pfn , stringsAsFactors = FALSE, sep = "\t", header = colnames )
-  read_in = readr::read_tsv( pfn, col_names = colnames, col_types = coltypes )
+  read_in <- readr::read_tsv(pfn, col_names = colnames, col_types = coltypes)
   iprint("New variable dim: ", dim(read_in))
-  read_in = as.data.frame(gtools::na.replace(data.matrix(read_in), replace = 0))
+  read_in <- as.data.frame(gtools::na.replace(data.matrix(read_in), replace = 0))
   return(read_in)
 }
 
@@ -272,9 +285,9 @@ read.simple.table <- function(..., colnames = TRUE, coltypes = NULL) {
 #' @param asTibble Load as tibble or dataframe?, Default: FALSE (=load as df)
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  # read.simple.tsv("path/to/my.file")
-#'  }
+#' if (interactive()) {
+#'   # read.simple.tsv("path/to/my.file")
+#' }
 #' }
 #' @seealso
 #'  \code{\link[readr]{read_delim}}
@@ -282,16 +295,21 @@ read.simple.table <- function(..., colnames = TRUE, coltypes = NULL) {
 #' @export
 #' @importFrom readr read_tsv
 #' @importFrom gtools na.replace
-read.simple.tsv <- function(..., sep_ = "\t", colnames = TRUE, wRownames = TRUE
-                            , coltypes = NULL, NaReplace = TRUE, asTibble = FALSE) {
-  pfn = Stringendo::kollapse(...) # merge path and filename
-  read_in = suppressWarnings(readr::read_tsv( pfn, col_names = colnames, col_types = coltypes ))
+read.simple.tsv <- function(
+    ..., sep_ = "\t", colnames = TRUE, wRownames = TRUE,
+    coltypes = NULL, NaReplace = TRUE, asTibble = FALSE) {
+  pfn <- Stringendo::kollapse(...) # merge path and filename
+  read_in <- suppressWarnings(readr::read_tsv(pfn, col_names = colnames, col_types = coltypes))
   iprint("New variable dim: ", dim(read_in) - 0:1)
 
   # if (wRownames) { read_in = FirstCol2RowNames(read_in, as.df = !asTibble ) }
-  if (wRownames) { read_in = column.2.row.names(read_in, as_df = !asTibble ) }
+  if (wRownames) {
+    read_in <- column.2.row.names(read_in, as_df = !asTibble)
+  }
 
-  if (NaReplace) { read_in = as.data.frame(gtools::na.replace(read_in, replace = 0)) }
+  if (NaReplace) {
+    read_in <- as.data.frame(gtools::na.replace(read_in, replace = 0))
+  }
   return(read_in)
 }
 
@@ -310,9 +328,9 @@ read.simple.tsv <- function(..., sep_ = "\t", colnames = TRUE, wRownames = TRUE
 #' @param nmax Max number of rows to read, Default: Inf
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  # read.simple.csv("path/to/my.file")
-#'  }
+#' if (interactive()) {
+#'   # read.simple.csv("path/to/my.file")
+#' }
 #' }
 #' @seealso
 #'  \code{\link[readr]{read_delim}}
@@ -320,16 +338,21 @@ read.simple.tsv <- function(..., sep_ = "\t", colnames = TRUE, wRownames = TRUE
 #' @export
 #' @importFrom readr read_csv
 #' @importFrom gtools na.replace
-read.simple.csv <- function(...,  colnames = TRUE, coltypes = NULL, wRownames = TRUE
-                            , NaReplace = TRUE, asTibble = FALSE, nmax = Inf) {
-  pfn = Stringendo::kollapse(...) # merge path and filename
-  read_in = suppressWarnings(readr::read_csv( pfn, col_names = colnames, col_types = coltypes, n_max = nmax ))
+read.simple.csv <- function(
+    ..., colnames = TRUE, coltypes = NULL, wRownames = TRUE,
+    NaReplace = TRUE, asTibble = FALSE, nmax = Inf) {
+  pfn <- Stringendo::kollapse(...) # merge path and filename
+  read_in <- suppressWarnings(readr::read_csv(pfn, col_names = colnames, col_types = coltypes, n_max = nmax))
   iprint("New variable dim: ", dim(read_in) - 0:1)
 
   # if (wRownames) { read_in = FirstCol2RowNames(read_in) }
-  if (wRownames) { read_in = column.2.row.names(read_in, as_df = !asTibble ) }
+  if (wRownames) {
+    read_in <- column.2.row.names(read_in, as_df = !asTibble)
+  }
 
-  if (NaReplace) { read_in = as.data.frame(gtools::na.replace(read_in, replace = 0)) }
+  if (NaReplace) {
+    read_in <- as.data.frame(gtools::na.replace(read_in, replace = 0))
+  }
   return(read_in)
 }
 
@@ -347,9 +370,9 @@ read.simple.csv <- function(...,  colnames = TRUE, coltypes = NULL, wRownames = 
 #' @param coltypes What type of variables are in columns? Auto-guessing can be very slow., Default: NULL
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  # read.simple.ssv("path/to/my.file")
-#'  }
+#' if (interactive()) {
+#'   # read.simple.ssv("path/to/my.file")
+#' }
 #' }
 #' @seealso
 #'  \code{\link[readr]{read_delim}}
@@ -357,13 +380,18 @@ read.simple.csv <- function(...,  colnames = TRUE, coltypes = NULL, wRownames = 
 #' @export
 #' @importFrom readr read_delim
 #' @importFrom gtools na.replace
-read.simple.ssv <- function(..., sep_ = " ", colnames = TRUE, wRownames = TRUE, NaReplace = TRUE
-                            , coltypes = NULL) {
-  pfn = Stringendo::kollapse(...) # merge path and filename
-  read_in = suppressWarnings(readr::read_delim( pfn, delim = sep_, col_names = colnames, col_types = coltypes ))
+read.simple.ssv <- function(
+    ..., sep_ = " ", colnames = TRUE, wRownames = TRUE, NaReplace = TRUE,
+    coltypes = NULL) {
+  pfn <- Stringendo::kollapse(...) # merge path and filename
+  read_in <- suppressWarnings(readr::read_delim(pfn, delim = sep_, col_names = colnames, col_types = coltypes))
   iprint("New variable dim: ", dim(read_in) - 0:1)
-  if (wRownames) { read_in = FirstCol2RowNames(read_in) }
-  if (NaReplace) { read_in = as.data.frame(gtools::na.replace(read_in, replace = 0)) }
+  if (wRownames) {
+    read_in <- FirstCol2RowNames(read_in)
+  }
+  if (NaReplace) {
+    read_in <- as.data.frame(gtools::na.replace(read_in, replace = 0))
+  }
   return(read_in)
 }
 
@@ -377,20 +405,20 @@ read.simple.ssv <- function(..., sep_ = " ", colnames = TRUE, wRownames = TRUE, 
 #' @param ... Multiple simple variables to parse.
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  # read.simple.tsv.named.vector("path/to/my.file")
-#'  }
+#' if (interactive()) {
+#'   # read.simple.tsv.named.vector("path/to/my.file")
+#' }
 #' }
 #' @seealso
 #'  \code{\link[readr]{read_delim}}
 #' @export
 #' @importFrom readr read_tsv
 read.simple.tsv.named.vector <- function(...) {
-  pfn = Stringendo::kollapse(...) # merge path and filename
+  pfn <- Stringendo::kollapse(...) # merge path and filename
   # read_in = read.delim( pfn , stringsAsFactors = FALSE, sep = sep_, row.names = 1, header = TRUE )
-  read_in = readr::read_tsv( pfn )
-  vect = read_in[[2]]
-  names(vect) = read_in[[1]]
+  read_in <- readr::read_tsv(pfn)
+  vect <- read_in[[2]]
+  names(vect) <- read_in[[1]]
   iprint("New vectors length is: ", length(vect))
   return(vect)
 }
@@ -416,10 +444,10 @@ read.simple.tsv.named.vector <- function(...) {
 #' @importFrom openxlsx read.xlsx getSheetNames
 #' @export
 
-read.simple.xlsx <- function(pfn = Stringendo::kollapse(...), which_sheets
-                             , col_names = TRUE, row_names = 0
-                             , trim_ws = TRUE, ...) {
-
+read.simple.xlsx <- function(
+    pfn = Stringendo::kollapse(...), which_sheets,
+    col_names = TRUE, row_names = 0,
+    trim_ws = TRUE, ...) {
   # Assertions for input arguments
   stopifnot(is.character(pfn), length(pfn) > 0)
   if (!missing(which_sheets)) stopifnot(is.numeric(which_sheets) | is.character(which_sheets))
@@ -431,20 +459,24 @@ read.simple.xlsx <- function(pfn = Stringendo::kollapse(...), which_sheets
   }
 
   # Read sheet names and count
-  ls.sheet.names = openxlsx::getSheetNames(pfn)
-  nr.sheets = length(ls.sheet.names)
+  ls.sheet.names <- openxlsx::getSheetNames(pfn)
+  nr.sheets <- length(ls.sheet.names)
   stopifnot(nr.sheets > 0) # Assert that there are sheets in the file
 
   # Prepare sheet index
-  range.of.sheets = if (missing(which_sheets)) 1:nr.sheets else which_sheets
+  range.of.sheets <- if (missing(which_sheets)) 1:nr.sheets else which_sheets
 
   # Read specified sheets
-  ls.excel.sheets = lapply(range.of.sheets, function(i) {
-    sheet_data <- openxlsx::read.xlsx(pfn, sheet = i, colNames = col_names
-                                      , rowNames =1, ...)
+  ls.excel.sheets <- lapply(range.of.sheets, function(i) {
+    sheet_data <- openxlsx::read.xlsx(pfn,
+      sheet = i, colNames = col_names,
+      rowNames = 1, ...
+    )
     if (row_names) {
-      sheet_data <- column.2.row.names(sheet_data, rowname_column = row_names
-                                       , make_names = FALSE, as_df = TRUE)
+      sheet_data <- column.2.row.names(sheet_data,
+        rowname_column = row_names,
+        make_names = FALSE, as_df = TRUE
+      )
     }
     sheet_data
   })
@@ -479,12 +511,12 @@ read.simple.xlsx <- function(pfn = Stringendo::kollapse(...), which_sheets
 #' @return Outputs a .tsv file and optionally prints the length of the input data frame.
 #' @examples
 #' \dontrun{
-#'   if(interactive()){
-#'     write.simple(input_df = myDataFrame)
-#'   }
+#' if (interactive()) {
+#'   write.simple(input_df = myDataFrame)
+#' }
 #' }
 #' @export
-write.simple <- function(input_df, filename = substitute(input_df), suffix = NULL, extension = 'tsv',
+write.simple <- function(input_df, filename = substitute(input_df), suffix = NULL, extension = "tsv",
                          manual_file_name = NULL, manual_directory = NULL, o = FALSE) {
   # Input argument assertions
   stopifnot(
@@ -496,13 +528,17 @@ write.simple <- function(input_df, filename = substitute(input_df), suffix = NUL
     is.logical(o)
   )
 
-  FnP <- constructFilePath(filename = filename, suffix = suffix, extension = extension,
-                             manual_file_name = manual_file_name, manual_directory = manual_directory)
+  FnP <- constructFilePath(
+    filename = filename, suffix = suffix, extension = extension,
+    manual_file_name = manual_file_name, manual_directory = manual_directory
+  )
 
   write.table(input_df, file = FnP, sep = "\t", row.names = FALSE, col.names = TRUE, quote = FALSE)
 
   # Optional: open the file after writing (specific to OS X)
-  if (o) { system(paste0("open ", FnP), wait = FALSE) }
+  if (o) {
+    system(paste0("open ", FnP), wait = FALSE)
+  }
   iprint("Length: ", length(input_df))
 }
 
@@ -525,13 +561,13 @@ write.simple <- function(input_df, filename = substitute(input_df), suffix = NUL
 #' @return Outputs a .vec file and optionally prints the length of the input vector.
 #' @examples
 #' \dontrun{
-#'   if(interactive()){
-#'     write.simple.vec(input_vec = myVector)
-#'   }
+#' if (interactive()) {
+#'   write.simple.vec(input_vec = myVector)
+#' }
 #' }
 #' @export
-write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix = NULL, extension = 'vec',
-                           manual_file_name = NULL, manual_directory = NULL, o = FALSE) {
+write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix = NULL, extension = "vec",
+                             manual_file_name = NULL, manual_directory = NULL, o = FALSE) {
   # Input argument assertions
   stopifnot(is.vector(input_vec))
   stopifnot(is.null(suffix) || is.character(suffix))
@@ -540,8 +576,10 @@ write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix
   stopifnot(is.null(manual_directory) || is.character(manual_directory))
   stopifnot(is.logical(o))
 
-  FnP <- constructFilePath(filename = filename, suffix = suffix, extension = extension,
-                           manual_file_name = manual_file_name, manual_directory = manual_directory)
+  FnP <- constructFilePath(
+    filename = filename, suffix = suffix, extension = extension,
+    manual_file_name = manual_file_name, manual_directory = manual_directory
+  )
 
   # Write the vector to a file
   write.table(input_vec, file = FnP, sep = "\n", row.names = FALSE, col.names = FALSE, quote = FALSE)
@@ -574,46 +612,60 @@ write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix
 #' @param col_names Write column names? NA by default, TRUE if row_names == FALSE
 #' @param o Open the file after saving? FALSE by default
 #' @param gzip Compress the file after saving? FALSE by default
-#' @examples YourDataFrameWithRowAndColumnNames = cbind("A" = rnorm(100), "B" = rpois(100, 8))
-#' rownames(YourDataFrameWithRowAndColumnNames) = letters[1:NROW(YourDataFrameWithRowAndColumnNames)]
+#' @examples YourDataFrameWithRowAndColumnNames <- cbind("A" = rnorm(100), "B" = rpois(100, 8))
+#' rownames(YourDataFrameWithRowAndColumnNames) <- letters[1:NROW(YourDataFrameWithRowAndColumnNames)]
 #' write.simple.tsv(YourDataFrameWithRowAndColumnNames)
 #'
 #' @export
-write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv'
-                             , filename = substitute(input_df)
-                             , suffix = NULL
-                             , manual_file_name = NULL
-                             , manual_directory = NULL
-                             , row_names = TRUE
-                             , col_names = NA
-                             , o = FALSE, gzip = FALSE
-                             ) {
-
-  if (row_names == FALSE) { col_names = TRUE }
-  if (separator %in% c(',', ';')) extension <- 'csv'
-
-  fname = Stringendo::kollapse(..., print = FALSE)
-  if (nchar (fname) < 2 ) { fname <- Stringendo::sppp(filename, suffix) }
-
-  if (nchar(ManualName)) {FnP = Stringendo::kollapse(ManualName)
-  } else { FnP = ww.FnP_parser(fname, extension) }
-
-  FnP <- construct.file.path(filename = filename, suffix = suffix, extension = NULL
-                             , manual_file_name = manual_file_name, manual_directory = manual_directory)
-
-  write.table(input_df, file = FnP, sep = separator
-                     , row.names = row_names
-                     , col.names = col_names
-                     , quote = FALSE  )
-
-  printme = if (length(dim(input_df))) {
-    paste0("Dim: ", dim(input_df) )
-  }else {
-    paste0("Length (of your vector): ", length(input_df) )
+write.simple.tsv <- function(
+    input_df, separator = "\t", extension = "tsv",
+    filename = substitute(input_df),
+    suffix = NULL,
+    manual_file_name = NULL,
+    manual_directory = NULL,
+    row_names = TRUE,
+    col_names = NA,
+    o = FALSE, gzip = FALSE) {
+  if (row_names == FALSE) {
+    col_names <- TRUE
   }
-  iprint (printme)
-  if (o) { system(paste0("open ", FnP), wait = FALSE) }
-  if (gzip) { system(paste0("gzip ", FnP), wait = FALSE) }
+  if (separator %in% c(",", ";")) extension <- "csv"
+
+  fname <- Stringendo::kollapse(..., print = FALSE)
+  if (nchar(fname) < 2) {
+    fname <- Stringendo::sppp(filename, suffix)
+  }
+
+  if (nchar(ManualName)) {
+    FnP <- Stringendo::kollapse(ManualName)
+  } else {
+    FnP <- ww.FnP_parser(fname, extension)
+  }
+
+  FnP <- construct.file.path(
+    filename = filename, suffix = suffix, extension = NULL,
+    manual_file_name = manual_file_name, manual_directory = manual_directory
+  )
+
+  write.table(input_df,
+    file = FnP, sep = separator,
+    row.names = row_names,
+    col.names = col_names,
+    quote = FALSE
+  )
+
+  printme <- if (length(dim(input_df))) {
+    paste0("Dim: ", dim(input_df))
+  } else {
+    paste0("Length (of your vector): ", length(input_df))
+  }
+  iprint(printme)
+  if (o) {
+    system(paste0("open ", FnP), wait = FALSE)
+  }
+  if (gzip) {
+    system(paste0("gzip ", FnP), wait = FALSE)
+  }
 }
 
 
@@ -636,14 +688,13 @@ write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv'
 #' @return Appends data to an existing .tsv file.
 #' @examples
 #' \dontrun{
-#'   if(interactive()){
-#'     write.simple.append(input_df = myDataFrame)
-#'   }
+#' if (interactive()) {
+#'   write.simple.append(input_df = myDataFrame)
+#' }
 #' }
 #' @export
-write.simple.append <- function(input_df, filename = substitute(input_df), suffix = NULL, extension = 'tsv',
-                              manualFileName = NULL, manualDirectory = NULL, o = FALSE) {
-
+write.simple.append <- function(input_df, filename = substitute(input_df), suffix = NULL, extension = "tsv",
+                                manualFileName = NULL, manualDirectory = NULL, o = FALSE) {
   stopifnot(
     # is.data.frame(input_df),
     is.null(suffix) || is.character(suffix),
@@ -653,14 +704,18 @@ write.simple.append <- function(input_df, filename = substitute(input_df), suffi
     is.logical(o)
   )
 
-  FnP <- constructFilePath(filename = filename, suffix = suffix, extension = extension,
-                           manualFileName = manualFileName, manualDirectory = manualDirectory)
+  FnP <- constructFilePath(
+    filename = filename, suffix = suffix, extension = extension,
+    manualFileName = manualFileName, manualDirectory = manualDirectory
+  )
 
   # Write (append) the data frame to a file
   write.table(input_df, file = FnP, sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE, append = TRUE)
 
   # Optional: open the file after writing (specific to OS X)
-  if (o) { system(paste0("open ", FnP), wait = FALSE) }
+  if (o) {
+    system(paste0("open ", FnP), wait = FALSE)
+  }
 }
 
 
@@ -695,37 +750,39 @@ write.simple.append <- function(input_df, filename = substitute(input_df), suffi
 #' @param has_row_names Logical; if set to FALSE, converts the first column to row names. Default: TRUE
 #' @examples
 #' \dontrun{
-#'   if (interactive()) {
-#'     # Example usage:
-#'     # write.simple.xlsx(my.list.of.data.frames, rowname_column = "gene")
-#'   }
+#' if (interactive()) {
+#'   # Example usage:
+#'   # write.simple.xlsx(my.list.of.data.frames, rowname_column = "gene")
+#' }
 #' }
 #' @seealso
 #'   \code{\link[openxlsx]{write.xlsx}}
 #' @export
 #' @importFrom openxlsx write.xlsx createStyle
 
-write.simple.xlsx <- function(named_list
-                              , filename = substitute(named_list)
-                              , suffix = NULL
-                              , manual_file_name = NULL
-                              , manual_directory = NULL
-                              , rowname_column #  'gene' # for Seurat df.markers
-                              , o = FALSE
-                              , TabColor = "darkgoldenrod1", HeaderLineColor = "darkolivegreen3"
-                              , HeaderCex = 12, Creator = ""
-                              , HeaderCharStyle = c("bold", "italic", "underline")[1]
-                              , FreezeFirstRow = TRUE, FreezeFirstCol = FALSE
-                              , has_row_names = TRUE) {
-
+write.simple.xlsx <- function(
+    named_list,
+    filename = substitute(named_list),
+    suffix = NULL,
+    manual_file_name = NULL,
+    manual_directory = NULL,
+    rowname_column #  'gene' # for Seurat df.markers
+    , o = FALSE,
+    TabColor = "darkgoldenrod1", HeaderLineColor = "darkolivegreen3",
+    HeaderCex = 12, Creator = "",
+    HeaderCharStyle = c("bold", "italic", "underline")[1],
+    FreezeFirstRow = TRUE, FreezeFirstCol = FALSE,
+    has_row_names = TRUE) {
   # Assertions for input arguments
   stopifnot(is.list(named_list), all(sapply(named_list, function(x) is.matrix(x) || is.data.frame(x))))
 
-  if ( !('list' %in% class(named_list))  ) named_list <- list(named_list) # convert to a list if needed
+  if (!("list" %in% class(named_list))) named_list <- list(named_list) # convert to a list if needed
 
   # Create header style
-  hs <- openxlsx::createStyle(textDecoration = HeaderCharStyle, fontSize = HeaderCex
-                              , fgFill = HeaderLineColor)
+  hs <- openxlsx::createStyle(
+    textDecoration = HeaderCharStyle, fontSize = HeaderCex,
+    fgFill = HeaderLineColor
+  )
 
   # assign row names if required
   if (!has_row_names) {
@@ -735,18 +792,22 @@ write.simple.xlsx <- function(named_list
   }
 
 
-  FnP <- construct.file.path(filename = filename, suffix = suffix, extension = NULL
-                             , manual_file_name = manual_file_name, manual_directory = manual_directory)
+  FnP <- construct.file.path(
+    filename = filename, suffix = suffix, extension = NULL,
+    manual_file_name = manual_file_name, manual_directory = manual_directory
+  )
 
-  openxlsx::write.xlsx(x = named_list, file = FnP, rowNames = has_row_names
-                       , firstRow = FreezeFirstRow, firstCol = FreezeFirstCol
-                       , headerStyle = hs, tabColour = TabColor
-                       , colWidths = "auto", creator = Creator)
+  openxlsx::write.xlsx(
+    x = named_list, file = FnP, rowNames = has_row_names,
+    firstRow = FreezeFirstRow, firstCol = FreezeFirstCol,
+    headerStyle = hs, tabColour = TabColor,
+    colWidths = "auto", creator = Creator
+  )
 
   # Output assertion
   stopifnot(file.exists(FnP))
 
-  if (o) { system(paste0("open ", fix_special_characters_bash(FnP)), wait = FALSE) }
+  if (o) {
+    system(paste0("open ", fix_special_characters_bash(FnP)), wait = FALSE)
+  }
 } # fun
-
-

@@ -1,6 +1,3 @@
-
-
-
 # _________________________________________________________________________________________________
 
 
@@ -17,39 +14,42 @@
 #' @param WhichSheets Which sheets to read in
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  # read.simple.xls("path/to/my.file")
-#'  }
+#' if (interactive()) {
+#'   # read.simple.xls("path/to/my.file")
+#' }
 #' }
 #' @seealso
 #'  \code{\link[gdata]{read.xls}}
 #' @export
 # #' @importFrom gdata read.xls sheetNames
 read.simple.xls <- function(pfn = kollapse(...), row_namePos = NULL, ..., header_ = TRUE, WhichSheets) {
-
   .Deprecated("read.simple.xlsx")
 
-  if (!require("gdata")) { print("Please install gplots: install.packages('gdata')") }
+  if (!require("gdata")) {
+    print("Please install gplots: install.packages('gdata')")
+  }
   if (grepl("^~/", pfn)) {
     iprint("You cannot use the ~/ in the file path! It is replaced by '~/'.")
-    pfn = gsub(pattern = "^~/", replacement = "~/", x = pfn)
-  } else {print(pfn)}
+    pfn <- gsub(pattern = "^~/", replacement = "~/", x = pfn)
+  } else {
+    print(pfn)
+  }
 
   # merge path and filename
-  TheSheetNames = gdata::sheetNames(pfn, verbose = FALSE);
-  NrSheets = length(TheSheetNames)
+  TheSheetNames <- gdata::sheetNames(pfn, verbose = FALSE)
+  NrSheets <- length(TheSheetNames)
   iprint(NrSheets, "sheets in the file.")
   # ExpData = CodeAndRoll2::list.fromNames(TheSheetNames)
-  ExpData = as.list(TheSheetNames)
-  names(ExpData) = TheSheetNames
+  ExpData <- as.list(TheSheetNames)
+  names(ExpData) <- TheSheetNames
 
-  RangeOfSheets = if (missing(WhichSheets)) 1:NrSheets else WhichSheets
-  for (i in RangeOfSheets ) {
+  RangeOfSheets <- if (missing(WhichSheets)) 1:NrSheets else WhichSheets
+  for (i in RangeOfSheets) {
     iprint("sheet", i)
     # ExpData[[i]] = gdata::read.xls(pfn, sheet = i, row.names = row_namePos, header = header_)
-  } #for
-  lapply(ExpData, function(x) print(dimnames(x)) )
-  return(ExpData);
+  } # for
+  lapply(ExpData, function(x) print(dimnames(x)))
+  return(ExpData)
 }
 
 
@@ -137,18 +137,15 @@ read.simple.xls <- function(pfn = kollapse(...), row_namePos = NULL, ..., header
 #' @seealso
 #'  \code{\link[gtools]{na.replace}}
 #' @importFrom gtools na.replace
-convert.tsv.data <- function(df_by_read.simple.tsv, digitz = 2, na_rep = 0 ) {
+convert.tsv.data <- function(df_by_read.simple.tsv, digitz = 2, na_rep = 0) {
+  .Deprecated(msg = "This function is phased out.")
 
-  .Deprecated(msg = 'This function is phased out.')
-
-  DAT = data.matrix(df_by_read.simple.tsv)
-  SNA = sum(is.na(DAT))
-  try(iprint("Replaced NA values:", SNA, "or", percentage_formatter(SNA/length(DAT))), silent = TRUE)
+  DAT <- data.matrix(df_by_read.simple.tsv)
+  SNA <- sum(is.na(DAT))
+  try(iprint("Replaced NA values:", SNA, "or", percentage_formatter(SNA / length(DAT))), silent = TRUE)
   gtools::na.replace(round(DAT, digits = digitz), replace = na_rep)
 }
 
 
 
 # _________________________________________________________________________________________________
-
-
