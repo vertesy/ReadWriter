@@ -35,7 +35,7 @@ DESCRIPTION <- list("Title" = "ReadWriter "
     , "License" = "GPL-3 + file LICENSE"
     , "Version" = package.version
     , "Packaged" =  Sys.time()
-    , "Depends" =  "Stringendo"
+    , "Depends" =  "Stringendo (>= 0.5.0)"
     , "Remotes" =  "github::vertesy/Stringendo" # https://cran.r-project.org/web/packages/devtools/vignettes/dependencies.html
     # https://stackoverflow.com/questions/72908510/r-package-how-to-specify-a-dependency-version-that-is-only-available-on-github
     , "Imports" = "openxlsx, gtools, readr, utils"
