@@ -10,6 +10,7 @@ read.simple.csv(
   coltypes = NULL,
   wRownames = TRUE,
   NaReplace = TRUE,
+  asTibble = FALSE,
   nmax = Inf
 )
 }
@@ -23,6 +24,8 @@ read.simple.csv(
 \item{wRownames}{With rownames?, Default: TRUE}
 
 \item{NaReplace}{Replace NA-values?, Default: TRUE}
+
+\item{asTibble}{Load as tibble or dataframe?, Default: FALSE (=load as df)}
 
 \item{nmax}{Max number of rows to read, Default: Inf}
 }

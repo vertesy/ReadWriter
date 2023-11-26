@@ -287,11 +287,13 @@ read.simple.tsv <- function(..., sep_ = "\t", colnames = TRUE, wRownames = TRUE
   pfn = Stringendo::kollapse(...) # merge path and filename
   read_in = suppressWarnings(readr::read_tsv( pfn, col_names = colnames, col_types = coltypes ))
   iprint("New variable dim: ", dim(read_in) - 0:1)
-  if (wRownames) { read_in = FirstCol2RowNames(read_in, as.df = !asTibble ) }
+
+  # if (wRownames) { read_in = FirstCol2RowNames(read_in, as.df = !asTibble ) }
+  if (wRownames) { read_in = column.2.row.names(read_in, as_df = !asTibble ) }
+
   if (NaReplace) { read_in = as.data.frame(gtools::na.replace(read_in, replace = 0)) }
   return(read_in)
 }
-
 
 
 # _________________________________________________________________________________________________
@@ -304,6 +306,7 @@ read.simple.tsv <- function(..., sep_ = "\t", colnames = TRUE, wRownames = TRUE
 #' @param coltypes What type of variables are in columns? Auto-guessing can be very slow., Default: NULL
 #' @param wRownames With rownames?, Default: TRUE
 #' @param NaReplace Replace NA-values?, Default: TRUE
+#' @param asTibble Load as tibble or dataframe?, Default: FALSE (=load as df)
 #' @param nmax Max number of rows to read, Default: Inf
 #' @examples
 #' \dontrun{
@@ -318,11 +321,14 @@ read.simple.tsv <- function(..., sep_ = "\t", colnames = TRUE, wRownames = TRUE
 #' @importFrom readr read_csv
 #' @importFrom gtools na.replace
 read.simple.csv <- function(...,  colnames = TRUE, coltypes = NULL, wRownames = TRUE
-                            , NaReplace = TRUE, nmax = Inf) {
+                            , NaReplace = TRUE, asTibble = FALSE, nmax = Inf) {
   pfn = Stringendo::kollapse(...) # merge path and filename
   read_in = suppressWarnings(readr::read_csv( pfn, col_names = colnames, col_types = coltypes, n_max = nmax ))
   iprint("New variable dim: ", dim(read_in) - 0:1)
-  if (wRownames) { read_in = FirstCol2RowNames(read_in) }
+
+  # if (wRownames) { read_in = FirstCol2RowNames(read_in) }
+  if (wRownames) { read_in = column.2.row.names(read_in, as_df = !asTibble ) }
+
   if (NaReplace) { read_in = as.data.frame(gtools::na.replace(read_in, replace = 0)) }
   return(read_in)
 }
@@ -585,6 +591,12 @@ write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv'
 
   if (row_names == FALSE) { col_names = TRUE }
   if (separator %in% c(',', ';')) extension <- 'csv'
+
+  fname = Stringendo::kollapse(..., print = FALSE)
+  if (nchar (fname) < 2 ) { fname <- Stringendo::sppp(filename, suffix) }
+
+  if (nchar(ManualName)) {FnP = Stringendo::kollapse(ManualName)
+  } else { FnP = ww.FnP_parser(fname, extension) }
 
   FnP <- construct.file.path(filename = filename, suffix = suffix, extension = NULL
                              , manual_file_name = manual_file_name, manual_directory = manual_directory)

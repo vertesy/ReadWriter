@@ -31,8 +31,8 @@ read.simple.xls <- function(pfn = kollapse(...), row_namePos = NULL, ..., header
 
   if (!require("gdata")) { print("Please install gplots: install.packages('gdata')") }
   if (grepl("^~/", pfn)) {
-    iprint("You cannot use the ~/ in the file path! It is replaced by '/Users/abel.vertesy/'.")
-    pfn = gsub(pattern = "^~/", replacement = "/Users/abel.vertesy/", x = pfn)
+    iprint("You cannot use the ~/ in the file path! It is replaced by '~/'.")
+    pfn = gsub(pattern = "^~/", replacement = "~/", x = pfn)
   } else {print(pfn)}
 
   # merge path and filename

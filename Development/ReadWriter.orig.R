@@ -110,8 +110,8 @@ convert.tsv.data <- function(df_by_read.simple.tsv = x, digitz = 2, na_rep = 0 )
 read.simple.xls <- function(pfn = kollapse(...), row_namePos = NULL, ..., header_ = TRUE, WhichSheets) { # Read multi-sheet excel files. row_namePos = NULL for automatic names Look into: http://readxl.tidyverse.org/.
   if (!require("gdata")) { print("Please install gplots: install.packages('gdata')") }
   if (grepl("^~/", pfn)) {
-    iprint("You cannot use the ~/ in the file path! It is replaced by '/Users/abel.vertesy/'.")
-    pfn = gsub(pattern = "^~/", replacement = "/Users/abel.vertesy/", x = pfn)
+    iprint("You cannot use the ~/ in the file path! It is replaced by '~/'.")
+    pfn = gsub(pattern = "^~/", replacement = "~/", x = pfn)
   } else {print(pfn)}
 
   if (!require("gdata")) { print("Please install gplots: install.packages('gdata')") }
