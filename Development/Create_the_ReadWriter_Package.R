@@ -84,7 +84,7 @@ warnings()
 # # setwd(RepositoryDir)
 devtools::install(RepositoryDir, upgrade = F)
 
-"devtools::install_github('vertesy/ReadWriter', upgrade = F)"
+pak:::pkg_install('vertesy/ReadWriter')
 
 # dev branch
 "devtools::install_github('vertesy/ReadWriter@read_excel', upgrade = F)"
