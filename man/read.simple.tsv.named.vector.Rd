@@ -16,9 +16,9 @@ should be empty.
 }
 \examples{
 \dontrun{
-if(interactive()){
- # read.simple.tsv.named.vector("path/to/my.file")
- }
+if (interactive()) {
+  # read.simple.tsv.named.vector("path/to/my.file")
+}
 }
 }
 \seealso{

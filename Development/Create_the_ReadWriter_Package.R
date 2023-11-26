@@ -11,7 +11,7 @@ try(dev.off(), silent = TRUE)
 
 # Setup ------------------------
 package.name <- 	"ReadWriter"
-package.version <- "1.5.1"
+package.version <- "1.5.2"
 setwd("~/GitHub/Packages/")
 
 RepositoryDir <- paste0("~/GitHub/Packages/", package.name, "/")

@@ -62,10 +62,10 @@ The function offers various styling and formatting options for the Excel file.
 }
 \examples{
 \dontrun{
-  if (interactive()) {
-    # Example usage:
-    # write.simple.xlsx(my.list.of.data.frames, rowname_column = "gene")
-  }
+if (interactive()) {
+  # Example usage:
+  # write.simple.xlsx(my.list.of.data.frames, rowname_column = "gene")
+}
 }
 }
 \seealso{

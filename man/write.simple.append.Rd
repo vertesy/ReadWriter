@@ -40,8 +40,8 @@ variable name can be passed separately and will be concatenated to form the file
 }
 \examples{
 \dontrun{
-  if(interactive()){
-    write.simple.append(input_df = myDataFrame)
-  }
+if (interactive()) {
+  write.simple.append(input_df = myDataFrame)
+}
 }
 }

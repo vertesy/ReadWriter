@@ -40,8 +40,8 @@ The path and variable name can be passed separately and will be concatenated to 
 }
 \examples{
 \dontrun{
-  if(interactive()){
-    write.simple(input_df = myDataFrame)
-  }
+if (interactive()) {
+  write.simple(input_df = myDataFrame)
+}
 }
 }

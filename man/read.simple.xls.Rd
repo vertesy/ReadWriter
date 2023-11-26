@@ -29,9 +29,9 @@ names Look into: http://readxl.tidyverse.org/.
 }
 \examples{
 \dontrun{
-if(interactive()){
- # read.simple.xls("path/to/my.file")
- }
+if (interactive()) {
+  # read.simple.xls("path/to/my.file")
+}
 }
 }
 \seealso{

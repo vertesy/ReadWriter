@@ -46,8 +46,8 @@ concatenated to the filename. If col.names = NA and row.names = TRUE a blank col
 which is the convention used for CSV files to be read by spreadsheets.
 }
 \examples{
-YourDataFrameWithRowAndColumnNames = cbind("A" = rnorm(100), "B" = rpois(100, 8))
-rownames(YourDataFrameWithRowAndColumnNames) = letters[1:NROW(YourDataFrameWithRowAndColumnNames)]
+YourDataFrameWithRowAndColumnNames <- cbind("A" = rnorm(100), "B" = rpois(100, 8))
+rownames(YourDataFrameWithRowAndColumnNames) <- letters[1:NROW(YourDataFrameWithRowAndColumnNames)]
 write.simple.tsv(YourDataFrameWithRowAndColumnNames)
 
 }

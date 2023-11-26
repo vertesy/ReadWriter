@@ -20,9 +20,9 @@ with a TAB / First column name should be empty.
 }
 \examples{
 \dontrun{
-if(interactive()){
- # read.simple.table("path/to/my.file")
- }
+if (interactive()) {
+  # read.simple.table("path/to/my.file")
+}
 }
 }
 \seealso{

@@ -14,8 +14,8 @@ It is essentially read.table() with file/path parsing.
 }
 \examples{
 \dontrun{
-if(interactive()){
- # read.simple("path/to/a/file")
- }
+if (interactive()) {
+  # read.simple("path/to/a/file")
+}
 }
 }

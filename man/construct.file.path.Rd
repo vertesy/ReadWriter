@@ -34,6 +34,8 @@ Constructs a complete file path using either provided manual file name and direc
 or defaults to processing a given filename and using the current working directory.
 }
 \examples{
-construct.file.path(filename = "report", manual_file_name = NULL, manual_directory = NULL
-, extension = "txt")
+construct.file.path(
+  filename = "report", manual_file_name = NULL, manual_directory = NULL,
+  extension = "txt"
+)
 }

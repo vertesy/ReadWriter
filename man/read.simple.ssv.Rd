@@ -33,9 +33,9 @@ TAB / First column name should be empty.
 }
 \examples{
 \dontrun{
-if(interactive()){
- # read.simple.ssv("path/to/my.file")
- }
+if (interactive()) {
+  # read.simple.ssv("path/to/my.file")
+}
 }
 }
 \seealso{

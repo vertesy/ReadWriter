@@ -14,8 +14,8 @@ Read in a file.
 }
 \examples{
 \dontrun{
-if(interactive()){
- # read.simple_char_list("path/to/my.file")
- }
+if (interactive()) {
+  # read.simple_char_list("path/to/my.file")
+}
 }
 }

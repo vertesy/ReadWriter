@@ -16,8 +16,8 @@ Read each line of a file to an element of a vector (read in new-line separated v
 }
 \examples{
 \dontrun{
-if(interactive()){
- # read.simple.vec("path/to/a/single.column.file")
- }
+if (interactive()) {
+  # read.simple.vec("path/to/a/single.column.file")
+}
 }
 }

@@ -36,9 +36,9 @@ should be empty.
 }
 \examples{
 \dontrun{
-if(interactive()){
- # read.simple.csv("path/to/my.file")
- }
+if (interactive()) {
+  # read.simple.csv("path/to/my.file")
+}
 }
 }
 \seealso{

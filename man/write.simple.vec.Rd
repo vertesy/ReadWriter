@@ -40,8 +40,8 @@ name can be passed separately and will be concatenated to form the filename.
 }
 \examples{
 \dontrun{
-  if(interactive()){
-    write.simple.vec(input_vec = myVector)
-  }
+if (interactive()) {
+  write.simple.vec(input_vec = myVector)
+}
 }
 }
