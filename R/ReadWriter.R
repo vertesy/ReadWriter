@@ -133,25 +133,26 @@ FirstCol2RowNames.as.df <- function(Tibble, rownamecol = 1, make_names = FALSE) 
 #' @param suffix The file name suffix to be appended. Default: NULL.
 #' @param extension The file extension to be appended. Default: NULL.
 #' @param verbose Print path? Default: TRUE.
-#' @param manualFileName An optional manual specification for the file name. Default: NULL.
-#' @param manualDirectory An optional manual specification for the directory. Default: NULL.
+#' @param manual_file_name An optional manual specification for the file name. Default: NULL.
+#' @param manual_directory An optional manual specification for the directory. Default: NULL.
 #' @return A string representing the constructed file path.
+#' @importFrom Stringendo sppp ParseFullFilePath
 #' @examples
-#' construct.file.path(filename = "report", manualFileName = NULL, manualDirectory = NULL
+#' construct.file.path(filename = "report", manual_file_name = NULL, manual_directory = NULL
 #' , extension = "txt")
 
 construct.file.path <- function(filename = NULL, suffix = NULL, extension = NULL
-                                , manualFileName = NULL, manualDirectory = NULL
+                                , manual_file_name = NULL, manual_directory = NULL
                                 , verbose = TRUE) {
   # Input argument assertions
   stopifnot(is.null(filename) || is.character(filename),
-            is.null(manualFileName) || is.character(manualFileName),
-            is.null(manualDirectory) || is.character(manualDirectory),
+            is.null(manual_file_name) || is.character(manual_file_name),
+            is.null(manual_directory) || is.character(manual_directory),
             is.null(extension) || is.character(extension)
             )
 
-  fname <- if (!is.null(manualFileName)) manualFileName else Stringendo::sppp(filename, suffix)
-  out_dir <- if (!is.null(manualDirectory)) manualDirectory else getwd()
+  fname <- if (!is.null(manual_file_name)) manual_file_name else Stringendo::sppp(filename, suffix)
+  out_dir <- if (!is.null(manual_directory)) manual_directory else getwd()
 
   # Construct the full file path
   FnP <- Stringendo::ParseFullFilePath(out_dir, fname, extension)
@@ -456,82 +457,97 @@ read.simple.xlsx <- function(pfn = Stringendo::kollapse(...), which_sheets
 
 
 # _________________________________________________________________________________________________
-#' @title write.simple
+#' @title Write Simple
 #'
-#' @description Write out a matrix-like R-object to a file with as tab separated
-#'   values (.tsv). Your output filename will be either the variable's name. The
-#'   output file will be located in "OutDir" specified by you at the beginning
-#'   of the script, or under your current working directory. You can pass the
-#'   PATH and VARIABLE separately (in order), they will be concatenated to the
-#'   filename.
-#' @param input_df Data frame to write out.
-#' @param extension File extension to add, Default: 'tsv'
-#' @param suffix A suffix added to the filename, Default: NULL
-#' @param manual_file_name A string for a manually defined filename. Default: ''
-#' @param o Set to TRUE to open file after writing out using 'system(open ...)' on OS X., Default: FALSE
-#' @param ... Multiple simple variables to parse.
+#' @description Writes a matrix-like R object (e.g., a data frame) to a file as tab-separated
+#'   values (.tsv). The output filename can be auto-generated from the variable's name or manually
+#'   specified. The file is saved in the specified output directory or the current working directory.
+#'   The path and variable name can be passed separately and will be concatenated to form the filename.
+#' @param input_df Data frame to write out. Default: None, must be provided.
+#' @param filename The base name for the output file. Default: Name of the input data frame.
+#' @param suffix An optional suffix to add to the filename. Default: NULL.
+#' @param extension File extension to use. Default: 'tsv'.
+#' @param manual_file_name Manually defined filename, overrides automatic naming. Default: NULL.
+#' @param manual_directory Directory to save the file in, overrides default directory. Default: NULL.
+#' @param o If TRUE, opens the file after writing on OS X using 'system(open ...)'. Default: FALSE.
+#' @return Outputs a .tsv file and optionally prints the length of the input data frame.
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  # write.simple.vec(my.vector)
-#'  }
+#'   if(interactive()){
+#'     write.simple(input_df = myDataFrame)
+#'   }
 #' }
 #' @export
-write.simple <- function(input_df, extension = 'tsv'
-                         , filename = substitute(input_df)
-                         , suffix = NULL, manual_file_name = ""
-                         , o = FALSE, ...  ) {
+write.simple <- function(input_df, filename = substitute(input_df), suffix = NULL, extension = 'tsv',
+                         manual_file_name = NULL, manual_directory = NULL, o = FALSE) {
+  # Input argument assertions
+  stopifnot(
+    is.data.frame(input_df),
+    is.null(suffix) || is.character(suffix),
+    is.character(extension),
+    is.null(manual_file_name) || is.character(manual_file_name),
+    is.null(manual_directory) || is.character(manual_directory),
+    is.logical(o)
+  )
 
-  fname = Stringendo::kollapse(...) ; if (nchar(fname) < 2 ) { fname = Stringendo::sppp(filename, suffix) }
-  if (nchar(manual_file_name)) {FnP = Stringendo::kollapse(manual_file_name)} else {FnP = ww.FnP_parser(fname, extension) }
-
-  "Continue here, preserve ... feature!"
-
-  "Continue here, preserve ... feature!"
-
-  "Continue here, preserve ... feature!"
-
-  "Continue here, preserve ... feature!"
+  FnP <- constructFilePath(filename = filename, suffix = suffix, extension = extension,
+                             manual_file_name = manual_file_name, manual_directory = manual_directory)
 
   write.table(input_df, file = FnP, sep = "\t", row.names = FALSE, col.names = TRUE, quote = FALSE)
+
+  # Optional: open the file after writing (specific to OS X)
   if (o) { system(paste0("open ", FnP), wait = FALSE) }
   iprint("Length: ", length(input_df))
-} # fun
+}
+
 
 
 # _________________________________________________________________________________________________
-#' @title write.simple.vec
+#' @title Write Simple Vector
 #'
-#' @description Write out a vector-like R-object to a file with as newline
-#'   separated values (.vec). Your output filename will be either the variable's
-#'   name. The output file will be located in "OutDir" specified by you at the
-#'   beginning of the script, or under your current working directory. You can
-#'   pass the PATH and VARIABLE separately (in order), they will be concatenated
-#'   to the filename.
-#' @param input_vec Vector to write out.
-#' @param extension File extension to add, Default: 'vec'
-#' @param suffix A suffix added to the filename, Default: NULL
-#' @param manual_file_name A string for a manually defined filename. Default: ''
-#' @param o Set to TRUE to open file after writing out using 'system(open ...)' on OS X., Default: FALSE
-#' @param ... Multiple simple variables to parse.
+#' @description Writes a vector-like R object to a file as newline separated values (.vec).
+#'   The output filename can be auto-generated from the variable's name or manually specified. The file
+#'   is saved in the specified output directory or the current working directory. The path and variable
+#'   name can be passed separately and will be concatenated to form the filename.
+#' @param input_vec Vector to write out. Default: None, must be provided.
+#' @param filename The base name for the output file. Default: Name of the input vector.
+#' @param suffix An optional suffix to add to the filename. Default: NULL.
+#' @param extension File extension to use. Default: 'vec'.
+#' @param manual_file_name Manually defined filename, overrides automatic naming. Default: NULL.
+#' @param manual_directory Directory to save the file in, overrides default directory. Default: NULL.
+#' @param o If TRUE, opens the file after writing on OS X using 'system(open ...)'. Default: FALSE.
+#' @return Outputs a .vec file and optionally prints the length of the input vector.
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  # write.simple.vec(my.vector)
-#'  }
+#'   if(interactive()){
+#'     write.simple.vec(input_vec = myVector)
+#'   }
 #' }
 #' @export
-write.simple.vec <- function(input_vec, extension = 'vec'
-                             , filename = substitute(input_vec)
-                             , suffix = NULL, manual_file_name = ""
-                             , o = FALSE, ... ) {
-  fname = Stringendo::kollapse(...) ; if (nchar(fname) < 2 ) { fname = Stringendo::sppp(filename, suffix) }
-  if (nchar(manual_file_name)) {FnP = Stringendo::kollapse(manual_file_name)} else {FnP =  ww.FnP_parser(fname, extension) }
+write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix = NULL, extension = 'vec',
+                           manual_file_name = NULL, manual_directory = NULL, o = FALSE) {
+  # Input argument assertions
+  stopifnot(is.vector(input_vec))
+  stopifnot(is.null(suffix) || is.character(suffix))
+  stopifnot(is.character(extension))
+  stopifnot(is.null(manual_file_name) || is.character(manual_file_name))
+  stopifnot(is.null(manual_directory) || is.character(manual_directory))
+  stopifnot(is.logical(o))
 
-  write.table(input_vec, file = FnP, sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE  )
-  iprint("Length: ", length(input_vec))
-  if (o) { system(paste0("open ", FnP), wait = FALSE) }
-} # fun
+  FnP <- constructFilePath(filename = filename, suffix = suffix, extension = extension,
+                           manual_file_name = manual_file_name, manual_directory = manual_directory)
+
+  # Write the vector to a file
+  write.table(input_vec, file = FnP, sep = "\n", row.names = FALSE, col.names = FALSE, quote = FALSE)
+
+  # Optional output: length of the vector
+  invisible(length(input_vec))
+
+  # Optional: open the file after writing (specific to OS X)
+  if (o) {
+    system(paste0("open ", FnP), wait = FALSE)
+  }
+}
 
 
 # _________________________________________________________________________________________________
@@ -571,7 +587,7 @@ write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv'
   if (separator %in% c(',', ';')) extension <- 'csv'
 
   FnP <- construct.file.path(filename = filename, suffix = suffix, extension = NULL
-                             , manualFileName = manual_file_name, manualDirectory = manual_directory)
+                             , manual_file_name = manual_file_name, manual_directory = manual_directory)
 
   write.table(input_df, file = FnP, sep = separator
                      , row.names = row_names
@@ -592,36 +608,49 @@ write.simple.tsv <- function(input_df, separator = "\t", extension = 'tsv'
 
 
 # _________________________________________________________________________________________________
-#' @title write.simple.append
+#' @title Write Simple Append
 #'
-#' @description Append an R-object WITHOUT ROWNAMES, to an existing .tsv file of
-#'  the same number of columns. Your output filename will be either the
-#'  variable's name. The output file will be located in "OutDir" specified by
-#'  you at the beginning of the script, or under your current working directory.
-#'  You can pass the PATH and VARIABLE separately (in order), they will be
-#'  concatenated to the filename.
-#' @param input_df Data frame to write out.
-#' @param extension File extension to add, Default: 'tsv'
-#' @param suffix A suffix added to the filename, Default: NULL
-#' @param manual_file_name A string for a manually defined filename. Default: ''
-#' @param o Set to TRUE to open file after writing out using 'system(open ...)' on OS X., Default: FALSE
-#' @param ... Multiple simple variables to parse.
+#' @description Appends a data frame without row names to an existing .tsv file with the same number
+#'   of columns. The output filename is auto-generated from the variable's name or manually specified.
+#'   The file is saved in the specified output directory or the current working directory. The path and
+#'   variable name can be passed separately and will be concatenated to form the filename.
+#' @param input_df Data frame to write out. Default: None, must be provided.
+#' @param filename The base name for the output file. Default: Name of the input data frame.
+#' @param suffix An optional suffix to add to the filename. Default: NULL.
+#' @param extension File extension to use, Default: 'tsv'.
+#' @param manualFileName Manually defined filename, overrides automatic naming. Default: NULL.
+#' @param manualDirectory Directory to save the file in, overrides default directory. Default: NULL.
+#' @param o If TRUE, opens the file after writing on OS X using 'system(open ...)'. Default: FALSE.
+#' @return Appends data to an existing .tsv file.
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  # write.simple.append(my.data.frame)
-#'  }
+#'   if(interactive()){
+#'     write.simple.append(input_df = myDataFrame)
+#'   }
 #' }
 #' @export
-write.simple.append <- function(input_df, extension = 'tsv'
-                                , filename = substitute(input_df)
-                                , suffix = NULL, manual_file_name = ""
-                                , o = FALSE, ... ) {
-  fname = Stringendo::kollapse(...) ; if (nchar(fname) < 2 ) { fname = Stringendo::sppp(filename, suffix) }
-  if (nchar(manual_file_name)) { FnP = Stringendo::kollapse(manual_file_name)} else {FnP =  ww.FnP_parser(fname, extension) }
-  write.table(input_df, file = FnP, sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE, append = TRUE  )
+write.simple.append <- function(input_df, filename = substitute(input_df), suffix = NULL, extension = 'tsv',
+                              manualFileName = NULL, manualDirectory = NULL, o = FALSE) {
+
+  stopifnot(
+    # is.data.frame(input_df),
+    is.null(suffix) || is.character(suffix),
+    is.character(extension),
+    is.null(manualFileName) || is.character(manualFileName),
+    is.null(manualDirectory) || is.character(manualDirectory),
+    is.logical(o)
+  )
+
+  FnP <- constructFilePath(filename = filename, suffix = suffix, extension = extension,
+                           manualFileName = manualFileName, manualDirectory = manualDirectory)
+
+  # Write (append) the data frame to a file
+  write.table(input_df, file = FnP, sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE, append = TRUE)
+
+  # Optional: open the file after writing (specific to OS X)
   if (o) { system(paste0("open ", FnP), wait = FALSE) }
 }
+
 
 
 # _________________________________________________________________________________________________
@@ -695,7 +724,7 @@ write.simple.xlsx <- function(named_list
 
 
   FnP <- construct.file.path(filename = filename, suffix = suffix, extension = NULL
-                             , manualFileName = manual_file_name, manualDirectory = manual_directory)
+                             , manual_file_name = manual_file_name, manual_directory = manual_directory)
 
   openxlsx::write.xlsx(x = named_list, file = FnP, rowNames = has_row_names
                        , firstRow = FreezeFirstRow, firstCol = FreezeFirstCol
