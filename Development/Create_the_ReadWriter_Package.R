@@ -1,7 +1,7 @@
 ######################################################################################################
 # Create_the_ReadWriter_Package.R
 ######################################################################################################
-# source("/Users/abel.vertesy/GitHub/Packages/ReadWriter/Development/Create_the_ReadWriter_Package.R")
+# source("~/GitHub/Packages/ReadWriter/Development/Create_the_ReadWriter_Package.R")
 rm(list = ls(all.names = TRUE));
 try(dev.off(), silent = TRUE)
 
@@ -80,57 +80,67 @@ warnings()
                   , "^version: v.+", paste0("version: v", package.version))
 }
 
+
 # Install your package ------------------------------------------------
-# # setwd(RepositoryDir)
-devtools::install(RepositoryDir, upgrade = F)
-
-pak:::pkg_install('vertesy/ReadWriter')
-
-# dev branch
-"devtools::install_github('vertesy/ReadWriter@read_excel', upgrade = F)"
-
-
-# require("ReadWriter")
-# # remove.packages("ReadWriter")
-# # Test your package ------------------------------------------------
-# help("wplot")
-# cat("\014")
-# devtools::run_examples()
-
+install(RepositoryDir, upgrade = F)
 
 # Test if you can install from github ------------------------------------------------
-# devtools::install_github(repo = "vertesy/ReadWriter")
+pak::pkg_install("vertesy/ReadWriter")
+# unload("CodeAndRoll2")
+# require("CodeAndRoll2")
+# # remove.packages("CodeAndRoll2")
 
-# require("ReadWriter")
+# dev branch
+# "devtools::install_github('vertesy/ReadWriter@read_excel', upgrade = F)"
 
-# Clean up if not needed anymore ------------------------------------------------
-# View(installed.packages())
-# remove.packages("ReadWriter")
 
+# Check CRAN ------------------------------------------------
 check(RepositoryDir, cran = TRUE)
 # as.package(RepositoryDir)
-#
-#
 # # source("https://install-github.me/r-lib/desc")
 # # library(desc)
-# # desc$set("ReadWriter", "foo")
-# # desc$get(ReadWriter)
-#
-#
-# system("cd ~/GitHub/ReadWriter/; ls -a; open .Rbuildignore")
-#
+# # desc$set("CodeAndRoll2", "foo")
+# # desc$get(CodeAndRoll2)
+# system("cd ~/GitHub/CodeAndRoll2/; ls -a; open .Rbuildignore")
+
+
 # Check package dependencies ------------------------------------------------
-depFile = paste0(RepositoryDir, 'Development/Dependencies.R')
+{
+  depFile = paste0(RepositoryDir, 'Development/Dependencies.R')
 
-(f.deps <- NCmisc::list.functions.in.file(filename = package.FnP))
-# clipr::write_clip(f.deps)
+  (f.deps <- NCmisc::list.functions.in.file(filename = package.FnP))
+  # clipr::write_clip(f.deps)
 
-sink(file = depFile); print(f.deps); sink()
-p.deps <- gsub(x = names(f.deps), pattern = 'package:', replacement = '')
-write(x = p.deps, file = depFile, append = T)
-p.dep.declared <- trimws(unlist(strsplit(DESCRIPTION$Imports, ",")))
-(p.dep.new <- sort(union( p.deps, p.dep.declared)))
-# clipr::write_clip(p.dep.new)
+  sink(file = depFile); print(f.deps); sink()
+  p.deps <- gsub(x = names(f.deps), pattern = 'package:', replacement = '')
+  write(x = p.deps, file = depFile, append = T)
+  p.dep.declared <- trimws(unlist(strsplit(DESCRIPTION$Imports, ",")))
+  (p.dep.new <- sort(union( p.deps, p.dep.declared)))
+  # clipr::write_clip(p.dep.new)
+}
+
+# Package styling, and visualization ------------------------------------------------
+{
+  styler::style_pkg(RepositoryDir)
+  # styler::style_file("~/GitHub/Packages/CodeAndRoll2/Development/02.Compile.the.CodeAndRoll2.package.R")
+
+  {
+    # Exploring the Structure and Dependencies of my R Package:
+    "works on an installed package!"
+    pkgnet_result <- pkgnet::CreatePackageReport(package.name)
+    fun_graph <- pkgnet_result$FunctionReporter$pkg_graph$"igraph"
+
+    # devtools::load_all('~/GitHub/Packages/PackageTools/R/DependencyTools.R')
+    convert_igraph_to_mermaid(graph = fun_graph, openMermaid = T, copy_to_clipboard = T)
+  }
+
+  if (F) {
+    # Add @importFrom statements
+    (FNP <- package.FnP)
+    PackageTools::add_importFrom_statements(FNP, exclude_packages = "")
+    add_importFrom_statements(FNP, exclude_packages = "")
+  }
+}
 
 
 if (F) {
