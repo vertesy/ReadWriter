@@ -79,9 +79,9 @@ install(RepositoryDir, upgrade = F)
 
 # Test if you can install from github ------------------------------------------------
 pak::pkg_install("vertesy/ReadWriter")
-# unload("CodeAndRoll2")
-# require("CodeAndRoll2")
-# # remove.packages("CodeAndRoll2")
+# unload("ReadWriter")
+# require("ReadWriter")
+# # remove.packages("ReadWriter")
 
 # dev branch
 # "devtools::install_github('vertesy/ReadWriter@read_excel', upgrade = F)"
@@ -92,9 +92,9 @@ check(RepositoryDir, cran = TRUE)
 # as.package(RepositoryDir)
 # # source("https://install-github.me/r-lib/desc")
 # # library(desc)
-# # desc$set("CodeAndRoll2", "foo")
-# # desc$get(CodeAndRoll2)
-# system("cd ~/GitHub/CodeAndRoll2/; ls -a; open .Rbuildignore")
+# # desc$set("ReadWriter", "foo")
+# # desc$get(ReadWriter)
+# system("cd ~/GitHub/ReadWriter/; ls -a; open .Rbuildignore")
 
 
 # Check package dependencies ------------------------------------------------
@@ -115,7 +115,7 @@ check(RepositoryDir, cran = TRUE)
 # Package styling, and visualization ------------------------------------------------
 {
   styler::style_pkg(RepositoryDir)
-  # styler::style_file("~/GitHub/Packages/CodeAndRoll2/Development/02.Compile.the.CodeAndRoll2.package.R")
+  # styler::style_file("~/GitHub/Packages/ReadWriter/Development/02.Compile.the.ReadWriter.package.R")
 
   {
     # Exploring the Structure and Dependencies of my R Package:
