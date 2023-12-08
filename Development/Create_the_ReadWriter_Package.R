@@ -5,7 +5,7 @@
 
 # Functions ------------------------
 require(PackageTools)
-devtools::load_all("~/GitHub/Packages/PackageTools")
+# devtools::load_all("~/GitHub/Packages/PackageTools")
 
 # Setup ------------------------
 repository.dir <- "~/GitHub/Packages/ReadWriter/"
