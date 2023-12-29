@@ -604,6 +604,7 @@ write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix
 #' concatenated to the filename. If col.names = NA and row.names = TRUE a blank column name is added,
 #' which is the convention used for CSV files to be read by spreadsheets.
 #' @param input_df Your Dataframe with row- and column-names
+#' @param ... Pass any other argument to the kollapse() function used for file name.
 #' @param separator Field separator, such as "," for csv
 #' @param extension e.g.: tsv
 #' @param suffix A suffix added to the filename, Default: NULL
@@ -618,7 +619,8 @@ write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix
 #'
 #' @export
 write.simple.tsv <- function(
-    input_df, separator = "\t", extension = "tsv",
+    input_df, ...,
+    separator = "\t", extension = "tsv",
     filename = substitute(input_df),
     suffix = NULL,
     manual_file_name = NULL,
@@ -636,14 +638,19 @@ write.simple.tsv <- function(
     fname <- Stringendo::sppp(filename, suffix)
   }
 
-  if (nchar(ManualName)) {
-    FnP <- Stringendo::kollapse(ManualName)
-  } else {
-    FnP <- ww.FnP_parser(fname, extension)
-  }
+  # if (nchar(ManualName)) {
+  #   FnP <- Stringendo::kollapse(ManualName)
+  # } else {
+  #   FnP <- ww.FnP_parser(fname, extension)
+  # }
+
+  # print("")
+  # print(fname)
+  # print("")
+  # browser()
 
   FnP <- construct.file.path(
-    filename = filename, suffix = suffix, extension = NULL,
+    filename = fname, suffix = suffix, extension = extension,
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
 

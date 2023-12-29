@@ -6,6 +6,7 @@
 \usage{
 write.simple.tsv(
   input_df,
+  ...,
   separator = "\\t",
   extension = "tsv",
   filename = substitute(input_df),
@@ -20,6 +21,8 @@ write.simple.tsv(
 }
 \arguments{
 \item{input_df}{Your Dataframe with row- and column-names}
+
+\item{...}{Pass any other argument to the kollapse() function used for file name.}
 
 \item{separator}{Field separator, such as "," for csv}
 
