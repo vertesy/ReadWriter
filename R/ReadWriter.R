@@ -528,7 +528,7 @@ write.simple <- function(input_df, filename = substitute(input_df), suffix = NUL
     is.logical(o)
   )
 
-  FnP <- constructFilePath(
+  FnP <- construct.file.path(
     filename = filename, suffix = suffix, extension = extension,
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
@@ -576,7 +576,7 @@ write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix
   stopifnot(is.null(manual_directory) || is.character(manual_directory))
   stopifnot(is.logical(o))
 
-  FnP <- constructFilePath(
+  FnP <- construct.file.path(
     filename = filename, suffix = suffix, extension = extension,
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
@@ -711,7 +711,7 @@ write.simple.append <- function(input_df, filename = substitute(input_df), suffi
     is.logical(o)
   )
 
-  FnP <- constructFilePath(
+  FnP <- construct.file.path(
     filename = filename, suffix = suffix, extension = extension,
     manualFileName = manualFileName, manualDirectory = manualDirectory
   )
@@ -797,7 +797,6 @@ write.simple.xlsx <- function(
     assignRownames <- function(x) column.2.row.names(df, rowname_column = rowname_column, make_names = T)
     named_list <- lapply(named_list, assignRownames)
   }
-
 
   FnP <- construct.file.path(
     filename = filename, suffix = suffix, extension = NULL,
