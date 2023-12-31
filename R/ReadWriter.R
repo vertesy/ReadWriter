@@ -156,6 +156,9 @@ construct.file.path <- function(
     filename = NULL, suffix = NULL, extension = NULL,
     manual_file_name = NULL, manual_directory = NULL,
     verbose = TRUE) {
+
+  filename <- as.character(filename) # unclear why thus bf needed.
+
   # Input argument assertions
   stopifnot(
     is.null(filename) || is.character(filename),
@@ -519,6 +522,7 @@ read.simple.xlsx <- function(
 write.simple <- function(input_df, filename = substitute(input_df), suffix = NULL, extension = "tsv",
                          manual_file_name = NULL, manual_directory = NULL, o = FALSE) {
   # Input argument assertions
+
   stopifnot(
     is.data.frame(input_df),
     is.null(suffix) || is.character(suffix),
@@ -528,6 +532,7 @@ write.simple <- function(input_df, filename = substitute(input_df), suffix = NUL
     is.logical(o)
   )
 
+  cat("22")
   FnP <- construct.file.path(
     filename = filename, suffix = suffix, extension = extension,
     manual_file_name = manual_file_name, manual_directory = manual_directory
@@ -576,6 +581,7 @@ write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix
   stopifnot(is.null(manual_directory) || is.character(manual_directory))
   stopifnot(is.logical(o))
 
+  "22"
   FnP <- construct.file.path(
     filename = filename, suffix = suffix, extension = extension,
     manual_file_name = manual_file_name, manual_directory = manual_directory
@@ -634,9 +640,7 @@ write.simple.tsv <- function(
   if (separator %in% c(",", ";")) extension <- "csv"
 
   fname <- Stringendo::kollapse(..., print = FALSE)
-  if (nchar(fname) < 2) {
-    fname <- Stringendo::sppp(filename, suffix)
-  }
+  if (nchar(fname) < 2) fname <- filename
 
   # if (nchar(ManualName)) {
   #   FnP <- Stringendo::kollapse(ManualName)
@@ -711,6 +715,7 @@ write.simple.append <- function(input_df, filename = substitute(input_df), suffi
     is.logical(o)
   )
 
+  "22"
   FnP <- construct.file.path(
     filename = filename, suffix = suffix, extension = extension,
     manualFileName = manualFileName, manualDirectory = manualDirectory
@@ -797,6 +802,7 @@ write.simple.xlsx <- function(
     assignRownames <- function(x) column.2.row.names(df, rowname_column = rowname_column, make_names = T)
     named_list <- lapply(named_list, assignRownames)
   }
+
 
   FnP <- construct.file.path(
     filename = filename, suffix = suffix, extension = NULL,
