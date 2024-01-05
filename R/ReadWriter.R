@@ -449,7 +449,7 @@ read.simple.tsv.named.vector <- function(...) {
 
 read.simple.xlsx <- function(
     pfn = Stringendo::kollapse(...), which_sheets,
-    col_names = TRUE, row_names = 0,
+    col_names = TRUE, row_names = FALSE,
     trim_ws = TRUE, ...) {
   # Assertions for input arguments
   stopifnot(is.character(pfn), length(pfn) > 0)
@@ -473,7 +473,7 @@ read.simple.xlsx <- function(
   ls.excel.sheets <- lapply(range.of.sheets, function(i) {
     sheet_data <- openxlsx::read.xlsx(pfn,
       sheet = i, colNames = col_names,
-      rowNames = 1, ...
+      rowNames = TRUE, ...
     )
     if (row_names) {
       sheet_data <- column.2.row.names(sheet_data,
