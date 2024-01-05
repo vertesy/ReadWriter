@@ -8,7 +8,7 @@ read.simple.xlsx(
   pfn = Stringendo::kollapse(...),
   which_sheets,
   col_names = TRUE,
-  row_names = 0,
+  row_names = FALSE,
   trim_ws = TRUE,
   ...
 )

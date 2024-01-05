@@ -451,6 +451,7 @@ read.simple.xlsx <- function(
     pfn = Stringendo::kollapse(...), which_sheets,
     col_names = TRUE, row_names = FALSE,
     trim_ws = TRUE, ...) {
+
   # Assertions for input arguments
   stopifnot(is.character(pfn), length(pfn) > 0)
   if (!missing(which_sheets)) stopifnot(is.numeric(which_sheets) | is.character(which_sheets))
@@ -460,7 +461,7 @@ read.simple.xlsx <- function(
   if (!require("openxlsx")) {
     stop("Package 'openxlsx' is required but not installed. Please install it using install.packages('openxlsx').")
   }
-
+  # browser()
   # Read sheet names and count
   ls.sheet.names <- openxlsx::getSheetNames(pfn)
   nr.sheets <- length(ls.sheet.names)
@@ -472,13 +473,13 @@ read.simple.xlsx <- function(
   # Read specified sheets
   ls.excel.sheets <- lapply(range.of.sheets, function(i) {
     sheet_data <- openxlsx::read.xlsx(pfn,
-      sheet = i, colNames = col_names,
-      rowNames = TRUE, ...
+                                      sheet = i, colNames = col_names,
+                                      rowNames = row_names, ...
     )
     if (row_names) {
       sheet_data <- column.2.row.names(sheet_data,
-        rowname_column = row_names,
-        make_names = FALSE, as_df = TRUE
+                                       rowname_column = row_names,
+                                       make_names = FALSE, as_df = TRUE
       )
     }
     sheet_data
@@ -490,7 +491,6 @@ read.simple.xlsx <- function(
   names(ls.excel.sheets) <- ls.sheet.names[range.of.sheets]
   return(ls.excel.sheets)
 }
-
 
 
 # ____________________________________________________________________________________________ ----
