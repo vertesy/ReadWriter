@@ -10,7 +10,6 @@
 # ____________________________________________________________________________________________ ----
 ## Aux -------------------------------------------------------------------------------------------------
 
-
 #' @title Convert a Column to Row Names in a Tibble or DataFrame
 #'
 #' @description Converts the first column (or a specified column) of a dataframe or tibble into row names.
@@ -46,6 +45,7 @@ column.2.row.names <- function(
 
   if (!is.null(rownames(tibble))) {
     if (warn) {
+      options(warn = -1) # this should not be necessary
       warning("tibble/df already has row names (now overwritten):", immediate. = T)
       print(head(rownames(tibble)))
     }
@@ -346,6 +346,8 @@ read.simple.tsv <- function(
 read.simple.csv <- function(
     ..., colnames = TRUE, coltypes = NULL, wRownames = TRUE,
     NaReplace = TRUE, asTibble = FALSE, nmax = Inf) {
+
+  # browser()
   pfn <- Stringendo::kollapse(...) # merge path and filename
   read_in <- suppressWarnings(readr::read_csv(pfn, col_names = colnames, col_types = coltypes, n_max = nmax))
   iprint("New variable dim: ", dim(read_in) - 0:1)
