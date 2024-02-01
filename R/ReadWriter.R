@@ -641,6 +641,13 @@ write.simple.tsv <- function(
   if (row_names == FALSE) {
     col_names <- TRUE
   }
+
+  " write.simple.tsv should have background compression as a feature #14 "
+
+  " write.simple.tsv should have background compression as a feature #14 "
+
+  " write.simple.tsv should have background compression as a feature #14 "
+
   if (separator %in% c(",", ";")) extension <- "csv"
 
   fname <- Stringendo::kollapse(..., print = FALSE)
