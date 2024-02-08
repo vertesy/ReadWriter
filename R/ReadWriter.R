@@ -816,7 +816,7 @@ write.simple.xlsx <- function(
 
 
   FnP <- construct.file.path(
-    filename = filename, suffix = suffix, extension = NULL,
+    filename = filename, suffix = suffix, extension = "xlsx",
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
 
