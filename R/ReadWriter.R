@@ -536,7 +536,6 @@ write.simple <- function(input_df, filename = substitute(input_df), suffix = NUL
     is.logical(o)
   )
 
-  cat("22")
   FnP <- construct.file.path(
     filename = filename, suffix = suffix, extension = extension,
     manual_file_name = manual_file_name, manual_directory = manual_directory
