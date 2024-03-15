@@ -537,7 +537,7 @@ write.simple <- function(input_df, filename = substitute(input_df), suffix = NUL
   )
 
   FnP <- construct.file.path(
-    filename = filename, suffix = suffix, extension = extension,
+    filename = FixPlotName(filename), suffix = suffix, extension = extension,
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
 
@@ -577,16 +577,15 @@ write.simple <- function(input_df, filename = substitute(input_df), suffix = NUL
 write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix = NULL, extension = "vec",
                              manual_file_name = NULL, manual_directory = NULL, o = FALSE) {
   # Input argument assertions
-  stopifnot(is.vector(input_vec))
-  stopifnot(is.null(suffix) || is.character(suffix))
-  stopifnot(is.character(extension))
-  stopifnot(is.null(manual_file_name) || is.character(manual_file_name))
-  stopifnot(is.null(manual_directory) || is.character(manual_directory))
-  stopifnot(is.logical(o))
+  stopifnot(is.vector(input_vec),
+            is.null(suffix) || is.character(suffix),
+            is.character(extension),
+            is.null(manual_file_name) || is.character(manual_file_name),
+            is.null(manual_directory) || is.character(manual_directory),
+            is.logical(o))
 
-  "22"
   FnP <- construct.file.path(
-    filename = filename, suffix = suffix, extension = extension,
+    filename = FixPlotName(filename), suffix = suffix, extension = extension,
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
 
@@ -664,7 +663,7 @@ write.simple.tsv <- function(
   # browser()
 
   FnP <- construct.file.path(
-    filename = fname, suffix = suffix, extension = extension,
+    filename = FixPlotName(fname), suffix = suffix, extension = extension,
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
 
@@ -725,9 +724,8 @@ write.simple.append <- function(input_df, filename = substitute(input_df), suffi
     is.logical(o)
   )
 
-  "22"
   FnP <- construct.file.path(
-    filename = filename, suffix = suffix, extension = extension,
+    filename = FixPlotName(filename), suffix = suffix, extension = extension,
     manualFileName = manualFileName, manualDirectory = manualDirectory
   )
 
@@ -813,9 +811,8 @@ write.simple.xlsx <- function(
     named_list <- lapply(named_list, assignRownames)
   }
 
-
   FnP <- construct.file.path(
-    filename = filename, suffix = suffix, extension = "xlsx",
+    filename = FixPlotName(filename), suffix = suffix, extension = "xlsx",
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
 
