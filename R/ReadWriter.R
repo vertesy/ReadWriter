@@ -349,7 +349,8 @@ read.simple.csv <- function(
 
   # browser()
   pfn <- Stringendo::kollapse(...) # merge path and filename
-  read_in <- suppressWarnings(readr::read_csv(pfn, col_names = colnames, col_types = coltypes, n_max = nmax))
+  read_in <- suppressWarnings(readr::read_csv(pfn, col_names = colnames, col_types = coltypes,
+                                              n_max = nmax))
   iprint("New variable dim: ", dim(read_in) - 0:1)
 
   # if (wRownames) { read_in = FirstCol2RowNames(read_in) }
