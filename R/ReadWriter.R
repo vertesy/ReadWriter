@@ -29,9 +29,10 @@
 #' @param ... Pass arguments to make.names()..
 #' @export
 
-column.2.row.names <- function(
-    tibble, rowname_column = 1, make_names = FALSE, as_df = TRUE,
-    warn = TRUE, ...) {
+column.2.row.names <- function(tibble, rowname_column = 1,
+                               make_names = FALSE, as_df = TRUE,
+                               warn = TRUE
+                               , ...) {
   "This is the function that should be used from 11.2023"
 
   # Assertions
