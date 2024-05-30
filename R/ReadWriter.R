@@ -777,8 +777,8 @@ write.simple.xlsx <- function(
     suffix = NULL,
     manual_file_name = NULL,
     manual_directory = NULL,
-    rowname_column #  'gene' # for Seurat df.markers
-    , o = FALSE,
+    rowname_column,  #  'gene' # for Seurat df.markers
+    o = FALSE,
     TabColor = "darkgoldenrod1", HeaderLineColor = "darkolivegreen3",
     HeaderCex = 12, Creator = "",
     HeaderCharStyle = c("bold", "italic", "underline")[1],
