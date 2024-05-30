@@ -646,28 +646,17 @@ write.simple.tsv <- function(
 
   " write.simple.tsv should have background compression as a feature #14 "
 
-  " write.simple.tsv should have background compression as a feature #14 "
-
   if (separator %in% c(",", ";")) extension <- "csv"
 
   fname <- Stringendo::kollapse(..., print = FALSE)
   if (nchar(fname) < 2) fname <- filename
 
-  # if (nchar(ManualName)) {
-  #   FnP <- Stringendo::kollapse(ManualName)
-  # } else {
-  #   FnP <- ww.FnP_parser(fname, extension)
-  # }
-
-  # print("")
-  # print(fname)
-  # print("")
-  # browser()
-
   FnP <- construct.file.path(
     filename = FixPlotName(fname), suffix = suffix, extension = extension,
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
+  print(FnP)
+  print(FnP)
 
   write.table(input_df,
     file = FnP, sep = separator,
@@ -796,7 +785,9 @@ write.simple.xlsx <- function(
     FreezeFirstRow = TRUE, FreezeFirstCol = FALSE,
     has_row_names = TRUE) {
   # Assertions for input arguments
-  stopifnot(is.list(named_list), all(sapply(named_list, function(x) is.matrix(x) || is.data.frame(x))))
+  stopifnot(is.list(named_list),
+            all(sapply(named_list, function(x) is.matrix(x) || is.data.frame(x)))
+            )
 
   if (!("list" %in% class(named_list))) named_list <- list(named_list) # convert to a list if needed
 
