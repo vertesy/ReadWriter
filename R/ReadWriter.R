@@ -521,7 +521,7 @@ read.simple.xlsx <- function(
 #' @importFrom checkmate assert_vector assert_character assert_flag
 #'
 #' @export
-write.simplest  <- function(vec = LETTERS[1:11], append = TRUE,
+write.simplest <- function(vec = LETTERS[1:11], append = TRUE,
                            file_path = "/groups/knoblich/Projects/connectomics/Analysis/__clipboard.txt") {
 
   stopifnot(is.vector(vec),
@@ -531,8 +531,11 @@ write.simplest  <- function(vec = LETTERS[1:11], append = TRUE,
   )
 
   # Append vector to file
-  if (append) write("\n\n# -----------------------------------------------------------------------",
-                    file = file_path, append = TRUE)
+  if (append) {
+    write("\n\n# -----------------------------------------------------------------------",
+          file = file_path, append = TRUE)
+    write(idate(), file = file_path, append = TRUE)
+  }
   write.table(vec, file = file_path, sep = "\n", row.names = FALSE, col.names = FALSE,
               quote = FALSE, append = append)
   message("Vector of length ", length(vec), " e.g.: ", kppc(head(vec)), ", is written to: \n", file_path)
