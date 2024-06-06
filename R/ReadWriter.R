@@ -534,7 +534,7 @@ write.simplest <- function(vec = LETTERS[1:11], append = TRUE,
   if (append) {
     write("\n\n# -----------------------------------------------------------------------",
           file = file_path, append = TRUE)
-    write(idate(), file = file_path, append = TRUE)
+    write(kppws(substitute(vec), idate()), file = file_path, append = TRUE)
   }
   write.table(vec, file = file_path, sep = "\n", row.names = FALSE, col.names = FALSE,
               quote = FALSE, append = append)
