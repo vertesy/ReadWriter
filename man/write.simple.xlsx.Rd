@@ -6,11 +6,11 @@
 \usage{
 write.simple.xlsx(
   named_list,
+  rowname_column,
   filename = substitute(named_list),
   suffix = NULL,
   manual_file_name = NULL,
   manual_directory = NULL,
-  rowname_column,
   o = FALSE,
   TabColor = "darkgoldenrod1",
   HeaderLineColor = "darkolivegreen3",
@@ -26,13 +26,13 @@ write.simple.xlsx(
 \item{named_list}{A list of data frames or matrices to write out.
 Default: No default value, a list must be provided.}
 
+\item{rowname_column}{The column name or index to use as row names in the Excel file.
+Required, no default value.}
+
 \item{filename}{The base name for the output file, derived from the 'named_list' variable if not specified.
 Default: Derived using 'substitute(named_list)'.}
 
 \item{suffix}{A suffix to be added to the output filename. Default: NULL.}
-
-\item{rowname_column}{The column name or index to use as row names in the Excel file.
-Required, no default value.}
 
 \item{o}{Logical; if TRUE, opens the file after writing using the system's default application.
 Default: FALSE.}

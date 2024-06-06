@@ -502,6 +502,50 @@ read.simple.xlsx <- function(
 # ____________________________________________________________________________________________ ----
 ## Writing files out ------------------------------------------------------------------------------
 
+#' @title Append or write a vector to standard file, one element per line.
+#'
+#' @description Alternative to clipboard. This function takes a vector and appends it
+#' to a specified file.
+#'
+#' @param vec A vector to be written to the file. Default: `LETTERS[1:11]`.
+#' @param append Logical flag indicating whether to append the vector to the file. Default: `TRUE`.
+#' @param file_path A string specifying the file path where the vector will be written. Default:
+#' `"/groups/knoblich/Projects/connectomics/Analysis/__clipboard.txt"`.
+#'
+#' @examples
+#' \dontrun{
+#'  write.simplest(letters[1:5], append = TRUE)
+#'  }
+#'
+#' @return A message indicating the length of the vector and the file path to which it was written.
+#' @importFrom checkmate assert_vector assert_character assert_flag
+#'
+#' @export
+write.simplest  <- function(vec = LETTERS[1:11], append = TRUE,
+                           file_path = "/groups/knoblich/Projects/connectomics/Analysis/__clipboard.txt") {
+
+  stopifnot(is.vector(vec),
+            is.character(file_path),
+            length(file_path) == 1,
+            file_path != ""
+  )
+
+  # Append vector to file
+  if (append) write("\n\n# -----------------------------------------------------------------------",
+                    file = file_path, append = TRUE)
+  write.table(vec, file = file_path, sep = "\n", row.names = FALSE, col.names = FALSE,
+              quote = FALSE, append = append)
+  message("Vector of length ", length(vec), " e.g.: ", kppc(head(vec)), ", is written to: \n", file_path)
+
+  guessed_local_path <- gsub(x = file_path,
+                             pattern = "/groups/knoblich/Projects/connectomics/Analysis/",
+                             replacement = "/Volumes/Analysis/")
+  message("open ", guessed_local_path)
+
+}
+
+# write.simplest()
+
 
 # _________________________________________________________________________________________________
 #' @title Write Simple
