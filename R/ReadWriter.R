@@ -773,11 +773,11 @@ write.simple.append <- function(input_df, filename = substitute(input_df), suffi
 
 write.simple.xlsx <- function(
     named_list,
+    rowname_column,  #  'gene' # for Seurat df.markers
     filename = substitute(named_list),
     suffix = NULL,
     manual_file_name = NULL,
     manual_directory = NULL,
-    rowname_column,  #  'gene' # for Seurat df.markers
     o = FALSE,
     TabColor = "darkgoldenrod1", HeaderLineColor = "darkolivegreen3",
     HeaderCex = 12, Creator = "",
@@ -802,6 +802,7 @@ write.simple.xlsx <- function(
     # assignRownames <- function(x) tibble::rownames_to_column(as.data.frame(x), var = "genes")
     assignRownames <- function(x) column.2.row.names(df, rowname_column = rowname_column, make_names = T)
     named_list <- lapply(named_list, assignRownames)
+    message("Converting column ", rowname_column," to row names: ", head(rownames(named_list[[1]])))
   }
 
   FnP <- construct.file.path(
