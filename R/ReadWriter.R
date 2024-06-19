@@ -154,8 +154,11 @@ FirstCol2RowNames.as.df <- function(Tibble, rownamecol = 1, make_names = FALSE) 
 #'   extension = "txt"
 #' )
 construct.file.path <- function(
-    filename = NULL, suffix = NULL, extension = NULL,
-    manual_file_name = NULL, manual_directory = NULL,
+    filename = NULL,
+    suffix = NULL,
+    extension = NULL,
+    manual_file_name = NULL,
+    manual_directory = NULL,
     verbose = TRUE) {
 
   filename <- as.character(filename) # unclear why thus bf needed.
@@ -177,7 +180,10 @@ construct.file.path <- function(
   # Output assertion
   stopifnot(is.character(FnP), nzchar(FnP))
 
-  if (verbose) cat(FnP, fill = TRUE)
+  if (verbose) {
+    try(message(osXpath(FnP)))
+    message(FnP, "\n")
+  }
   return(FnP)
 }
 
@@ -707,10 +713,10 @@ write.simple.tsv <- function(
   print(FnP)
 
   write.table(input_df,
-    file = FnP, sep = separator,
-    row.names = row_names,
-    col.names = col_names,
-    quote = FALSE
+              file = FnP, sep = separator,
+              row.names = row_names,
+              col.names = col_names,
+              quote = FALSE
   )
 
   printme <- if (length(dim(input_df))) {
@@ -821,7 +827,7 @@ write.simple.append <- function(input_df, filename = substitute(input_df), suffi
 
 write.simple.xlsx <- function(
     named_list,
-    rowname_column,  #  'gene' # for Seurat df.markers
+    rowname_column = 1,  #  'gene' # for Seurat df.markers
     filename = substitute(named_list),
     suffix = NULL,
     manual_file_name = NULL,
@@ -835,7 +841,7 @@ write.simple.xlsx <- function(
   # Assertions for input arguments
   stopifnot(is.list(named_list),
             all(sapply(named_list, function(x) is.matrix(x) || is.data.frame(x)))
-            )
+  )
 
   if (!("list" %in% class(named_list))) named_list <- list(named_list) # convert to a list if needed
 
@@ -847,7 +853,6 @@ write.simple.xlsx <- function(
 
   # assign row names if required
   if (!has_row_names) {
-    # assignRownames <- function(x) tibble::rownames_to_column(as.data.frame(x), var = "genes")
     assignRownames <- function(x) column.2.row.names(df, rowname_column = rowname_column, make_names = T)
     named_list <- lapply(named_list, assignRownames)
     message("Converting column ", rowname_column," to row names: ", head(rownames(named_list[[1]])))
