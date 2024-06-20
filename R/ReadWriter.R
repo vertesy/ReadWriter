@@ -677,6 +677,8 @@ write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix
 #' @param col_names Write column names? NA by default, TRUE if row_names == FALSE
 #' @param o Open the file after saving? FALSE by default
 #' @param gzip Compress the file after saving? FALSE by default
+#' @param ... Additional arguments passed to write.table()
+#'
 #' @examples YourDataFrameWithRowAndColumnNames <- cbind("A" = rnorm(100), "B" = rpois(100, 8))
 #' rownames(YourDataFrameWithRowAndColumnNames) <- letters[1:NROW(YourDataFrameWithRowAndColumnNames)]
 #' write.simple.tsv(YourDataFrameWithRowAndColumnNames)
@@ -691,12 +693,13 @@ write.simple.tsv <- function(
     manual_directory = NULL,
     row_names = TRUE,
     col_names = NA,
-    o = FALSE, gzip = FALSE) {
+    o = FALSE,
+    gzip = FALSE
+    ) {
+  #
   if (row_names == FALSE) {
     col_names <- TRUE
   }
-
-  " write.simple.tsv should have background compression as a feature #14 "
 
   " write.simple.tsv should have background compression as a feature #14 "
 
@@ -709,15 +712,13 @@ write.simple.tsv <- function(
     filename = FixPlotName(fname), suffix = suffix, extension = extension,
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
-  print(FnP)
-  print(FnP)
+  # print(FnP)
 
   write.table(input_df,
               file = FnP, sep = separator,
               row.names = row_names,
               col.names = col_names,
-              quote = FALSE
-  )
+              quote = FALSE)
 
   printme <- if (length(dim(input_df))) {
     paste0("Dim: ", dim(input_df))

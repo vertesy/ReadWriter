@@ -6,7 +6,7 @@
 \usage{
 write.simple.xlsx(
   named_list,
-  rowname_column,
+  rowname_column = 1,
   filename = substitute(named_list),
   suffix = NULL,
   manual_file_name = NULL,

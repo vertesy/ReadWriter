@@ -22,7 +22,8 @@ write.simplest(
 A message indicating the length of the vector and the file path to which it was written.
 }
 \description{
-Alternative clipboard. This function takes a vector and appends it to a specified file.
+Alternative to clipboard. This function takes a vector and appends it
+to a specified file.
 }
 \examples{
 \dontrun{

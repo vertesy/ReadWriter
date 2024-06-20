@@ -22,7 +22,7 @@ write.simple.tsv(
 \arguments{
 \item{input_df}{Your Dataframe with row- and column-names}
 
-\item{...}{Pass any other argument to the kollapse() function used for file name.}
+\item{...}{Additional arguments passed to write.table()}
 
 \item{separator}{Field separator, such as "," for csv}
 
