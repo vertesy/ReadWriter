@@ -10,6 +10,7 @@ column.2.row.names(
   make_names = FALSE,
   as_df = TRUE,
   warn = TRUE,
+  overwrite = TRUE,
   ...
 )
 }

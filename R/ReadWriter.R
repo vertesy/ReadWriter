@@ -31,14 +31,15 @@
 
 column.2.row.names <- function(tibble, rowname_column = 1,
                                make_names = FALSE, as_df = TRUE,
-                               warn = TRUE
-                               , ...) {
+                               warn = TRUE,
+                               overwrite = TRUE,
+                               ...) {
   "This is the function that should be used from 11.2023"
 
   # Assertions
   stopifnot(
     is.data.frame(tibble),
-    is.numeric(rowname_column),
+    # is.numeric(rowname_column),
     rowname_column > 0,
     rowname_column <= ncol(tibble),
     is.logical(make_names), is.logical(as_df)
@@ -47,10 +48,11 @@ column.2.row.names <- function(tibble, rowname_column = 1,
   if (!is.null(rownames(tibble))) {
     if (warn) {
       options(warn = -1) # this should not be necessary
-      warning("tibble/df already has row names (now overwritten):", immediate. = T)
+      warning("tibble/df already has row names:", immediate. = T)
       print(head(rownames(tibble)))
     }
   }
+  # browser()
 
   if (as_df) {
     tibble <- as.data.frame(tibble)
@@ -77,7 +79,13 @@ column.2.row.names <- function(tibble, rowname_column = 1,
   tibble <- tibble[, -rowname_column, drop = FALSE]
 
   # Setting the row names
-  rownames(tibble) <- row_names
+  if(overwrite) {
+    message("Overwriting row names.")
+    rownames(tibble) <- NULL
+    rownames(tibble) <- row_names
+  } else {
+    message("Nothing changed, original row names kept.")
+  }
 
   # Output assertion
   stopifnot(is.data.frame(tibble), !is.null(rownames(tibble)))
