@@ -11,7 +11,8 @@ write.simple.append(
   extension = "tsv",
   manualFileName = NULL,
   manualDirectory = NULL,
-  o = FALSE
+  o = FALSE,
+  v = TRUE
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ write.simple.append(
 \item{manualDirectory}{Directory to save the file in, overrides default directory. Default: NULL.}
 
 \item{o}{If TRUE, opens the file after writing on OS X using 'system(open ...)'. Default: FALSE.}
+
+\item{v}{verbose Print path? Default: TRUE.}
 }
 \value{
 Appends data to an existing .tsv file.

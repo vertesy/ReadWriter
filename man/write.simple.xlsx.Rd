@@ -19,7 +19,7 @@ write.simple.xlsx(
   HeaderCharStyle = c("bold", "italic", "underline")[1],
   FreezeFirstRow = TRUE,
   FreezeFirstCol = FALSE,
-  has_row_names = TRUE
+  v = TRUE
 )
 }
 \arguments{
@@ -51,6 +51,8 @@ Default: 'bold'.}
 \item{FreezeFirstRow}{Logical; if TRUE, freezes the first row in Excel. Default: TRUE.}
 
 \item{FreezeFirstCol}{Logical; if TRUE, freezes the first column in Excel. Default: FALSE.}
+
+\item{v}{verbose Print path? Default: TRUE.}
 
 \item{has_row_names}{Logical; if set to FALSE, converts the first column to row names. Default: TRUE}
 }

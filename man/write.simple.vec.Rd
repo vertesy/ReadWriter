@@ -11,7 +11,8 @@ write.simple.vec(
   extension = "vec",
   manual_file_name = NULL,
   manual_directory = NULL,
-  o = FALSE
+  o = FALSE,
+  v = TRUE
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ write.simple.vec(
 \item{manual_directory}{Directory to save the file in, overrides default directory. Default: NULL.}
 
 \item{o}{If TRUE, opens the file after writing on OS X using 'system(open ...)'. Default: FALSE.}
+
+\item{v}{verbose Print path? Default: TRUE.}
 }
 \value{
 Outputs a .vec file and optionally prints the length of the input vector.

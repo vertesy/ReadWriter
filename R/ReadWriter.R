@@ -151,9 +151,10 @@ FirstCol2RowNames.as.df <- function(Tibble, rownamecol = 1, make_names = FALSE) 
 #' @param filename The base file name to process. Default: NULL.
 #' @param suffix The file name suffix to be appended. Default: NULL.
 #' @param extension The file extension to be appended. Default: NULL.
-#' @param verbose Print path? Default: TRUE.
 #' @param manual_file_name An optional manual specification for the file name. Default: NULL.
 #' @param manual_directory An optional manual specification for the directory. Default: NULL.
+#' @param v verbose Print path? Default: TRUE.
+#'
 #' @return A string representing the constructed file path.
 #' @importFrom Stringendo sppp ParseFullFilePath
 #' @examples
@@ -167,7 +168,7 @@ construct.file.path <- function(
     extension = NULL,
     manual_file_name = NULL,
     manual_directory = NULL,
-    verbose = TRUE) {
+    v = TRUE) {
 
   filename <- as.character(filename) # unclear why thus bf needed.
 
@@ -188,7 +189,7 @@ construct.file.path <- function(
   # Output assertion
   stopifnot(is.character(FnP), nzchar(FnP))
 
-  if (verbose) {
+  if (v) {
     try(message(osXpath(FnP)))
     message(FnP, "\n")
   }
@@ -579,6 +580,7 @@ write.simplest <- function(vec = LETTERS[1:11], append = TRUE,
 #' @param manual_file_name Manually defined filename, overrides automatic naming. Default: NULL.
 #' @param manual_directory Directory to save the file in, overrides default directory. Default: NULL.
 #' @param o If TRUE, opens the file after writing on OS X using 'system(open ...)'. Default: FALSE.
+#' @param v verbose Print path? Default: TRUE.
 #' @return Outputs a .tsv file and optionally prints the length of the input data frame.
 #' @examples
 #' \dontrun{
@@ -588,7 +590,8 @@ write.simplest <- function(vec = LETTERS[1:11], append = TRUE,
 #' }
 #' @export
 write.simple <- function(input_df, filename = substitute(input_df), suffix = NULL, extension = "tsv",
-                         manual_file_name = NULL, manual_directory = NULL, o = FALSE) {
+                         manual_file_name = NULL, manual_directory = NULL, o = FALSE,
+                         v = TRUE) {
   # Input argument assertions
 
   stopifnot(
@@ -600,7 +603,7 @@ write.simple <- function(input_df, filename = substitute(input_df), suffix = NUL
     is.logical(o)
   )
 
-  FnP <- construct.file.path(
+  FnP <- construct.file.path(v = v,
     filename = FixPlotName(filename), suffix = suffix, extension = extension,
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
@@ -630,6 +633,8 @@ write.simple <- function(input_df, filename = substitute(input_df), suffix = NUL
 #' @param manual_file_name Manually defined filename, overrides automatic naming. Default: NULL.
 #' @param manual_directory Directory to save the file in, overrides default directory. Default: NULL.
 #' @param o If TRUE, opens the file after writing on OS X using 'system(open ...)'. Default: FALSE.
+#' @param v verbose Print path? Default: TRUE.
+#'
 #' @return Outputs a .vec file and optionally prints the length of the input vector.
 #' @examples
 #' \dontrun{
@@ -639,7 +644,8 @@ write.simple <- function(input_df, filename = substitute(input_df), suffix = NUL
 #' }
 #' @export
 write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix = NULL, extension = "vec",
-                             manual_file_name = NULL, manual_directory = NULL, o = FALSE) {
+                             manual_file_name = NULL, manual_directory = NULL, o = FALSE,
+                             v = TRUE) {
   # Input argument assertions
   stopifnot(is.vector(input_vec),
             is.null(suffix) || is.character(suffix),
@@ -648,7 +654,7 @@ write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix
             is.null(manual_directory) || is.character(manual_directory),
             is.logical(o))
 
-  FnP <- construct.file.path(
+  FnP <- construct.file.path(v = v,
     filename = FixPlotName(filename), suffix = suffix, extension = extension,
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
@@ -683,8 +689,9 @@ write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix
 #' @param manual_file_name Specify full filename if you do not want to name it by the variable name.
 #' @param row_names Write row names? TRUE by default
 #' @param col_names Write column names? NA by default, TRUE if row_names == FALSE
-#' @param o Open the file after saving? FALSE by default
 #' @param gzip Compress the file after saving? FALSE by default
+#' @param o Open the file after saving? FALSE by default
+#' @param v verbose Print path? Default: TRUE.
 #' @param ... Additional arguments passed to write.table()
 #'
 #' @examples YourDataFrameWithRowAndColumnNames <- cbind("A" = rnorm(100), "B" = rpois(100, 8))
@@ -693,7 +700,7 @@ write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix
 #'
 #' @export
 write.simple.tsv <- function(
-    input_df, ...,
+    input_df,
     separator = "\t", extension = "tsv",
     filename = substitute(input_df),
     suffix = NULL,
@@ -701,9 +708,10 @@ write.simple.tsv <- function(
     manual_directory = NULL,
     row_names = TRUE,
     col_names = NA,
+    gzip = FALSE,
     o = FALSE,
-    gzip = FALSE
-    ) {
+    v = TRUE,
+    ...) {
   #
   if (row_names == FALSE) {
     col_names <- TRUE
@@ -716,7 +724,7 @@ write.simple.tsv <- function(
   fname <- Stringendo::kollapse(..., print = FALSE)
   if (nchar(fname) < 2) fname <- filename
 
-  FnP <- construct.file.path(
+  FnP <- construct.file.path(v = v,
     filename = FixPlotName(fname), suffix = suffix, extension = extension,
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
@@ -726,7 +734,7 @@ write.simple.tsv <- function(
               file = FnP, sep = separator,
               row.names = row_names,
               col.names = col_names,
-              quote = FALSE)
+              quote = FALSE, ...)
 
   printme <- if (length(dim(input_df))) {
     paste0("Dim: ", dim(input_df))
@@ -759,6 +767,8 @@ write.simple.tsv <- function(
 #' @param manualFileName Manually defined filename, overrides automatic naming. Default: NULL.
 #' @param manualDirectory Directory to save the file in, overrides default directory. Default: NULL.
 #' @param o If TRUE, opens the file after writing on OS X using 'system(open ...)'. Default: FALSE.
+#' @param v verbose Print path? Default: TRUE.
+#'
 #' @return Appends data to an existing .tsv file.
 #' @examples
 #' \dontrun{
@@ -768,7 +778,8 @@ write.simple.tsv <- function(
 #' }
 #' @export
 write.simple.append <- function(input_df, filename = substitute(input_df), suffix = NULL, extension = "tsv",
-                                manualFileName = NULL, manualDirectory = NULL, o = FALSE) {
+                                manualFileName = NULL, manualDirectory = NULL, o = FALSE,
+                                v = TRUE) {
   stopifnot(
     # is.data.frame(input_df),
     is.null(suffix) || is.character(suffix),
@@ -778,7 +789,7 @@ write.simple.append <- function(input_df, filename = substitute(input_df), suffi
     is.logical(o)
   )
 
-  FnP <- construct.file.path(
+  FnP <- construct.file.path(v = v,
     filename = FixPlotName(filename), suffix = suffix, extension = extension,
     manualFileName = manualFileName, manualDirectory = manualDirectory
   )
@@ -819,9 +830,11 @@ write.simple.append <- function(input_df, filename = substitute(input_df), suffi
 #' @param HeaderLineColor Color for the header line. Default: 'darkolivegreen3'.
 #' @param HeaderCharStyle Character style for the header (e.g., 'bold', 'italic', 'underline').
 #'                        Default: 'bold'.
+#' @param has_row_names Logical; if set to FALSE, converts the first column to row names. Default: TRUE
 #' @param FreezeFirstRow Logical; if TRUE, freezes the first row in Excel. Default: TRUE.
 #' @param FreezeFirstCol Logical; if TRUE, freezes the first column in Excel. Default: FALSE.
-#' @param has_row_names Logical; if set to FALSE, converts the first column to row names. Default: TRUE
+#' @param v verbose Print path? Default: TRUE.
+#'
 #' @examples
 #' \dontrun{
 #' if (interactive()) {
@@ -846,7 +859,7 @@ write.simple.xlsx <- function(
     HeaderCex = 12, Creator = "",
     HeaderCharStyle = c("bold", "italic", "underline")[1],
     FreezeFirstRow = TRUE, FreezeFirstCol = FALSE,
-    has_row_names = TRUE) {
+    v = TRUE) {
   # Assertions for input arguments
   stopifnot(is.list(named_list),
             all(sapply(named_list, function(x) is.matrix(x) || is.data.frame(x)))
@@ -867,7 +880,7 @@ write.simple.xlsx <- function(
     message("Converting column ", rowname_column," to row names: ", head(rownames(named_list[[1]])))
   }
 
-  FnP <- construct.file.path(
+  FnP <- construct.file.path(v = v,
     filename = FixPlotName(filename), suffix = suffix, extension = "xlsx",
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )

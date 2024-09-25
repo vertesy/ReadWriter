@@ -10,7 +10,7 @@ construct.file.path(
   extension = NULL,
   manual_file_name = NULL,
   manual_directory = NULL,
-  verbose = TRUE
+  v = TRUE
 )
 }
 \arguments{
@@ -24,7 +24,7 @@ construct.file.path(
 
 \item{manual_directory}{An optional manual specification for the directory. Default: NULL.}
 
-\item{verbose}{Print path? Default: TRUE.}
+\item{v}{verbose Print path? Default: TRUE.}
 }
 \value{
 A string representing the constructed file path.

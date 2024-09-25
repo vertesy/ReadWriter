@@ -6,7 +6,6 @@
 \usage{
 write.simple.tsv(
   input_df,
-  ...,
   separator = "\\t",
   extension = "tsv",
   filename = substitute(input_df),
@@ -15,14 +14,14 @@ write.simple.tsv(
   manual_directory = NULL,
   row_names = TRUE,
   col_names = NA,
+  gzip = FALSE,
   o = FALSE,
-  gzip = FALSE
+  v = TRUE,
+  ...
 )
 }
 \arguments{
 \item{input_df}{Your Dataframe with row- and column-names}
-
-\item{...}{Additional arguments passed to write.table()}
 
 \item{separator}{Field separator, such as "," for csv}
 
@@ -36,9 +35,13 @@ write.simple.tsv(
 
 \item{col_names}{Write column names? NA by default, TRUE if row_names == FALSE}
 
+\item{gzip}{Compress the file after saving? FALSE by default}
+
 \item{o}{Open the file after saving? FALSE by default}
 
-\item{gzip}{Compress the file after saving? FALSE by default}
+\item{v}{verbose Print path? Default: TRUE.}
+
+\item{...}{Additional arguments passed to write.table()}
 }
 \description{
 Write out a matrix-like R-object WITH ROW- AND COLUMN- NAMES to a file with as tab separated
