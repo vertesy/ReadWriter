@@ -604,7 +604,7 @@ write.simple <- function(input_df, filename = substitute(input_df), suffix = NUL
   )
 
   FnP <- construct.file.path(v = v,
-    filename = FixPlotName(filename), suffix = suffix, extension = extension,
+    filename = FixPlotName(make.names(filename)), suffix = suffix, extension = extension,
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
 
@@ -655,7 +655,7 @@ write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix
             is.logical(o))
 
   FnP <- construct.file.path(v = v,
-    filename = FixPlotName(filename), suffix = suffix, extension = extension,
+    filename = FixPlotName(make.names(filename)), suffix = suffix, extension = extension,
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
 
@@ -725,7 +725,7 @@ write.simple.tsv <- function(
   if (nchar(fname) < 2) fname <- filename
 
   FnP <- construct.file.path(v = v,
-    filename = FixPlotName(fname), suffix = suffix, extension = extension,
+    filename = FixPlotName(make.names(fname)), suffix = suffix, extension = extension,
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
   # print(FnP)
@@ -790,7 +790,7 @@ write.simple.append <- function(input_df, filename = substitute(input_df), suffi
   )
 
   FnP <- construct.file.path(v = v,
-    filename = FixPlotName(filename), suffix = suffix, extension = extension,
+    filename = FixPlotName(make.names(filename)), suffix = suffix, extension = extension,
     manualFileName = manualFileName, manualDirectory = manualDirectory
   )
 
@@ -858,6 +858,7 @@ write.simple.xlsx <- function(
     TabColor = "darkgoldenrod1", HeaderLineColor = "darkolivegreen3",
     HeaderCex = 12, Creator = "",
     HeaderCharStyle = c("bold", "italic", "underline")[1],
+    has_row_names = TRUE,
     FreezeFirstRow = TRUE, FreezeFirstCol = FALSE,
     v = TRUE) {
   # Assertions for input arguments
@@ -881,7 +882,7 @@ write.simple.xlsx <- function(
   }
 
   FnP <- construct.file.path(v = v,
-    filename = FixPlotName(filename), suffix = suffix, extension = "xlsx",
+    filename = FixPlotName(make.names(filename)), suffix = suffix, extension = "xlsx",
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
 

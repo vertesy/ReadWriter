@@ -17,6 +17,7 @@ write.simple.xlsx(
   HeaderCex = 12,
   Creator = "",
   HeaderCharStyle = c("bold", "italic", "underline")[1],
+  has_row_names = TRUE,
   FreezeFirstRow = TRUE,
   FreezeFirstCol = FALSE,
   v = TRUE
@@ -48,13 +49,13 @@ Default: FALSE.}
 \item{HeaderCharStyle}{Character style for the header (e.g., 'bold', 'italic', 'underline').
 Default: 'bold'.}
 
+\item{has_row_names}{Logical; if set to FALSE, converts the first column to row names. Default: TRUE}
+
 \item{FreezeFirstRow}{Logical; if TRUE, freezes the first row in Excel. Default: TRUE.}
 
 \item{FreezeFirstCol}{Logical; if TRUE, freezes the first column in Excel. Default: FALSE.}
 
 \item{v}{verbose Print path? Default: TRUE.}
-
-\item{has_row_names}{Logical; if set to FALSE, converts the first column to row names. Default: TRUE}
 }
 \description{
 Write out a list of matrices or data frames with row and column names
