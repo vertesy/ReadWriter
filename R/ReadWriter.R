@@ -413,7 +413,7 @@ read.simple.csv.named.vector <- function(file, sep = ";", value_col = 2, name_co
     stop("Unknown separator: ", sep)
   }
 
-  if (ncol(vect) < 2) stop("Less than 2 columns in file: ", file)
+  if (ncol(df) < 2) stop("Less than 2 columns in file: ", file)
 
   vect <- df[[value_col]]
   names(vect) <- df[[name_col]]
@@ -480,6 +480,7 @@ read.simple.ssv <- function(
 #' @export
 #' @importFrom readr read_tsv
 read.simple.tsv.named.vector <- function(...) {
+  message("This function should be updated as `read.simple.csv.named.vector`!")
   pfn <- Stringendo::kollapse(...) # merge path and filename
   # read_in = read.delim( pfn , stringsAsFactors = FALSE, sep = sep_, row.names = 1, header = TRUE )
   read_in <- readr::read_tsv(pfn)
