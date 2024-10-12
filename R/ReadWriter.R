@@ -380,6 +380,48 @@ read.simple.csv <- function(
   return(read_in)
 }
 
+# _________________________________________________________________________________________________
+#' @title read.simple.csv.named.vector
+#'
+#' @description Read in a data frame (csv), and extact a value and a name column, and convert them
+#' to a named vector. By default, it assumes the names in the first column and the values
+#' excel style named vectors, names in col1,
+#' headers SHIFTED. The header should start with a TAB / First column name
+#' should be empty.
+#' @param file Path to the *.csv file.
+#' @param sep Separator character, Default: ';' alternative: ','.
+#' @param value_col Column number of the values in the input data frame. Default: 2
+#' @param name_col Column number of the names in the input data frame. Default: 1
+#' @examples
+#' \dontrun{
+#' if (interactive()) {
+#'   # read.simple.csv.named.vector("path/to/my.file.csv")
+#' }
+#' }
+#' @seealso
+#'  \code{\link[readr]{read_delim}}
+#' @export
+#' @importFrom readr read_csv
+read.simple.csv.named.vector <- function(file, sep = ";", value_col = 2, name_col = 1) {
+  stopifnot(is.character(file), length(file) == 1, file.exists(file))
+
+  if(sep == ";") {
+    df <- readr::read_csv2(file, col_names = FALSE)
+  } else if(sep == ",") {
+    df <- readr::read_csv(file, col_names = FALSE)
+  } else {
+    stop("Unknown separator: ", sep)
+  }
+
+  if (ncol(vect) < 2) stop("Less than 2 columns in file: ", file)
+
+  vect <- df[[value_col]]
+  names(vect) <- df[[name_col]]
+  message("New vectors length is: ", length(vect), "e.g. ", head(vect), " ...")
+
+  return(vect)
+}
+
 
 # _________________________________________________________________________________________________
 #' @title read.simple.ssv
