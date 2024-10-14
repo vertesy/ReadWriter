@@ -4,7 +4,14 @@
 \alias{read.simple.csv.named.vector}
 \title{read.simple.csv.named.vector}
 \usage{
-read.simple.csv.named.vector(file, sep = ";", value_col = 2, name_col = 1)
+read.simple.csv.named.vector(
+  file,
+  sep = ";",
+  col_names = TRUE,
+  value_col = 2,
+  name_col = 1,
+  ...
+)
 }
 \arguments{
 \item{file}{Path to the *.csv file.}
@@ -14,6 +21,10 @@ read.simple.csv.named.vector(file, sep = ";", value_col = 2, name_col = 1)
 \item{value_col}{Column number of the values in the input data frame. Default: 2}
 
 \item{name_col}{Column number of the names in the input data frame. Default: 1}
+
+\item{...}{Additional arguments passed to \code{\link[readr]{read_csv}} or read_csv2.}
+
+\item{colnames}{Are there column names?, Default: TRUE}
 }
 \description{
 Read in a data frame (csv), and extact a value and a name column, and convert them

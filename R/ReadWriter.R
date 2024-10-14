@@ -390,8 +390,10 @@ read.simple.csv <- function(
 #' should be empty.
 #' @param file Path to the *.csv file.
 #' @param sep Separator character, Default: ';' alternative: ','.
+#' @param colnames Are there column names?, Default: TRUE
 #' @param value_col Column number of the values in the input data frame. Default: 2
 #' @param name_col Column number of the names in the input data frame. Default: 1
+#' @param ... Additional arguments passed to \code{\link[readr]{read_csv}} or read_csv2.
 #' @examples
 #' \dontrun{
 #' if (interactive()) {
@@ -401,14 +403,15 @@ read.simple.csv <- function(
 #' @seealso
 #'  \code{\link[readr]{read_delim}}
 #' @export
-#' @importFrom readr read_csv
-read.simple.csv.named.vector <- function(file, sep = ";", value_col = 2, name_col = 1) {
+#' @importFrom readr read_csv read_csv2
+read.simple.csv.named.vector <- function(file, sep = ";", col_names = FALSE,
+                                         value_col = 2, name_col = 1, ...) {
   stopifnot(is.character(file), length(file) == 1, file.exists(file))
 
   if(sep == ";") {
-    df <- readr::read_csv2(file, col_names = FALSE)
+    df <- readr::read_csv2(file, col_names = col_names, ...)
   } else if(sep == ",") {
-    df <- readr::read_csv(file, col_names = FALSE)
+    df <- readr::read_csv(file, col_names = col_names, ...)
   } else {
     stop("Unknown separator: ", sep)
   }
@@ -417,7 +420,7 @@ read.simple.csv.named.vector <- function(file, sep = ";", value_col = 2, name_co
 
   vect <- df[[value_col]]
   names(vect) <- df[[name_col]]
-  message("New vectors length is: ", length(vect), "e.g. ", head(vect), " ...")
+  message("New vectors length is: ", length(vect), "e.g. ", kppc(head(vect)), " ...")
 
   return(vect)
 }
