@@ -7,7 +7,7 @@
 read.simple.csv.named.vector(
   file,
   sep = ";",
-  col_names = TRUE,
+  col_names = FALSE,
   value_col = 2,
   name_col = 1,
   ...
