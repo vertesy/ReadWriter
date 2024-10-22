@@ -946,3 +946,62 @@ write.simple.xlsx <- function(
     system(paste0("open ", fix_special_characters_bash(FnP)), wait = FALSE)
   }
 } # fun
+
+
+
+# ____________________________________________________________________________________________ ----
+## Reexport files ------------------------------------------------------------------------------
+
+#' @title Convert and save a .qs file to different formats
+#'
+#' @description
+#' This function reads in a `.qs` file and resaves it as either a `.tsv`, `.csv`, semicolon-separated
+#' `.csv` (csv2), or Excel file based on the `out_file` argument.
+#'
+#' @param path A character string specifying the path to the `.qs` file. Default: none.
+#' @param out_file A character string specifying the output file format. One of `"tsv"` (default),
+#'   `"csv"`, `"csv2"` (semicolon-separated), or `"excel"`. Default: `"tsv"`.
+#'
+#' @return The function does not return a value but writes the file to disk in the specified format.
+#'
+#' @importFrom qs qread
+#' @export
+#'
+
+qs.2.table <- function(path, out_file = c("tsv", "csv", "csv2", "excel")[1]) {
+
+  # Ensure that the file exists and is a .qs file
+  stopifnot( file.exists(path), stringi::stri_detect(str = path, regex =  "\\.qs$") )
+
+  # Ensure out_file is one of the allowed choices
+  out_file <- match.arg(out_file, c("tsv", "csv", "csv2", "excel"))
+
+  # Read in the .qs file
+  data <- qs:qread(path)
+
+  # Determine the output file extension and write the file based on the output format
+  path_out <- ppp(base_filename, out_file)
+
+  if (out_file == "excel") {
+    # out_path <- ppp(base_filename, "xlsx")
+    ppp(base_filename, out_file)
+    ReadWriter::write.simple.xlsx(data, out_path)
+  }
+
+  if (out_file == "tsv") {
+    ReadWriter::write.simple.tsv(data, path_out, separator = "\t")
+  } else if (out_file == "csv") {
+    ReadWriter::write.simple.tsv(data, path_out, separator = ",")
+
+  } else if (out_file == "csv2") {
+    out_path <- paste0(base_filename, ".csv")
+    ReadWriter::write.simple.tsv(data, path_out, separator = ";")
+
+  } else if (out_file == "excel") {
+    out_path <- paste0(base_filename, ".xlsx")
+    ReadWriter::write.simple.xlsx(data, out_path)
+  }
+
+  message("File saved as: ", out_path)
+}
+
