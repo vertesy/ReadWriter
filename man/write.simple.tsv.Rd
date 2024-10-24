@@ -27,9 +27,13 @@ write.simple.tsv(
 
 \item{extension}{e.g.: tsv}
 
+\item{filename}{The base name for the output file. Default: Name of the input vector.}
+
 \item{suffix}{A suffix added to the filename, Default: NULL}
 
 \item{manual_file_name}{Specify full filename if you do not want to name it by the variable name.}
+
+\item{manual_directory}{Specify the directory where the file should be saved.}
 
 \item{row_names}{Write row names? TRUE by default}
 

@@ -15,6 +15,9 @@ column.2.row.names(
 )
 }
 \arguments{
+\item{tibble}{A dataframe or tibble without row names.
+Default: No default value, a dataframe must be provided.}
+
 \item{rowname_column}{Index of the column to be used as row names.
 Default: 1.}
 
@@ -24,12 +27,11 @@ Default: FALSE.}
 \item{as_df}{Boolean indicating whether to convert the input to a dataframe if it's not already one.
 Default: TRUE.}
 
-\item{warn}{Warn user if row names pre-exist.}
+\item{warn}{Warn user if row names pre-exist. Default: TRUE.}
+
+\item{overwrite}{Overwrite row names if they already exist. Default: TRUE.}
 
 \item{...}{Pass arguments to make.names()..}
-
-\item{df}{A dataframe or tibble without row names.
-Default: No default value, a dataframe must be provided.}
 }
 \description{
 Converts the first column (or a specified column) of a dataframe or tibble into row names.

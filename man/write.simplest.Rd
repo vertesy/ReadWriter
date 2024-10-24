@@ -27,7 +27,7 @@ to a specified file.
 }
 \examples{
 \dontrun{
- write.simplest(letters[1:5], append = TRUE)
- }
+write.simplest(letters[1:5], append = TRUE)
+}
 
 }

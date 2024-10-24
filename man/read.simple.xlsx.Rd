@@ -24,7 +24,9 @@ Default: All sheets.}
 Default: TRUE.}
 
 \item{row_names}{Numeric, whether to convert a column to row names.
-Default: 1. Use 0 for no conversion.}
+Default: 1. Use 0 for no conversion. Default: FALSE.}
+
+\item{trim_ws}{Logical, whether to trim white spaces from column names.}
 
 \item{...}{Pass arguments to read.xlsx().}
 }
@@ -34,4 +36,7 @@ A list of data frames, each representing a sheet from the XLSX file.
 \description{
 Reads specified sheets from an XLSX file into a list of data frames.
 It allows customization of column names, row names, and trimming of white spaces.
+}
+\seealso{
+\code{\link[openxlsx]{read.xlsx}}
 }

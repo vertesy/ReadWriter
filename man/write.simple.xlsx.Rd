@@ -35,6 +35,10 @@ Default: Derived using 'substitute(named_list)'.}
 
 \item{suffix}{A suffix to be added to the output filename. Default: NULL.}
 
+\item{manual_file_name}{Manually defined filename, overrides automatic naming. Default: NULL.}
+
+\item{manual_directory}{Directory to save the file in, overrides default directory. Default: NULL.}
+
 \item{o}{Logical; if TRUE, opens the file after writing using the system's default application.
 Default: FALSE.}
 

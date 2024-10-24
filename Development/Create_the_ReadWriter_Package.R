@@ -42,6 +42,7 @@ devtools::install_github(repo = "vertesy/Seurat.utils", upgrade = F)
 # BiocManager::install("MatrixGenerics")
 
 # CMD CHECK ------------------------------------------------
+devtools::check_man(repository.dir)
 checkres <- devtools::check(repository.dir, cran = FALSE)
 
 

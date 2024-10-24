@@ -17,7 +17,7 @@
 #' it offers the option to sanitize row names using `make.names`, provides a warning if there are
 #' duplicated values in the row name column
 #'
-#' @param df A dataframe or tibble without row names.
+#' @param tibble A dataframe or tibble without row names.
 #'           Default: No default value, a dataframe must be provided.
 #' @param rowname_column Index of the column to be used as row names.
 #'                    Default: 1.
@@ -25,7 +25,9 @@
 #'                   Default: FALSE.
 #' @param as_df Boolean indicating whether to convert the input to a dataframe if it's not already one.
 #'              Default: TRUE.
-#' @param warn Warn user if row names pre-exist.
+#' @param warn Warn user if row names pre-exist. Default: TRUE.
+#' @param overwrite Overwrite row names if they already exist. Default: TRUE.
+#'
 #' @param ... Pass arguments to make.names()..
 #' @export
 
@@ -48,7 +50,7 @@ column.2.row.names <- function(tibble, rowname_column = 1,
   if (!is.null(rownames(tibble))) {
     if (warn) {
       options(warn = -1) # this should not be necessary
-      warning("tibble/df already has row names:", immediate. = T)
+      warning("tibble/df already has row names:", immediate. = TRUE)
       print(head(rownames(tibble)))
     }
   }
@@ -79,7 +81,7 @@ column.2.row.names <- function(tibble, rowname_column = 1,
   tibble <- tibble[, -rowname_column, drop = FALSE]
 
   # Setting the row names
-  if(overwrite) {
+  if (overwrite) {
     message("Overwriting row names.")
     rownames(tibble) <- NULL
     rownames(tibble) <- row_names
@@ -112,7 +114,7 @@ FirstCol2RowNames <- function(Tibble, rownamecol = 1, make_names = FALSE, as.df 
     Tibble <- as.data.frame(Tibble)
   }
 
-  Tibble <- Tibble[, -rownamecol, drop = F]
+  Tibble <- Tibble[, -rownamecol, drop = FALSE]
   if (make_names) {
     row.names <- make.names(row.names, unique = TRUE)
   }
@@ -138,7 +140,7 @@ FirstCol2RowNames.as.df <- function(Tibble, rownamecol = 1, make_names = FALSE) 
   row.names <- Tibble[[rownamecol]]
   Tibble <- as.data.frame(Tibble)
   rownames(Tibble) <- if (make_names) make.names(row.names, unique = TRUE) else row.names
-  return(Tibble[, -rownamecol, drop = F])
+  return(Tibble[, -rownamecol, drop = FALSE])
 }
 
 
@@ -169,7 +171,6 @@ construct.file.path <- function(
     manual_file_name = NULL,
     manual_directory = NULL,
     v = TRUE) {
-
   filename <- as.character(filename) # unclear why thus bf needed.
 
   # Input argument assertions
@@ -362,11 +363,12 @@ read.simple.tsv <- function(
 read.simple.csv <- function(
     ..., colnames = TRUE, coltypes = NULL, wRownames = TRUE,
     NaReplace = TRUE, asTibble = FALSE, nmax = Inf) {
-
   # browser()
   pfn <- Stringendo::kollapse(...) # merge path and filename
-  read_in <- suppressWarnings(readr::read_csv(pfn, col_names = colnames, col_types = coltypes,
-                                              n_max = nmax))
+  read_in <- suppressWarnings(readr::read_csv(pfn,
+    col_names = colnames, col_types = coltypes,
+    n_max = nmax
+  ))
   iprint("New variable dim: ", dim(read_in) - 0:1)
 
   # if (wRownames) { read_in = FirstCol2RowNames(read_in) }
@@ -390,7 +392,7 @@ read.simple.csv <- function(
 #' should be empty.
 #' @param file Path to the *.csv file.
 #' @param sep Separator character, Default: ';' alternative: ','.
-#' @param colnames Are there column names?, Default: TRUE
+#' @param col_names Are there column names?, Default: TRUE
 #' @param value_col Column number of the values in the input data frame. Default: 2
 #' @param name_col Column number of the names in the input data frame. Default: 1
 #' @param ... Additional arguments passed to \code{\link[readr]{read_csv}} or read_csv2.
@@ -408,9 +410,9 @@ read.simple.csv.named.vector <- function(file, sep = ";", col_names = FALSE,
                                          value_col = 2, name_col = 1, ...) {
   stopifnot(is.character(file), length(file) == 1, file.exists(file))
 
-  if(sep == ";") {
+  if (sep == ";") {
     df <- readr::read_csv2(file, col_names = col_names, ...)
-  } else if(sep == ",") {
+  } else if (sep == ",") {
     df <- readr::read_csv(file, col_names = col_names, ...)
   } else {
     stop("Unknown separator: ", sep)
@@ -508,17 +510,21 @@ read.simple.tsv.named.vector <- function(...) {
 #' @param col_names Logical, whether to use the first row as column names.
 #'                  Default: TRUE.
 #' @param row_names Numeric, whether to convert a column to row names.
-#'                  Default: 1. Use 0 for no conversion.
+#'                  Default: 1. Use 0 for no conversion. Default: FALSE.
+#' @param trim_ws Logical, whether to trim white spaces from column names.
 #' @param ... Pass arguments to read.xlsx().
+#'
 #' @return A list of data frames, each representing a sheet from the XLSX file.
 #' @importFrom openxlsx read.xlsx getSheetNames
+#' @seealso \code{\link[openxlsx]{read.xlsx}}
+#'
 #' @export
 
 read.simple.xlsx <- function(
     pfn = Stringendo::kollapse(...), which_sheets,
     col_names = TRUE, row_names = FALSE,
-    trim_ws = TRUE, ...) {
-
+    trim_ws = TRUE
+    , ...) {
   # Assertions for input arguments
   stopifnot(is.character(pfn), length(pfn) > 0)
   if (!missing(which_sheets)) stopifnot(is.numeric(which_sheets) | is.character(which_sheets))
@@ -540,13 +546,13 @@ read.simple.xlsx <- function(
   # Read specified sheets
   ls.excel.sheets <- lapply(range.of.sheets, function(i) {
     sheet_data <- openxlsx::read.xlsx(pfn,
-                                      sheet = i, colNames = col_names,
-                                      rowNames = row_names, ...
+      sheet = i, colNames = col_names,
+      rowNames = row_names, ...
     )
     if (row_names) {
       sheet_data <- column.2.row.names(sheet_data,
-                                       rowname_column = row_names,
-                                       make_names = FALSE, as_df = TRUE
+        rowname_column = row_names,
+        make_names = FALSE, as_df = TRUE
       )
     }
     sheet_data
@@ -575,8 +581,8 @@ read.simple.xlsx <- function(
 #'
 #' @examples
 #' \dontrun{
-#'  write.simplest(letters[1:5], append = TRUE)
-#'  }
+#' write.simplest(letters[1:5], append = TRUE)
+#' }
 #'
 #' @return A message indicating the length of the vector and the file path to which it was written.
 #' @importFrom checkmate assert_vector assert_character assert_flag
@@ -584,29 +590,33 @@ read.simple.xlsx <- function(
 #' @export
 write.simplest <- function(vec = LETTERS[1:11], append = TRUE,
                            file_path = "/groups/knoblich/Projects/connectomics/Analysis/__clipboard.txt") {
-
-  stopifnot(is.vector(vec),
-            is.character(file_path),
-            length(file_path) == 1,
-            file_path != ""
+  stopifnot(
+    is.vector(vec),
+    is.character(file_path),
+    length(file_path) == 1,
+    file_path != ""
   )
 
   # Append vector to file
   if (append) {
     write("\n\n# -----------------------------------------------------------------------",
-          file = file_path, append = TRUE)
+      file = file_path, append = TRUE
+    )
   }
 
   write(kppws(substitute(vec), idate()), file = file_path, append = TRUE)
-  write.table(vec, file = file_path, sep = "\n", row.names = FALSE, col.names = FALSE,
-              quote = FALSE, append = append)
+  write.table(vec,
+    file = file_path, sep = "\n", row.names = FALSE, col.names = FALSE,
+    quote = FALSE, append = append
+  )
   message("Vector of length ", length(vec), " e.g.: ", kppc(head(vec)), ", is written to: \n", file_path)
 
-  guessed_local_path <- gsub(x = file_path,
-                             pattern = "/groups/knoblich/Projects/connectomics/Analysis/",
-                             replacement = "/Volumes/Analysis/")
+  guessed_local_path <- gsub(
+    x = file_path,
+    pattern = "/groups/knoblich/Projects/connectomics/Analysis/",
+    replacement = "/Volumes/Analysis/"
+  )
   message("open ", guessed_local_path)
-
 }
 
 # write.simplest()
@@ -649,7 +659,8 @@ write.simple <- function(input_df, filename = substitute(input_df), suffix = NUL
     is.logical(o)
   )
 
-  FnP <- construct.file.path(v = v,
+  FnP <- construct.file.path(
+    v = v,
     filename = FixPlotName(make.names(filename)), suffix = suffix, extension = extension,
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
@@ -693,14 +704,17 @@ write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix
                              manual_file_name = NULL, manual_directory = NULL, o = FALSE,
                              v = TRUE) {
   # Input argument assertions
-  stopifnot(is.vector(input_vec),
-            is.null(suffix) || is.character(suffix),
-            is.character(extension),
-            is.null(manual_file_name) || is.character(manual_file_name),
-            is.null(manual_directory) || is.character(manual_directory),
-            is.logical(o))
+  stopifnot(
+    is.vector(input_vec),
+    is.null(suffix) || is.character(suffix),
+    is.character(extension),
+    is.null(manual_file_name) || is.character(manual_file_name),
+    is.null(manual_directory) || is.character(manual_directory),
+    is.logical(o)
+  )
 
-  FnP <- construct.file.path(v = v,
+  FnP <- construct.file.path(
+    v = v,
     filename = FixPlotName(make.names(filename)), suffix = suffix, extension = extension,
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
@@ -730,9 +744,11 @@ write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix
 #' @param input_df Your Dataframe with row- and column-names
 #' @param ... Pass any other argument to the kollapse() function used for file name.
 #' @param separator Field separator, such as "," for csv
+#' @param filename The base name for the output file. Default: Name of the input vector.
 #' @param extension e.g.: tsv
 #' @param suffix A suffix added to the filename, Default: NULL
 #' @param manual_file_name Specify full filename if you do not want to name it by the variable name.
+#' @param manual_directory Specify the directory where the file should be saved.
 #' @param row_names Write row names? TRUE by default
 #' @param col_names Write column names? NA by default, TRUE if row_names == FALSE
 #' @param gzip Compress the file after saving? FALSE by default
@@ -770,17 +786,19 @@ write.simple.tsv <- function(
   fname <- Stringendo::kollapse(..., print = FALSE)
   if (nchar(fname) < 2) fname <- filename
 
-  FnP <- construct.file.path(v = v,
+  FnP <- construct.file.path(
+    v = v,
     filename = FixPlotName(make.names(fname)), suffix = suffix, extension = extension,
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
   # print(FnP)
 
   write.table(input_df,
-              file = FnP, sep = separator,
-              row.names = row_names,
-              col.names = col_names,
-              quote = FALSE, ...)
+    file = FnP, sep = separator,
+    row.names = row_names,
+    col.names = col_names,
+    quote = FALSE, ...
+  )
 
   printme <- if (length(dim(input_df))) {
     paste0("Dim: ", dim(input_df))
@@ -835,7 +853,8 @@ write.simple.append <- function(input_df, filename = substitute(input_df), suffi
     is.logical(o)
   )
 
-  FnP <- construct.file.path(v = v,
+  FnP <- construct.file.path(
+    v = v,
     filename = FixPlotName(make.names(filename)), suffix = suffix, extension = extension,
     manualFileName = manualFileName, manualDirectory = manualDirectory
   )
@@ -863,11 +882,13 @@ write.simple.append <- function(input_df, filename = substitute(input_df), suffi
 #'
 #' @param named_list A list of data frames or matrices to write out.
 #'                   Default: No default value, a list must be provided.
-#' @param filename The base name for the output file, derived from the 'named_list' variable if not specified.
-#'                 Default: Derived using 'substitute(named_list)'.
 #' @param rowname_column The column name or index to use as row names in the Excel file.
 #'                    Required, no default value.
+#' @param filename The base name for the output file, derived from the 'named_list' variable if not specified.
+#'                 Default: Derived using 'substitute(named_list)'.
 #' @param suffix A suffix to be added to the output filename. Default: NULL.
+#' @param manual_file_name Manually defined filename, overrides automatic naming. Default: NULL.
+#' @param manual_directory Directory to save the file in, overrides default directory. Default: NULL.
 #' @param o Logical; if TRUE, opens the file after writing using the system's default application.
 #'          Default: FALSE.
 #' @param TabColor Color for the tabs in Excel. Default: 'darkgoldenrod1'.
@@ -895,7 +916,7 @@ write.simple.append <- function(input_df, filename = substitute(input_df), suffi
 
 write.simple.xlsx <- function(
     named_list,
-    rowname_column = 1,  #  'gene' # for Seurat df.markers
+    rowname_column = 1, #  'gene' # for Seurat df.markers
     filename = substitute(named_list),
     suffix = NULL,
     manual_file_name = NULL,
@@ -908,8 +929,9 @@ write.simple.xlsx <- function(
     FreezeFirstRow = TRUE, FreezeFirstCol = FALSE,
     v = TRUE) {
   # Assertions for input arguments
-  stopifnot(is.list(named_list),
-            all(sapply(named_list, function(x) is.matrix(x) || is.data.frame(x)))
+  stopifnot(
+    is.list(named_list),
+    all(sapply(named_list, function(x) is.matrix(x) || is.data.frame(x)))
   )
 
   if (!("list" %in% class(named_list))) named_list <- list(named_list) # convert to a list if needed
@@ -922,12 +944,13 @@ write.simple.xlsx <- function(
 
   # assign row names if required
   if (!has_row_names) {
-    assignRownames <- function(x) column.2.row.names(df, rowname_column = rowname_column, make_names = T)
+    assignRownames <- function(x) column.2.row.names(df, rowname_column = rowname_column, make_names = TRUE)
     named_list <- lapply(named_list, assignRownames)
-    message("Converting column ", rowname_column," to row names: ", head(rownames(named_list[[1]])))
+    message("Converting column ", rowname_column, " to row names: ", head(rownames(named_list[[1]])))
   }
 
-  FnP <- construct.file.path(v = v,
+  FnP <- construct.file.path(
+    v = v,
     filename = FixPlotName(make.names(filename)), suffix = suffix, extension = "xlsx",
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
@@ -969,9 +992,8 @@ write.simple.xlsx <- function(
 #'
 
 qs.2.table <- function(path, out_file = c("tsv", "csv", "csv2", "excel")[1]) {
-
   # Ensure that the file exists and is a .qs file
-  stopifnot( file.exists(path), stringi::stri_detect(str = path, regex =  "\\.qs$") )
+  stopifnot(file.exists(path), stringi::stri_detect(str = path, regex = "\\.qs$"))
 
   # Ensure out_file is one of the allowed choices
   out_file <- match.arg(out_file, c("tsv", "csv", "csv2", "excel"))
@@ -992,11 +1014,9 @@ qs.2.table <- function(path, out_file = c("tsv", "csv", "csv2", "excel")[1]) {
     ReadWriter::write.simple.tsv(data, path_out, separator = "\t")
   } else if (out_file == "csv") {
     ReadWriter::write.simple.tsv(data, path_out, separator = ",")
-
   } else if (out_file == "csv2") {
     out_path <- paste0(base_filename, ".csv")
     ReadWriter::write.simple.tsv(data, path_out, separator = ";")
-
   } else if (out_file == "excel") {
     out_path <- paste0(base_filename, ".xlsx")
     ReadWriter::write.simple.xlsx(data, out_path)
@@ -1004,4 +1024,3 @@ qs.2.table <- function(path, out_file = c("tsv", "csv", "csv2", "excel")[1]) {
 
   message("File saved as: ", out_path)
 }
-

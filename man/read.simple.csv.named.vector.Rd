@@ -18,13 +18,13 @@ read.simple.csv.named.vector(
 
 \item{sep}{Separator character, Default: ';' alternative: ','.}
 
+\item{col_names}{Are there column names?, Default: TRUE}
+
 \item{value_col}{Column number of the values in the input data frame. Default: 2}
 
 \item{name_col}{Column number of the names in the input data frame. Default: 1}
 
 \item{...}{Additional arguments passed to \code{\link[readr]{read_csv}} or read_csv2.}
-
-\item{colnames}{Are there column names?, Default: TRUE}
 }
 \description{
 Read in a data frame (csv), and extact a value and a name column, and convert them
