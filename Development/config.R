@@ -1,4 +1,6 @@
 # Configuration for the Package
+# file.edit("~/GitHub/Packages/ReadWriter/Development/config.R")
+
 DESCRIPTION <- list(
   package.name = "ReadWriter",
   version = "1.6.0",
