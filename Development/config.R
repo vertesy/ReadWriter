@@ -1,7 +1,7 @@
 # Configuration for the Package
 DESCRIPTION <- list(
   package.name = "ReadWriter",
-  version = "1.5.4",
+  version = "1.6.0",
   title = "ReadWriter",
   description = "ReadWriter is a set of R functions to read and write files conveniently. Complements CodeAndRoll2.",
 
