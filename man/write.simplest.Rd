@@ -7,6 +7,8 @@
 write.simplest(
   vec = LETTERS[1:11],
   append = TRUE,
+  header = NULL,
+  prefix = kppws(substitute(vec), idate()),
   file_path = "/groups/knoblich/Projects/connectomics/Analysis/__clipboard.txt"
 )
 }
@@ -14,6 +16,10 @@ write.simplest(
 \item{vec}{A vector to be written to the file. Default: \code{LETTERS[1:11]}.}
 
 \item{append}{Logical flag indicating whether to append the vector to the file. Default: \code{TRUE}.}
+
+\item{header}{A string to be added to the header line (before the vector). Default: \code{NULL}.}
+
+\item{prefix}{A prefix to the header. Default: \code{kppws(substitute(vec), idate())}.}
 
 \item{file_path}{A string specifying the file path where the vector will be written. Default:
 \code{"/groups/knoblich/Projects/connectomics/Analysis/__clipboard.txt"}.}

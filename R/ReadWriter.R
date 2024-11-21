@@ -576,6 +576,8 @@ read.simple.xlsx <- function(
 #'
 #' @param vec A vector to be written to the file. Default: `LETTERS[1:11]`.
 #' @param append Logical flag indicating whether to append the vector to the file. Default: `TRUE`.
+#' @param header A string to be added to the header line (before the vector). Default: `NULL`.
+#' @param prefix A prefix to the header. Default: `kppws(substitute(vec), idate())`.
 #' @param file_path A string specifying the file path where the vector will be written. Default:
 #' `"/groups/knoblich/Projects/connectomics/Analysis/__clipboard.txt"`.
 #'
@@ -585,10 +587,9 @@ read.simple.xlsx <- function(
 #' }
 #'
 #' @return A message indicating the length of the vector and the file path to which it was written.
-#' @importFrom checkmate assert_vector assert_character assert_flag
 #'
 #' @export
-write.simplest <- function(vec = LETTERS[1:11], append = TRUE,
+write.simplest <- function(vec = LETTERS[1:11], append = TRUE, header = NULL, prefix = kppws(substitute(vec), idate()),
                            file_path = "/groups/knoblich/Projects/connectomics/Analysis/__clipboard.txt") {
   stopifnot(
     is.vector(vec),
@@ -604,7 +605,7 @@ write.simplest <- function(vec = LETTERS[1:11], append = TRUE,
     )
   }
 
-  write(kppws(substitute(vec), idate()), file = file_path, append = TRUE)
+  write(kppws(prefix, header), file = file_path, append = TRUE)
   write.table(vec,
     file = file_path, sep = "\n", row.names = FALSE, col.names = FALSE,
     quote = FALSE, append = append
