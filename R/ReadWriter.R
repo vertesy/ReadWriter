@@ -41,14 +41,24 @@ column.2.row.names <- function(tibble, rowname_column = 1,
   # Assertions
   stopifnot(
     is.data.frame(tibble),
-    # is.numeric(rowname_column),
-    rowname_column > 0,
-    rowname_column <= ncol(tibble),
-    is.logical(make_names), is.logical(as_df)
+    is.logical(make_names), is.logical(as_df),
+    is.logical(warn), is.logical(overwrite)
   )
+
+  if (is.numeric(rowname_column)) {
+    stopifnot(rowname_column >= 1, rowname_column <= ncol(tibble))
+    col_idx <- rowname_column
+  } else if (is.character(rowname_column)) {
+    stopifnot(rowname_column %in% colnames(tibble))
+    col_idx <- match(rowname_column, colnames(tibble))
+  } else {
+    stop("`rowname_column` must be a numeric index or column name.")
+  }
 
   if (!is.null(rownames(tibble))) {
     if (warn) {
+      old_warn <- getOption("warn")
+      on.exit(options(warn = old_warn), add = TRUE)
       options(warn = -1) # this should not be necessary
       warning("tibble/df already has row names:", immediate. = TRUE)
       print(head(rownames(tibble)))
@@ -61,13 +71,14 @@ column.2.row.names <- function(tibble, rowname_column = 1,
   }
 
   # Extracting the specified column to be used as row names
-  row_names <- tibble[[rowname_column]]
+  row_names <- tibble[[col_idx]]
 
   # Check for duplicated row names
-  if (anyDuplicated(rowname_column)) {
-    is.duplicated <- rowname_column[which(duplicated(rowname_column))]
+  dup_idx <- which(duplicated(row_names))
+  if (length(dup_idx) > 0) {
+    dup_vals <- row_names[dup_idx]
     warning(
-      length(is.duplicated), " duplicated entries in: ", substitute(rowname_column),
+      length(dup_vals), " duplicated entries in ", colnames(tibble)[col_idx],
       "\narg make_names = TRUE will enforce uniqueness"
     )
   }
@@ -78,7 +89,7 @@ column.2.row.names <- function(tibble, rowname_column = 1,
   }
 
   # Removing the rowname column from the dataframe
-  tibble <- tibble[, -rowname_column, drop = FALSE]
+  tibble <- tibble[, -col_idx, drop = FALSE]
 
   # Setting the row names
   if (overwrite) {
@@ -149,6 +160,7 @@ FirstCol2RowNames.as.df <- function(Tibble, rownamecol = 1, make_names = FALSE) 
 #'
 #' @description Constructs a complete file path using either provided manual file name and directory
 #'   or defaults to processing a given filename and using the current working directory.
+#'   At least one of `filename` or `manual_file_name` must be supplied.
 #'
 #' @param filename The base file name to process. Default: NULL.
 #' @param suffix The file name suffix to be appended. Default: NULL.
@@ -171,24 +183,27 @@ construct.file.path <- function(
     manual_file_name = NULL,
     manual_directory = NULL,
     v = TRUE) {
-  filename <- as.character(filename) # unclear why thus bf needed.
+  if (!is.null(filename)) filename <- as.character(filename) # unclear why thus bf needed.
 
   # Input argument assertions
   stopifnot(
     is.null(filename) || is.character(filename),
+    is.null(suffix) || is.character(suffix),
+    is.null(extension) || is.character(extension),
     is.null(manual_file_name) || is.character(manual_file_name),
     is.null(manual_directory) || is.character(manual_directory),
-    is.null(extension) || is.character(extension)
+    !is.null(filename) || !is.null(manual_file_name)
   )
 
   fname <- if (!is.null(manual_file_name)) manual_file_name else Stringendo::sppp(filename, suffix)
   out_dir <- if (!is.null(manual_directory)) manual_directory else getwd()
+  stopifnot(dir.exists(out_dir))
 
   # Construct the full file path
   FnP <- Stringendo::ParseFullFilePath(out_dir, fname, extension)
 
   # Output assertion
-  stopifnot(is.character(FnP), nzchar(FnP))
+  stopifnot(is.character(FnP), length(FnP) == 1, nzchar(FnP))
 
   if (v) {
     try(message(osXpath(FnP)))
