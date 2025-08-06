@@ -5,13 +5,13 @@
 
 # _________________________________________________________________________________________________
 #' @title read.simple.xls
-#' @description Read multi-sheet excel files. row_namePos = NULL for automatic
-#' names Look into: http://readxl.tidyverse.org/.
-#' @param pfn Path and File name, Default: kollapse(...)
-#' @param row_namePos Where is the rowname, Default: NULL
+#' @description Read multi-sheet Excel files. `row_namePos = NULL` for automatic
+#' names. See http://readxl.tidyverse.org/.
+#' @param pfn Path and file name. Default: kollapse(...).
+#' @param row_namePos Where is the row name? Default: NULL.
 #' @param ... Multiple simple variables to parse.
-#' @param header_ Is there header? Default: TRUE
-#' @param WhichSheets Which sheets to read in
+#' @param header_ Is there a header? Default: TRUE.
+#' @param WhichSheets Which sheets to read.
 #' @examples
 #' \dontrun{
 #' if (interactive()) {
@@ -129,11 +129,11 @@ read.simple.xls <- function(pfn = kollapse(...), row_namePos = NULL, ..., header
 
 # _________________________________________________________________________________________________
 #' @title convert.tsv.data
-#' @description Fix NA issue in dataframes imported by the new read.simple.tsv.
-#' Set na_rep to NA if you want to keep NA-s
-#' @param df_by_read.simple.tsv Data frame (e.g. by read.simple.tsv).
-#' @param digitz Number of digits when rounding up, Default: 2
-#' @param na_rep Replace NA?, Default: 0
+#' @description Fix NA issues in data frames imported by the new read.simple.tsv.
+#' Set `na_rep` to NA if you want to keep NAs.
+#' @param df_by_read.simple.tsv Data frame (e.g., by `read.simple.tsv`).
+#' @param digitz Number of digits when rounding up. Default: 2.
+#' @param na_rep Replace NA? Default: 0.
 #' @seealso
 #'  \code{\link[gtools]{na.replace}}
 #' @importFrom gtools na.replace
