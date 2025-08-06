@@ -35,16 +35,16 @@ read.simple.csv. Read in a file with excel style data: rownames in col1,
 read.simple.csv.named.vector. Read in a file with excel style data: rownames in col1,
 
 - #### 12 `read.simple.ssv()`
-read.simple.ssv. Read in a data frame (csv), and extact a value and a name column, and convert them
+read.simple.ssv. Read in a data frame (csv), and extract a value and a name column, and convert them
 
 - #### 13 `read.simple.tsv.named.vector()`
-read.simple.tsv.named.vector. Space separeted values. Read in a file with excel style data:
+read.simple.tsv.named.vector. Space separated values. Read in a file with excel style data:
 
 - #### 14 `read.simple.xlsx()`
 Read a multi-sheet XLSX easily. Read in a file with excel style named vectors, names in col1,
 
 - #### 15 `write.simplest()`
-Append or write a vector to standard file, one element per line.. Reads specified sheets from an XLSX file into a list of data frames.
+Append or write a vector to standard file, one element per line. Reads specified sheets from an XLSX file into a list of data frames.
 
 - #### 16 `write.simple()`
 Write Simple. Alternative to clipboard. This function takes a vector and appends it

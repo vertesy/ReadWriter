@@ -47,7 +47,7 @@ source("https://raw.githubusercontent.com/vertesy/ReadWriter/main/R/ReadWriter.R
 Updated: 2024/10/24 13:48
 
 - #### 1 `column.2.row.names()`
-Convert a Column to Row Names in a Tibble or DataFrame. Converts the first column (or a specified column) of a dataframe or tibble into row names.  This function differs from `tibble::column_to_rownames` in that it takes column names or inices and  it offers the option to sanitize row names using `make.names`, provides a warning if there are  duplicated values in the row name column 
+Convert a Column to Row Names in a Tibble or DataFrame. Converts the first column (or a specified column) of a dataframe or tibble into row names.  This function differs from `tibble::column_to_rownames` in that it takes column names or indices and  it offers the option to sanitize row names using `make.names`, provides a warning if there are  duplicated values in the row name column
 
 - #### 2 `FirstCol2RowNames()`
 FirstCol2RowNames. Set First Col to Row Names
@@ -77,10 +77,10 @@ read.simple.tsv. Read in a file with excel style data: rownames in col1,  header
 read.simple.csv. Read in a file with excel style data: rownames in col1,  headers SHIFTED. The header should start with a TAB / First column name  should be empty.
 
 - #### 11 `read.simple.csv.named.vector()`
-read.simple.csv.named.vector. Read in a data frame (csv), and extact a value and a name column, and convert them  to a named vector. By default, it assumes the names in the first column and the values  excel style named vectors, names in col1,  headers SHIFTED. The header should start with a TAB / First column name  should be empty.
+read.simple.csv.named.vector. Read in a data frame (csv), and extract a value and a name column, and convert them  to a named vector. By default, it assumes the names in the first column and the values  excel style named vectors, names in col1,  headers SHIFTED. The header should start with a TAB / First column name  should be empty.
 
 - #### 12 `read.simple.ssv()`
-read.simple.ssv. Space separeted values. Read in a file with excel style data:  rownames in col1, headers SHIFTED. The header should start with a  TAB / First column name should be empty.
+read.simple.ssv. Space separated values. Read in a file with excel style data:  rownames in col1, headers SHIFTED. The header should start with a  TAB / First column name should be empty.
 
 - #### 13 `read.simple.tsv.named.vector()`
 read.simple.tsv.named.vector. Read in a file with excel style named vectors, names in col1,  headers SHIFTED. The header should start with a TAB / First column name  should be empty.
@@ -89,7 +89,7 @@ read.simple.tsv.named.vector. Read in a file with excel style named vectors, nam
 Read a multi-sheet XLSX easily. Reads specified sheets from an XLSX file into a list of data frames.               It allows customization of column names, row names, and trimming of white spaces. 
 
 - #### 15 `write.simplest()`
-Append or write a vector to standard file, one element per line.. Alternative to clipboard. This function takes a vector and appends it  to a specified file. 
+Append or write a vector to standard file, one element per line. Alternative to clipboard. This function takes a vector and appends it  to a specified file.
 
 - #### 16 `write.simple()`
 Write Simple. Writes a matrix-like R object (e.g., a data frame) to a file as tab-separated    values (.tsv). The output filename can be auto-generated from the variable's name or manually    specified. The file is saved in the specified output directory or the current working directory.    The path and variable name can be passed separately and will be concatenated to form the filename.

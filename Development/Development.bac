@@ -14,7 +14,7 @@
 #' @title Convert a Column to Row Names in a Tibble or DataFrame
 #'
 #' @description Converts the first column (or a specified column) of a dataframe or tibble into row names.
-#' This function differs from `tibble::column_to_rownames` in that it takes column names or inices and
+#' This function differs from `tibble::column_to_rownames` in that it takes column names or indices and
 #' it offers the option to sanitize row names using `make.names`, provides a warning if there are
 #' duplicated values in the row name column
 #'
@@ -27,7 +27,7 @@
 #' @param as_df Boolean indicating whether to convert the input to a dataframe if it's not already one.
 #'              Default: TRUE.
 #' @param warn Warn user if row names pre-exist.
-#' @param ... Pass arguments to make.names()..
+#' @param ... Pass arguments to make.names().
 #' @export
 
 column.2.row.names <- function(
@@ -359,7 +359,7 @@ read.simple.csv <- function(
 
 # _________________________________________________________________________________________________
 #' @title read.simple.ssv
-#' @description Space separeted values. Read in a file with excel style data:
+#' @description Space separated values. Read in a file with excel style data:
 #' rownames in col1, headers SHIFTED. The header should start with a
 #' TAB / First column name should be empty.
 #' @param ... Multiple simple variables to parse.

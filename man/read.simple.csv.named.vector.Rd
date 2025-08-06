@@ -27,7 +27,7 @@ read.simple.csv.named.vector(
 \item{...}{Additional arguments passed to \code{\link[readr]{read_csv}} or read_csv2.}
 }
 \description{
-Read in a data frame (csv), and extact a value and a name column, and convert them
+Read in a data frame (csv), and extract a value and a name column, and convert them
 to a named vector. By default, it assumes the names in the first column and the values
 excel style named vectors, names in col1,
 headers SHIFTED. The header should start with a TAB / First column name
