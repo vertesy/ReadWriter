@@ -26,7 +26,7 @@ read.simple.xls <- function(pfn = kollapse(...), row_namePos = NULL, ..., header
   .Deprecated("read.simple.xlsx")
 
   if (!require("gdata")) {
-    print("Please install gplots: install.packages('gdata')")
+    print("Please install gdata: install.packages('gdata')")
   }
   if (grepl("^~/", pfn)) {
     iprint("You cannot use the ~/ in the file path! It is replaced by '~/'.")

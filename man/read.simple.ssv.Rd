@@ -27,7 +27,7 @@ read.simple.ssv(
 \item{coltypes}{What type of variables are in columns? Auto-guessing can be very slow., Default: NULL}
 }
 \description{
-Space separeted values. Read in a file with excel style data:
+Space separated values. Read in a file with excel style data:
 rownames in col1, headers SHIFTED. The header should start with a
 TAB / First column name should be empty.
 }
