@@ -2,7 +2,7 @@
 % Please edit documentation in R/ReadWriter.R
 \name{write.simplest}
 \alias{write.simplest}
-\title{Append or write a vector to standard file, one element per line.}
+\title{Append or write a vector to a standard file, one element per line.}
 \usage{
 write.simplest(
   vec = LETTERS[1:11],
@@ -28,7 +28,7 @@ write.simplest(
 A message indicating the length of the vector and the file path to which it was written.
 }
 \description{
-Alternative to clipboard. This function takes a vector and appends it
+Alternative to the clipboard. This function takes a vector and appends it
 to a specified file.
 }
 \examples{

@@ -16,20 +16,20 @@ read.simple.ssv(
 \arguments{
 \item{...}{Multiple simple variables to parse.}
 
-\item{sep_}{Separator character, Default: ' '}
+\item{sep_}{Separator character. Default: ' '.}
 
-\item{colnames}{Are there column names?, Default: TRUE}
+\item{colnames}{Are there column names? Default: TRUE.}
 
-\item{wRownames}{With rownames?, Default: TRUE}
+\item{wRownames}{With row names? Default: TRUE.}
 
-\item{NaReplace}{Replace NA-values?, Default: TRUE}
+\item{NaReplace}{Replace NA values? Default: TRUE.}
 
-\item{coltypes}{What type of variables are in columns? Auto-guessing can be very slow., Default: NULL}
+\item{coltypes}{What type of variables are in columns? Auto-guessing can be very slow. Default: NULL.}
 }
 \description{
-Space separated values. Read in a file with excel style data:
-rownames in col1, headers SHIFTED. The header should start with a
-TAB / First column name should be empty.
+Space separated values. Read in a file with Excel-style data:
+row names in column 1, headers shifted. The header should start with a
+TAB; the first column name should be empty.
 }
 \examples{
 \dontrun{

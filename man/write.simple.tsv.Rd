@@ -21,38 +21,38 @@ write.simple.tsv(
 )
 }
 \arguments{
-\item{input_df}{Your Dataframe with row- and column-names}
+\item{input_df}{Your data frame with row and column names.}
 
-\item{separator}{Field separator, such as "," for csv}
+\item{separator}{Field separator, such as ',' for CSV.}
 
-\item{extension}{e.g.: tsv}
+\item{extension}{e.g., 'tsv'.}
 
-\item{filename}{The base name for the output file. Default: Name of the input vector.}
+\item{filename}{The base name for the output file. Default: Name of the input data frame.}
 
-\item{suffix}{A suffix added to the filename, Default: NULL}
+\item{suffix}{A suffix added to the filename. Default: NULL.}
 
-\item{manual_file_name}{Specify full filename if you do not want to name it by the variable name.}
+\item{manual_file_name}{Specify full filename if you do not want to name it after the variable.}
 
 \item{manual_directory}{Specify the directory where the file should be saved.}
 
-\item{row_names}{Write row names? TRUE by default}
+\item{row_names}{Write row names? Default: TRUE.}
 
-\item{col_names}{Write column names? NA by default, TRUE if row_names == FALSE}
+\item{col_names}{Write column names? Default: NA, set to TRUE if \code{row_names == FALSE}.}
 
-\item{gzip}{Compress the file after saving? FALSE by default}
+\item{gzip}{Compress the file after saving? Default: FALSE.}
 
-\item{o}{Open the file after saving? FALSE by default}
+\item{o}{Open the file after saving? Default: FALSE.}
 
-\item{v}{verbose Print path? Default: TRUE.}
+\item{v}{Print path if verbose? Default: TRUE.}
 
-\item{...}{Additional arguments passed to write.table()}
+\item{...}{Additional arguments passed to the kollapse() function used for the file name and to \code{write.table()}.}
 }
 \description{
-Write out a matrix-like R-object WITH ROW- AND COLUMN- NAMES to a file with as tab separated
-values (.tsv). Your output filename will be either the variable's name. The output file will be
-located in "OutDir" specified by you at the beginning of the script, or under your current
-working directory. You can pass the PATH and VARIABLE separately (in order), they will be
-concatenated to the filename. If col.names = NA and row.names = TRUE a blank column name is added,
+Write out a matrix-like R object with row and column names to a file as tab-separated
+values (.tsv). The output filename will be either the variable's name or the one you provide. The output
+file will be located in the directory specified at the beginning of the script or in your current
+working directory. You can pass the path and variable separately (in order); they will be concatenated
+to the filename. If \code{col.names = NA} and \code{row.names = TRUE}, a blank column name is added,
 which is the convention used for CSV files to be read by spreadsheets.
 }
 \examples{

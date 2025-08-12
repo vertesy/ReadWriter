@@ -24,7 +24,7 @@ construct.file.path(
 
 \item{manual_directory}{An optional manual specification for the directory. Default: NULL.}
 
-\item{v}{verbose Print path? Default: TRUE.}
+\item{v}{Print path if verbose? Default: TRUE.}
 }
 \value{
 A string representing the constructed file path.
@@ -32,6 +32,7 @@ A string representing the constructed file path.
 \description{
 Constructs a complete file path using either provided manual file name and directory
 or defaults to processing a given filename and using the current working directory.
+At least one of \code{filename} or \code{manual_file_name} must be supplied.
 }
 \examples{
 construct.file.path(

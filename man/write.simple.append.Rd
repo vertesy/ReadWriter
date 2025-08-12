@@ -30,7 +30,7 @@ write.simple.append(
 
 \item{o}{If TRUE, opens the file after writing on OS X using 'system(open ...)'. Default: FALSE.}
 
-\item{v}{verbose Print path? Default: TRUE.}
+\item{v}{Print path if verbose? Default: TRUE.}
 }
 \value{
 Appends data to an existing .tsv file.

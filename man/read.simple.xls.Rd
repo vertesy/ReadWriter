@@ -13,19 +13,19 @@ read.simple.xls(
 )
 }
 \arguments{
-\item{pfn}{Path and File name, Default: kollapse(...)}
+\item{pfn}{Path and file name. Default: kollapse(...).}
 
-\item{row_namePos}{Where is the rowname, Default: NULL}
+\item{row_namePos}{Where is the row name? Default: NULL.}
 
 \item{...}{Multiple simple variables to parse.}
 
-\item{header_}{Is there header? Default: TRUE}
+\item{header_}{Is there a header? Default: TRUE.}
 
-\item{WhichSheets}{Which sheets to read in}
+\item{WhichSheets}{Which sheets to read.}
 }
 \description{
-Read multi-sheet excel files. row_namePos = NULL for automatic
-names Look into: http://readxl.tidyverse.org/.
+Read multi-sheet Excel files. \code{row_namePos = NULL} for automatic
+names. See http://readxl.tidyverse.org/.
 }
 \examples{
 \dontrun{

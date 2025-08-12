@@ -17,21 +17,21 @@ read.simple.csv(
 \arguments{
 \item{...}{Multiple simple variables to parse.}
 
-\item{colnames}{Are there column names?, Default: TRUE}
+\item{colnames}{Are there column names? Default: TRUE.}
 
-\item{coltypes}{What type of variables are in columns? Auto-guessing can be very slow., Default: NULL}
+\item{coltypes}{What type of variables are in columns? Auto-guessing can be very slow. Default: NULL.}
 
-\item{wRownames}{With rownames?, Default: TRUE}
+\item{wRownames}{With row names? Default: TRUE.}
 
-\item{NaReplace}{Replace NA-values?, Default: TRUE}
+\item{NaReplace}{Replace NA values? Default: TRUE.}
 
-\item{asTibble}{Load as tibble or dataframe?, Default: FALSE (=load as df)}
+\item{asTibble}{Load as tibble or data frame? Default: FALSE (load as data frame).}
 
-\item{nmax}{Max number of rows to read, Default: Inf}
+\item{nmax}{Max number of rows to read. Default: Inf.}
 }
 \description{
-Read in a file with excel style data: rownames in col1,
-headers SHIFTED. The header should start with a TAB / First column name
+Read in a file with Excel-style data: row names in column 1,
+headers shifted. The header should start with a TAB; the first column name
 should be empty.
 }
 \examples{

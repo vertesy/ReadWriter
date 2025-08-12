@@ -7,15 +7,15 @@
 convert.tsv.data(df_by_read.simple.tsv, digitz = 2, na_rep = 0)
 }
 \arguments{
-\item{df_by_read.simple.tsv}{Data frame (e.g. by read.simple.tsv).}
+\item{df_by_read.simple.tsv}{Data frame (e.g., by \code{read.simple.tsv}).}
 
-\item{digitz}{Number of digits when rounding up, Default: 2}
+\item{digitz}{Number of digits when rounding up. Default: 2.}
 
-\item{na_rep}{Replace NA?, Default: 0}
+\item{na_rep}{Replace NA? Default: 0.}
 }
 \description{
-Fix NA issue in dataframes imported by the new read.simple.tsv.
-Set na_rep to NA if you want to keep NA-s
+Fix NA issues in data frames imported by the new read.simple.tsv.
+Set \code{na_rep} to NA if you want to keep NAs.
 }
 \section{_________________________________________________________________________________________________}{
 #' @title write.simple.xlsx.old

@@ -30,13 +30,13 @@ write.simple.vec(
 
 \item{o}{If TRUE, opens the file after writing on OS X using 'system(open ...)'. Default: FALSE.}
 
-\item{v}{verbose Print path? Default: TRUE.}
+\item{v}{Print path if verbose? Default: TRUE.}
 }
 \value{
 Outputs a .vec file and optionally prints the length of the input vector.
 }
 \description{
-Writes a vector-like R object to a file as newline separated values (.vec).
+Writes a vector-like R object to a file as newline-separated values (.vec).
 The output filename can be auto-generated from the variable's name or manually specified. The file
 is saved in the specified output directory or the current working directory. The path and variable
 name can be passed separately and will be concatenated to form the filename.

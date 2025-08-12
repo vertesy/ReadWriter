@@ -10,7 +10,7 @@ read.simple(...)
 \item{...}{Multiple simple variables to parse.}
 }
 \description{
-It is essentially read.table() with file/path parsing.
+Essentially \code{read.table()} with file/path parsing.
 }
 \examples{
 \dontrun{

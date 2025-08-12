@@ -10,8 +10,8 @@ read.simple.tsv.named.vector(...)
 \item{...}{Multiple simple variables to parse.}
 }
 \description{
-Read in a file with excel style named vectors, names in col1,
-headers SHIFTED. The header should start with a TAB / First column name
+Read in a file with Excel-style named vectors, names in column 1,
+headers shifted. The header should start with a TAB; the first column name
 should be empty.
 }
 \examples{

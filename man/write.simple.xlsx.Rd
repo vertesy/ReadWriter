@@ -25,13 +25,13 @@ write.simple.xlsx(
 }
 \arguments{
 \item{named_list}{A list of data frames or matrices to write out.
-Default: No default value, a list must be provided.}
+Default: No default value; a list must be provided.}
 
 \item{rowname_column}{The column name or index to use as row names in the Excel file.
-Required, no default value.}
+Default: 1.}
 
 \item{filename}{The base name for the output file, derived from the 'named_list' variable if not specified.
-Default: Derived using 'substitute(named_list)'.}
+Default: Derived using \code{substitute(named_list)}.}
 
 \item{suffix}{A suffix to be added to the output filename. Default: NULL.}
 
@@ -53,13 +53,13 @@ Default: FALSE.}
 \item{HeaderCharStyle}{Character style for the header (e.g., 'bold', 'italic', 'underline').
 Default: 'bold'.}
 
-\item{has_row_names}{Logical; if set to FALSE, converts the first column to row names. Default: TRUE}
+\item{has_row_names}{Logical; if set to FALSE, converts the first column to row names. Default: TRUE.}
 
 \item{FreezeFirstRow}{Logical; if TRUE, freezes the first row in Excel. Default: TRUE.}
 
 \item{FreezeFirstCol}{Logical; if TRUE, freezes the first column in Excel. Default: FALSE.}
 
-\item{v}{verbose Print path? Default: TRUE.}
+\item{v}{Print path if verbose? Default: TRUE.}
 }
 \description{
 Write out a list of matrices or data frames with row and column names

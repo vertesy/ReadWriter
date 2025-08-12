@@ -16,22 +16,21 @@ read.simple.csv.named.vector(
 \arguments{
 \item{file}{Path to the *.csv file.}
 
-\item{sep}{Separator character, Default: ';' alternative: ','.}
+\item{sep}{Separator character. Default: ';'; alternative: ','.}
 
-\item{col_names}{Are there column names?, Default: TRUE}
+\item{col_names}{Are there column names? Default: TRUE.}
 
-\item{value_col}{Column number of the values in the input data frame. Default: 2}
+\item{value_col}{Column number of the values in the input data frame. Default: 2.}
 
-\item{name_col}{Column number of the names in the input data frame. Default: 1}
+\item{name_col}{Column number of the names in the input data frame. Default: 1.}
 
-\item{...}{Additional arguments passed to \code{\link[readr]{read_csv}} or read_csv2.}
+\item{...}{Additional arguments passed to \code{\link[readr]{read_csv}} or \code{read_csv2}.}
 }
 \description{
-Read in a data frame (csv), and extract a value and a name column, and convert them
-to a named vector. By default, it assumes the names in the first column and the values
-excel style named vectors, names in col1,
-headers SHIFTED. The header should start with a TAB / First column name
-should be empty.
+Read in a data frame (CSV), extract a value and a name column, and convert them
+to a named vector. By default, it assumes the names are in the first column and the values in the second.
+For Excel-style named vectors, names are in column 1 and headers are shifted.
+The header should start with a TAB; the first column name should be empty.
 }
 \examples{
 \dontrun{
