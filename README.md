@@ -17,11 +17,11 @@ Install directly from **GitHub** via **devtools** with one R command:
 ```R
 # install.packages("devtools"); # If you don't have it.
 require("devtools")
-devtools::install_github(repo = "vertesy/Stringendo", upgrade = F)
-devtools::install_github(repo = "vertesy/ReadWriter")
+devtools::install_github(repo = "vertesy/Stringendo", ref = "main", upgrade = F)
+devtools::install_github(repo = "vertesy/ReadWriter", ref = "main")
 
 "As of 11/2023 you may need:"
-devtools::install_github(repo = "vertesy/ReadWriter@main")
+devtools::install_github(repo = "vertesy/ReadWriter@main", ref = "main")
 ```
 
 ...then simply load the package:
