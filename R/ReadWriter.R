@@ -12,23 +12,23 @@
 
 #' @title Convert a Column to Row Names in a Tibble or DataFrame
 #'
-#' @description Converts the first column (or a specified column) of a dataframe or tibble into row names.
-#' This function differs from `tibble::column_to_rownames` in that it takes column names or inices and
-#' it offers the option to sanitize row names using `make.names`, provides a warning if there are
-#' duplicated values in the row name column
+#' @description Converts the first column (or a specified column) of a data frame or tibble into row names.
+#' This function differs from `tibble::column_to_rownames` in that it takes column names or indices,
+#' offers the option to sanitize row names using `make.names`, and provides a warning if there are
+#' duplicated values in the row name column.
 #'
-#' @param tibble A dataframe or tibble without row names.
-#'           Default: No default value, a dataframe must be provided.
+#' @param tibble A data frame or tibble without row names.
+#'           Default: No default value; a data frame must be provided.
 #' @param rowname_column Index of the column to be used as row names.
 #'                    Default: 1.
 #' @param make_names Boolean indicating whether to call `make.names` to sanitize row names.
 #'                   Default: FALSE.
-#' @param as_df Boolean indicating whether to convert the input to a dataframe if it's not already one.
+#' @param as_df Boolean indicating whether to convert the input to a data frame if it's not already one.
 #'              Default: TRUE.
-#' @param warn Warn user if row names pre-exist. Default: TRUE.
+#' @param warn Warn user if row names preexist. Default: TRUE.
 #' @param overwrite Overwrite row names if they already exist. Default: TRUE.
 #'
-#' @param ... Pass arguments to make.names()..
+#' @param ... Pass arguments to `make.names()`.
 #' @export
 
 column.2.row.names <- function(tibble, rowname_column = 1,
@@ -41,14 +41,24 @@ column.2.row.names <- function(tibble, rowname_column = 1,
   # Assertions
   stopifnot(
     is.data.frame(tibble),
-    # is.numeric(rowname_column),
-    rowname_column > 0,
-    rowname_column <= ncol(tibble),
-    is.logical(make_names), is.logical(as_df)
+    is.logical(make_names), is.logical(as_df),
+    is.logical(warn), is.logical(overwrite)
   )
+
+  if (is.numeric(rowname_column)) {
+    stopifnot(rowname_column >= 1, rowname_column <= ncol(tibble))
+    col_idx <- rowname_column
+  } else if (is.character(rowname_column)) {
+    stopifnot(rowname_column %in% colnames(tibble))
+    col_idx <- match(rowname_column, colnames(tibble))
+  } else {
+    stop("`rowname_column` must be a numeric index or column name.")
+  }
 
   if (!is.null(rownames(tibble))) {
     if (warn) {
+      old_warn <- getOption("warn")
+      on.exit(options(warn = old_warn), add = TRUE)
       options(warn = -1) # this should not be necessary
       warning("tibble/df already has row names:", immediate. = TRUE)
       print(head(rownames(tibble)))
@@ -61,13 +71,14 @@ column.2.row.names <- function(tibble, rowname_column = 1,
   }
 
   # Extracting the specified column to be used as row names
-  row_names <- tibble[[rowname_column]]
+  row_names <- tibble[[col_idx]]
 
   # Check for duplicated row names
-  if (anyDuplicated(rowname_column)) {
-    is.duplicated <- rowname_column[which(duplicated(rowname_column))]
+  dup_idx <- which(duplicated(row_names))
+  if (length(dup_idx) > 0) {
+    dup_vals <- row_names[dup_idx]
     warning(
-      length(is.duplicated), " duplicated entries in: ", substitute(rowname_column),
+      length(dup_vals), " duplicated entries in ", colnames(tibble)[col_idx],
       "\narg make_names = TRUE will enforce uniqueness"
     )
   }
@@ -78,7 +89,7 @@ column.2.row.names <- function(tibble, rowname_column = 1,
   }
 
   # Removing the rowname column from the dataframe
-  tibble <- tibble[, -rowname_column, drop = FALSE]
+  tibble <- tibble[, -col_idx, drop = FALSE]
 
   # Setting the row names
   if (overwrite) {
@@ -100,11 +111,11 @@ column.2.row.names <- function(tibble, rowname_column = 1,
 # _________________________________________________________________________________________________
 #' @title FirstCol2RowNames
 #'
-#' @description Set First Col to Row Names
-#' @param Tibble A dataframe without rownames (tibble style)
-#' @param rownamecol rowname column, Default: 1
-#' @param make_names call make.names to remove weird characters, Default: FALSE
-#' @param as.df Convert tibble to data frame? Default: TRUE
+#' @description Set first column to row names.
+#' @param Tibble A data frame without row names (tibble style).
+#' @param rownamecol Row name column. Default: 1.
+#' @param make_names Call `make.names` to remove unusual characters. Default: FALSE.
+#' @param as.df Convert tibble to data frame? Default: TRUE.
 #' @export
 FirstCol2RowNames <- function(Tibble, rownamecol = 1, make_names = FALSE, as.df = TRUE) {
   .Deprecated("column.2.row.names")
@@ -128,10 +139,10 @@ FirstCol2RowNames <- function(Tibble, rownamecol = 1, make_names = FALSE, as.df 
 
 # _________________________________________________________________________________________________
 #' @title FirstCol2RowNames.as.df
-#' @description Set First Col to Row Names
-#' @param Tibble A dataframe without rownames (tibble style)
-#' @param rownamecol rowname column, Default: 1
-#' @param make_names call make.names to remove weird characters, Default: FALSE
+#' @description Set first column to row names.
+#' @param Tibble A data frame without row names (tibble style).
+#' @param rownamecol Row name column. Default: 1.
+#' @param make_names Call `make.names` to remove unusual characters. Default: FALSE.
 #' @export
 
 FirstCol2RowNames.as.df <- function(Tibble, rownamecol = 1, make_names = FALSE) {
@@ -149,13 +160,14 @@ FirstCol2RowNames.as.df <- function(Tibble, rownamecol = 1, make_names = FALSE) 
 #'
 #' @description Constructs a complete file path using either provided manual file name and directory
 #'   or defaults to processing a given filename and using the current working directory.
+#'   At least one of `filename` or `manual_file_name` must be supplied.
 #'
 #' @param filename The base file name to process. Default: NULL.
 #' @param suffix The file name suffix to be appended. Default: NULL.
 #' @param extension The file extension to be appended. Default: NULL.
 #' @param manual_file_name An optional manual specification for the file name. Default: NULL.
 #' @param manual_directory An optional manual specification for the directory. Default: NULL.
-#' @param v verbose Print path? Default: TRUE.
+#' @param v Print path if verbose? Default: TRUE.
 #'
 #' @return A string representing the constructed file path.
 #' @importFrom Stringendo sppp ParseFullFilePath
@@ -171,24 +183,27 @@ construct.file.path <- function(
     manual_file_name = NULL,
     manual_directory = NULL,
     v = TRUE) {
-  filename <- as.character(filename) # unclear why thus bf needed.
+  if (!is.null(filename)) filename <- as.character(filename) # unclear why thus bf needed.
 
   # Input argument assertions
   stopifnot(
     is.null(filename) || is.character(filename),
+    is.null(suffix) || is.character(suffix),
+    is.null(extension) || is.character(extension),
     is.null(manual_file_name) || is.character(manual_file_name),
     is.null(manual_directory) || is.character(manual_directory),
-    is.null(extension) || is.character(extension)
+    !is.null(filename) || !is.null(manual_file_name)
   )
 
   fname <- if (!is.null(manual_file_name)) manual_file_name else Stringendo::sppp(filename, suffix)
   out_dir <- if (!is.null(manual_directory)) manual_directory else getwd()
+  stopifnot(dir.exists(out_dir))
 
   # Construct the full file path
   FnP <- Stringendo::ParseFullFilePath(out_dir, fname, extension)
 
   # Output assertion
-  stopifnot(is.character(FnP), nzchar(FnP))
+  stopifnot(is.character(FnP), length(FnP) == 1, nzchar(FnP))
 
   if (v) {
     try(message(osXpath(FnP)))
@@ -204,8 +219,7 @@ construct.file.path <- function(
 
 # _________________________________________________________________________________________________
 #' @title read.simple.vec
-#' @description read.simple.vec
-#' @description Read each line of a file to an element of a vector (read in new-line separated values, no header!).
+#' @description Read each line of a file to an element of a vector (read in newline-separated values, no header!).
 #' @param ... Multiple simple variables to parse.
 #' @examples
 #' \dontrun{
@@ -224,7 +238,7 @@ read.simple.vec <- function(...) {
 
 # _________________________________________________________________________________________________
 #' @title read.simple
-#' @description It is essentially read.table() with file/path parsing.
+#' @description Essentially `read.table()` with file/path parsing.
 #' @param ... Multiple simple variables to parse.
 #' @examples
 #' \dontrun{
@@ -262,12 +276,12 @@ read.simple_char_list <- function(...) {
 
 # _________________________________________________________________________________________________
 #' @title read.simple.table
-#' @description Read in a file. default: header defines colnames, no rownames.
-#' For rownames give the col nr. with rownames, eg. 1 The header should start
-#' with a TAB / First column name should be empty.
+#' @description Read a file. Default: header defines column names, no row names.
+#' For row names give the column number with row names, e.g., 1. The header should start
+#' with a TAB; the first column name should be empty.
 #' @param ... Multiple simple variables to parse.
-#' @param colnames Are there column names? Default: TRUE
-#' @param coltypes What type of variables are in columns? Auto-guessing can be very slow. Default: NULL
+#' @param colnames Are there column names? Default: TRUE.
+#' @param coltypes What type of variables are in columns? Auto-guessing can be very slow. Default: NULL.
 #' @examples
 #' \dontrun{
 #' if (interactive()) {
@@ -293,16 +307,16 @@ read.simple.table <- function(..., colnames = TRUE, coltypes = NULL) {
 
 # _________________________________________________________________________________________________
 #' @title read.simple.tsv
-#' @description Read in a file with excel style data: rownames in col1,
-#' headers SHIFTED. The header should start with a TAB / First column name
+#' @description Read in a file with Excel-style data: row names in column 1,
+#' headers shifted. The header should start with a TAB; the first column name
 #' should be empty.
 #' @param ... Multiple simple variables to parse.
-#' @param sep_ Separator character, Default: '  '
-#' @param colnames Are there column names?, Default: TRUE
-#' @param wRownames With rownames?, Default: TRUE
-#' @param coltypes What type of variables are in columns? Auto-guessing can be very slow., Default: NULL
-#' @param NaReplace Replace NA-values?, Default: TRUE
-#' @param asTibble Load as tibble or dataframe?, Default: FALSE (=load as df)
+#' @param sep_ Separator character. Default: '\\t'.
+#' @param colnames Are there column names? Default: TRUE.
+#' @param wRownames With row names? Default: TRUE.
+#' @param coltypes What type of variables are in columns? Auto-guessing can be very slow. Default: NULL.
+#' @param NaReplace Replace NA values? Default: TRUE.
+#' @param asTibble Load as tibble or data frame? Default: FALSE (load as data frame).
 #' @examples
 #' \dontrun{
 #' if (interactive()) {
@@ -338,16 +352,16 @@ read.simple.tsv <- function(
 
 # _________________________________________________________________________________________________
 #' @title read.simple.csv
-#' @description Read in a file with excel style data: rownames in col1,
-#' headers SHIFTED. The header should start with a TAB / First column name
+#' @description Read in a file with Excel-style data: row names in column 1,
+#' headers shifted. The header should start with a TAB; the first column name
 #' should be empty.
 #' @param ... Multiple simple variables to parse.
-#' @param colnames Are there column names?, Default: TRUE
-#' @param coltypes What type of variables are in columns? Auto-guessing can be very slow., Default: NULL
-#' @param wRownames With rownames?, Default: TRUE
-#' @param NaReplace Replace NA-values?, Default: TRUE
-#' @param asTibble Load as tibble or dataframe?, Default: FALSE (=load as df)
-#' @param nmax Max number of rows to read, Default: Inf
+#' @param colnames Are there column names? Default: TRUE.
+#' @param coltypes What type of variables are in columns? Auto-guessing can be very slow. Default: NULL.
+#' @param wRownames With row names? Default: TRUE.
+#' @param NaReplace Replace NA values? Default: TRUE.
+#' @param asTibble Load as tibble or data frame? Default: FALSE (load as data frame).
+#' @param nmax Max number of rows to read. Default: Inf.
 #' @examples
 #' \dontrun{
 #' if (interactive()) {
@@ -385,17 +399,16 @@ read.simple.csv <- function(
 # _________________________________________________________________________________________________
 #' @title read.simple.csv.named.vector
 #'
-#' @description Read in a data frame (csv), and extact a value and a name column, and convert them
-#' to a named vector. By default, it assumes the names in the first column and the values
-#' excel style named vectors, names in col1,
-#' headers SHIFTED. The header should start with a TAB / First column name
-#' should be empty.
+#' @description Read in a data frame (CSV), extract a value and a name column, and convert them
+#' to a named vector. By default, it assumes the names are in the first column and the values in the second.
+#' For Excel-style named vectors, names are in column 1 and headers are shifted.
+#' The header should start with a TAB; the first column name should be empty.
 #' @param file Path to the *.csv file.
-#' @param sep Separator character, Default: ';' alternative: ','.
-#' @param col_names Are there column names?, Default: TRUE
-#' @param value_col Column number of the values in the input data frame. Default: 2
-#' @param name_col Column number of the names in the input data frame. Default: 1
-#' @param ... Additional arguments passed to \code{\link[readr]{read_csv}} or read_csv2.
+#' @param sep Separator character. Default: ';'; alternative: ','.
+#' @param col_names Are there column names? Default: TRUE.
+#' @param value_col Column number of the values in the input data frame. Default: 2.
+#' @param name_col Column number of the names in the input data frame. Default: 1.
+#' @param ... Additional arguments passed to \code{\link[readr]{read_csv}} or `read_csv2`.
 #' @examples
 #' \dontrun{
 #' if (interactive()) {
@@ -430,15 +443,15 @@ read.simple.csv.named.vector <- function(file, sep = ";", col_names = FALSE,
 
 # _________________________________________________________________________________________________
 #' @title read.simple.ssv
-#' @description Space separeted values. Read in a file with excel style data:
-#' rownames in col1, headers SHIFTED. The header should start with a
-#' TAB / First column name should be empty.
+#' @description Space separated values. Read in a file with Excel-style data:
+#' row names in column 1, headers shifted. The header should start with a
+#' TAB; the first column name should be empty.
 #' @param ... Multiple simple variables to parse.
-#' @param sep_ Separator character, Default: ' '
-#' @param colnames Are there column names?, Default: TRUE
-#' @param wRownames With rownames?, Default: TRUE
-#' @param NaReplace Replace NA-values?, Default: TRUE
-#' @param coltypes What type of variables are in columns? Auto-guessing can be very slow., Default: NULL
+#' @param sep_ Separator character. Default: ' '.
+#' @param colnames Are there column names? Default: TRUE.
+#' @param wRownames With row names? Default: TRUE.
+#' @param NaReplace Replace NA values? Default: TRUE.
+#' @param coltypes What type of variables are in columns? Auto-guessing can be very slow. Default: NULL.
 #' @examples
 #' \dontrun{
 #' if (interactive()) {
@@ -470,8 +483,8 @@ read.simple.ssv <- function(
 
 # _________________________________________________________________________________________________
 #' @title read.simple.tsv.named.vector
-#' @description Read in a file with excel style named vectors, names in col1,
-#' headers SHIFTED. The header should start with a TAB / First column name
+#' @description Read in a file with Excel-style named vectors, names in column 1,
+#' headers shifted. The header should start with a TAB; the first column name
 #' should be empty.
 #' @param ... Multiple simple variables to parse.
 #' @examples
@@ -501,7 +514,7 @@ read.simple.tsv.named.vector <- function(...) {
 #' @title Read a multi-sheet XLSX easily
 #'
 #' @description Reads specified sheets from an XLSX file into a list of data frames.
-#'              It allows customization of column names, row names, and trimming of white spaces.
+#'              It allows customization of column names, row names, and trimming of whitespace.
 #'
 #' @param pfn Path and filename of the XLSX file.
 #'            Default: Constructed using `Stringendo::kollapse(...)`.
@@ -509,10 +522,10 @@ read.simple.tsv.named.vector <- function(...) {
 #'                     Default: All sheets.
 #' @param col_names Logical, whether to use the first row as column names.
 #'                  Default: TRUE.
-#' @param row_names Numeric, whether to convert a column to row names.
-#'                  Default: 1. Use 0 for no conversion. Default: FALSE.
-#' @param trim_ws Logical, whether to trim white spaces from column names.
-#' @param ... Pass arguments to read.xlsx().
+#' @param row_names Numeric indicating which column to convert to row names.
+#'                  Use 0 or FALSE for no conversion. Default: FALSE.
+#' @param trim_ws Logical, whether to trim whitespace from column names.
+#' @param ... Pass arguments to `read.xlsx()`.
 #'
 #' @return A list of data frames, each representing a sheet from the XLSX file.
 #' @importFrom openxlsx read.xlsx getSheetNames
@@ -569,9 +582,9 @@ read.simple.xlsx <- function(
 # ____________________________________________________________________________________________ ----
 ## Writing files out ------------------------------------------------------------------------------
 
-#' @title Append or write a vector to standard file, one element per line.
+#' @title Append or write a vector to a standard file, one element per line.
 #'
-#' @description Alternative to clipboard. This function takes a vector and appends it
+#' @description Alternative to the clipboard. This function takes a vector and appends it
 #' to a specified file.
 #'
 #' @param vec A vector to be written to the file. Default: `LETTERS[1:11]`.
@@ -637,7 +650,7 @@ write.simplest <- function(vec = LETTERS[1:11], append = TRUE, header = NULL, pr
 #' @param manual_file_name Manually defined filename, overrides automatic naming. Default: NULL.
 #' @param manual_directory Directory to save the file in, overrides default directory. Default: NULL.
 #' @param o If TRUE, opens the file after writing on OS X using 'system(open ...)'. Default: FALSE.
-#' @param v verbose Print path? Default: TRUE.
+#' @param v Print path if verbose? Default: TRUE.
 #' @return Outputs a .tsv file and optionally prints the length of the input data frame.
 #' @examples
 #' \dontrun{
@@ -680,7 +693,7 @@ write.simple <- function(input_df, filename = substitute(input_df), suffix = NUL
 # _________________________________________________________________________________________________
 #' @title Write Simple Vector
 #'
-#' @description Writes a vector-like R object to a file as newline separated values (.vec).
+#' @description Writes a vector-like R object to a file as newline-separated values (.vec).
 #'   The output filename can be auto-generated from the variable's name or manually specified. The file
 #'   is saved in the specified output directory or the current working directory. The path and variable
 #'   name can be passed separately and will be concatenated to form the filename.
@@ -691,7 +704,7 @@ write.simple <- function(input_df, filename = substitute(input_df), suffix = NUL
 #' @param manual_file_name Manually defined filename, overrides automatic naming. Default: NULL.
 #' @param manual_directory Directory to save the file in, overrides default directory. Default: NULL.
 #' @param o If TRUE, opens the file after writing on OS X using 'system(open ...)'. Default: FALSE.
-#' @param v verbose Print path? Default: TRUE.
+#' @param v Print path if verbose? Default: TRUE.
 #'
 #' @return Outputs a .vec file and optionally prints the length of the input vector.
 #' @examples
@@ -736,26 +749,25 @@ write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix
 # _________________________________________________________________________________________________
 #' @title write.simple.tsv
 #'
-#' @description Write out a matrix-like R-object WITH ROW- AND COLUMN- NAMES to a file with as tab separated
-#' values (.tsv). Your output filename will be either the variable's name. The output file will be
-#' located in "OutDir" specified by you at the beginning of the script, or under your current
-#' working directory. You can pass the PATH and VARIABLE separately (in order), they will be
-#' concatenated to the filename. If col.names = NA and row.names = TRUE a blank column name is added,
+#' @description Write out a matrix-like R object with row and column names to a file as tab-separated
+#' values (.tsv). The output filename will be either the variable's name or the one you provide. The output
+#' file will be located in the directory specified at the beginning of the script or in your current
+#' working directory. You can pass the path and variable separately (in order); they will be concatenated
+#' to the filename. If `col.names = NA` and `row.names = TRUE`, a blank column name is added,
 #' which is the convention used for CSV files to be read by spreadsheets.
-#' @param input_df Your Dataframe with row- and column-names
-#' @param ... Pass any other argument to the kollapse() function used for file name.
-#' @param separator Field separator, such as "," for csv
-#' @param filename The base name for the output file. Default: Name of the input vector.
-#' @param extension e.g.: tsv
-#' @param suffix A suffix added to the filename, Default: NULL
-#' @param manual_file_name Specify full filename if you do not want to name it by the variable name.
+#' @param input_df Your data frame with row and column names.
+#' @param separator Field separator, such as ',' for CSV.
+#' @param filename The base name for the output file. Default: Name of the input data frame.
+#' @param extension e.g., 'tsv'.
+#' @param suffix A suffix added to the filename. Default: NULL.
+#' @param manual_file_name Specify full filename if you do not want to name it after the variable.
 #' @param manual_directory Specify the directory where the file should be saved.
-#' @param row_names Write row names? TRUE by default
-#' @param col_names Write column names? NA by default, TRUE if row_names == FALSE
-#' @param gzip Compress the file after saving? FALSE by default
-#' @param o Open the file after saving? FALSE by default
-#' @param v verbose Print path? Default: TRUE.
-#' @param ... Additional arguments passed to write.table()
+#' @param row_names Write row names? Default: TRUE.
+#' @param col_names Write column names? Default: NA, set to TRUE if `row_names == FALSE`.
+#' @param gzip Compress the file after saving? Default: FALSE.
+#' @param o Open the file after saving? Default: FALSE.
+#' @param v Print path if verbose? Default: TRUE.
+#' @param ... Additional arguments passed to the kollapse() function used for the file name and to `write.table()`.
 #'
 #' @examples YourDataFrameWithRowAndColumnNames <- cbind("A" = rnorm(100), "B" = rpois(100, 8))
 #' rownames(YourDataFrameWithRowAndColumnNames) <- letters[1:NROW(YourDataFrameWithRowAndColumnNames)]
@@ -832,7 +844,7 @@ write.simple.tsv <- function(
 #' @param manualFileName Manually defined filename, overrides automatic naming. Default: NULL.
 #' @param manualDirectory Directory to save the file in, overrides default directory. Default: NULL.
 #' @param o If TRUE, opens the file after writing on OS X using 'system(open ...)'. Default: FALSE.
-#' @param v verbose Print path? Default: TRUE.
+#' @param v Print path if verbose? Default: TRUE.
 #'
 #' @return Appends data to an existing .tsv file.
 #' @examples
@@ -882,11 +894,11 @@ write.simple.append <- function(input_df, filename = substitute(input_df), suffi
 #'   The function offers various styling and formatting options for the Excel file.
 #'
 #' @param named_list A list of data frames or matrices to write out.
-#'                   Default: No default value, a list must be provided.
+#'                   Default: No default value; a list must be provided.
 #' @param rowname_column The column name or index to use as row names in the Excel file.
-#'                    Required, no default value.
+#'                    Default: 1.
 #' @param filename The base name for the output file, derived from the 'named_list' variable if not specified.
-#'                 Default: Derived using 'substitute(named_list)'.
+#'                 Default: Derived using `substitute(named_list)`.
 #' @param suffix A suffix to be added to the output filename. Default: NULL.
 #' @param manual_file_name Manually defined filename, overrides automatic naming. Default: NULL.
 #' @param manual_directory Directory to save the file in, overrides default directory. Default: NULL.
@@ -898,10 +910,10 @@ write.simple.append <- function(input_df, filename = substitute(input_df), suffi
 #' @param HeaderLineColor Color for the header line. Default: 'darkolivegreen3'.
 #' @param HeaderCharStyle Character style for the header (e.g., 'bold', 'italic', 'underline').
 #'                        Default: 'bold'.
-#' @param has_row_names Logical; if set to FALSE, converts the first column to row names. Default: TRUE
+#' @param has_row_names Logical; if set to FALSE, converts the first column to row names. Default: TRUE.
 #' @param FreezeFirstRow Logical; if TRUE, freezes the first row in Excel. Default: TRUE.
 #' @param FreezeFirstCol Logical; if TRUE, freezes the first column in Excel. Default: FALSE.
-#' @param v verbose Print path? Default: TRUE.
+#' @param v Print path if verbose? Default: TRUE.
 #'
 #' @examples
 #' \dontrun{
@@ -978,13 +990,12 @@ write.simple.xlsx <- function(
 
 #' @title Convert and save a .qs file to different formats
 #'
-#' @description
-#' This function reads in a `.qs` file and resaves it as either a `.tsv`, `.csv`, semicolon-separated
+#' @description Reads in a `.qs` file and resaves it as either a `.tsv`, `.csv`, semicolon-separated
 #' `.csv` (csv2), or Excel file based on the `out_file` argument.
 #'
-#' @param path A character string specifying the path to the `.qs` file. Default: none.
+#' @param path A character string specifying the path to the `.qs` file. Default: None.
 #' @param out_file A character string specifying the output file format. One of `"tsv"` (default),
-#'   `"csv"`, `"csv2"` (semicolon-separated), or `"excel"`. Default: `"tsv"`.
+#'   `"csv"`, `"csv2"` (semicolon-separated), or `"excel"`.
 #'
 #' @return The function does not return a value but writes the file to disk in the specified format.
 #'

@@ -31,11 +31,11 @@ Default: TRUE.}
 
 \item{overwrite}{Overwrite row names if they already exist. Default: TRUE.}
 
-\item{...}{Pass arguments to make.names()..}
+\item{...}{Pass arguments to make.names().}
 }
 \description{
 Converts the first column (or a specified column) of a dataframe or tibble into row names.
-This function differs from \code{tibble::column_to_rownames} in that it takes column names or inices and
+This function differs from \code{tibble::column_to_rownames} in that it takes column names or indices and
 it offers the option to sanitize row names using \code{make.names}, provides a warning if there are
 duplicated values in the row name column
 }
