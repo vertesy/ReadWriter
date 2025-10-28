@@ -623,14 +623,22 @@ write.simplest <- function(vec = LETTERS[1:11], append = TRUE, header = NULL, pr
     file = file_path, sep = "\n", row.names = FALSE, col.names = FALSE,
     quote = FALSE, append = append
   )
-  message("Vector of length ", length(vec), " e.g.: ", kppc(head(vec)), ", is written to: \n", file_path)
+  message("Vector of length ", length(vec), " e.g.: ", kppc(head(vec)), ".")
 
-  guessed_local_path <- gsub(
-    x = file_path,
-    pattern = "/groups/knoblich/Projects/connectomics/Analysis/",
-    replacement = "/Volumes/Analysis/"
-  )
-  message("open ", guessed_local_path)
+  message("\nsubl ", file_path)
+
+  if(ifExistsAndTrue("onCBE")){
+    attach = paste0("smb://storage.imp.ac.at", dirname(file_path))
+    message("\nAttach in Finder:\n", attach, "\n")
+    message("open ", spps("/Volumes/", basename(attach)))
+  }
+
+  # guessed_local_path <- gsub(
+  #   x = file_path,
+  #   pattern = "/groups/knoblich/Projects/connectomics/Analysis/",
+  #   replacement = "/Volumes/Analysis/"
+  # )
+  # message("open ", guessed_local_path)
 }
 
 # write.simplest()
