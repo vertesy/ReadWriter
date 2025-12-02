@@ -299,7 +299,9 @@ read.simple.table <- function(..., colnames = TRUE, coltypes = NULL) {
   # read_in = read.table( pfn , stringsAsFactors = FALSE, sep = "\t", header = colnames )
   read_in <- readr::read_tsv(pfn, col_names = colnames, col_types = coltypes)
   iprint("New variable dim: ", dim(read_in))
-  read_in <- as.data.frame(gtools::na.replace(data.matrix(read_in), replace = 0))
+
+  # Preserve column classes when replacing missing values
+  read_in <- as.data.frame(gtools::na.replace(read_in, replace = 0))
   return(read_in)
 }
 
