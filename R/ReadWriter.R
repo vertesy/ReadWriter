@@ -522,8 +522,9 @@ read.simple.tsv.named.vector <- function(...) {
 #'                     Default: All sheets.
 #' @param col_names Logical, whether to use the first row as column names.
 #'                  Default: TRUE.
-#' @param row_names Numeric indicating which column to convert to row names.
-#'                  Use 0 or FALSE for no conversion. Default: FALSE.
+#' @param row_names Column identifier to convert to row names. Accepts column index,
+#'                  column name, or `TRUE` to use the first column. Use `FALSE`
+#'                  for no conversion. Default: FALSE.
 #' @param trim_ws Logical, whether to trim whitespace from column names.
 #' @param ... Pass arguments to `read.xlsx()`.
 #'
@@ -541,7 +542,16 @@ read.simple.xlsx <- function(
   # Assertions for input arguments
   stopifnot(is.character(pfn), length(pfn) > 0)
   if (!missing(which_sheets)) stopifnot(is.numeric(which_sheets) | is.character(which_sheets))
-  stopifnot(is.logical(col_names), is.logical(trim_ws))
+  stopifnot(
+    is.logical(col_names),
+    is.logical(trim_ws),
+    is.logical(row_names) || is.numeric(row_names) || is.character(row_names)
+  )
+
+  # Normalize how row names are handled
+  if (is.numeric(row_names) && row_names == 0) row_names <- FALSE
+  rowname_column <- if (isTRUE(row_names)) 1 else row_names
+  use_row_names_arg <- isTRUE(row_names)
 
   # Check if openxlsx package is installed
   if (!require("openxlsx")) {
@@ -560,11 +570,11 @@ read.simple.xlsx <- function(
   ls.excel.sheets <- lapply(range.of.sheets, function(i) {
     sheet_data <- openxlsx::read.xlsx(pfn,
       sheet = i, colNames = col_names,
-      rowNames = row_names, ...
+      rowNames = use_row_names_arg, ...
     )
-    if (row_names) {
+    if (!identical(row_names, FALSE)) {
       sheet_data <- column.2.row.names(sheet_data,
-        rowname_column = row_names,
+        rowname_column = rowname_column,
         make_names = FALSE, as_df = TRUE
       )
     }
