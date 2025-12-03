@@ -536,8 +536,8 @@ read.simple.tsv.named.vector <- function(...) {
 read.simple.xlsx <- function(
     pfn = Stringendo::kollapse(...), which_sheets,
     col_names = TRUE, row_names = FALSE,
-    trim_ws = TRUE
-    , ...) {
+    trim_ws = TRUE,
+    ...) {
   # Assertions for input arguments
   stopifnot(is.character(pfn), length(pfn) > 0)
   if (!missing(which_sheets)) stopifnot(is.numeric(which_sheets) | is.character(which_sheets))
@@ -627,8 +627,8 @@ write.simplest <- function(vec = LETTERS[1:11], append = TRUE, header = NULL, pr
 
   message("\nsubl ", file_path)
 
-  if(ifExistsAndTrue("onCBE")){
-    attach = paste0("smb://storage.imp.ac.at", dirname(file_path))
+  if (ifExistsAndTrue("onCBE")) {
+    attach <- paste0("smb://storage.imp.ac.at", dirname(file_path))
     message("\nAttach in Finder:\n", attach, "\n")
     message("open ", spps("/Volumes/", basename(attach)))
   }
@@ -862,11 +862,11 @@ write.simple.tsv <- function(
 #' }
 #' }
 #' @export
-write.simple.append <- function(input_df, filename = substitute(input_df), suffix = NULL, extension = "tsv",
-                                manualFileName = NULL, manualDirectory = NULL, o = FALSE,
-                                v = TRUE) {
+write.simple.append <- function(
+    input_df, filename = substitute(input_df), suffix = NULL, extension = "tsv",
+    manualFileName = NULL, manualDirectory = NULL, o = FALSE, v = TRUE) {
+
   stopifnot(
-    # is.data.frame(input_df),
     is.null(suffix) || is.character(suffix),
     is.character(extension),
     is.null(manualFileName) || is.character(manualFileName),
@@ -932,8 +932,8 @@ write.simple.append <- function(input_df, filename = substitute(input_df), suffi
 #' }
 #' @seealso
 #'   \code{\link[openxlsx]{write.xlsx}}
-#' @export
 #' @importFrom openxlsx write.xlsx createStyle
+#' @export write.simple.xlsx
 
 write.simple.xlsx <- function(
     named_list,
@@ -1008,8 +1008,8 @@ write.simple.xlsx <- function(
 #' @return The function does not return a value but writes the file to disk in the specified format.
 #'
 #' @importFrom qs qread
-#' @export
 #'
+#' @export qs.2.table
 
 qs.2.table <- function(path, out_file = c("tsv", "csv", "csv2", "excel")[1]) {
   # Ensure that the file exists and is a .qs file
