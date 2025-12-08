@@ -9,6 +9,7 @@ write.simple.vec(
   filename = substitute(input_vec),
   suffix = NULL,
   extension = "vec",
+  make_names = TRUE,
   manual_file_name = NULL,
   manual_directory = NULL,
   o = FALSE,
@@ -23,6 +24,10 @@ write.simple.vec(
 \item{suffix}{An optional suffix to add to the filename. Default: NULL.}
 
 \item{extension}{File extension to use. Default: 'vec'.}
+
+\item{make_names}{If TRUE, applies \code{make.names} to the filename. Generally safer, but it can,
+e.g.: inadvarently change "_myFile" to "X_myFile". Default: TRUE.
+Default: TRUE.}
 
 \item{manual_file_name}{Manually defined filename, overrides automatic naming. Default: NULL.}
 

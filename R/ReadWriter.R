@@ -709,6 +709,9 @@ write.simple <- function(input_df, filename = substitute(input_df), suffix = NUL
 #' @param filename The base name for the output file. Default: Name of the input vector.
 #' @param suffix An optional suffix to add to the filename. Default: NULL.
 #' @param extension File extension to use. Default: 'vec'.
+#' @param make_names If TRUE, applies `make.names` to the filename. Generally safer, but it can,
+#' e.g.: inadvarently change "_myFile" to "X_myFile". Default: TRUE.
+#' Default: TRUE.
 #' @param manual_file_name Manually defined filename, overrides automatic naming. Default: NULL.
 #' @param manual_directory Directory to save the file in, overrides default directory. Default: NULL.
 #' @param o If TRUE, opens the file after writing on OS X using 'system(open ...)'. Default: FALSE.
@@ -723,7 +726,7 @@ write.simple <- function(input_df, filename = substitute(input_df), suffix = NUL
 #' }
 #' @export
 write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix = NULL, extension = "vec",
-                             manual_file_name = NULL, manual_directory = NULL, o = FALSE,
+                             make_names = TRUE, manual_file_name = NULL, manual_directory = NULL, o = FALSE,
                              v = TRUE) {
   # Input argument assertions
   stopifnot(
@@ -735,9 +738,10 @@ write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix
     is.logical(o)
   )
 
+  if (make_names) filename <- make.names(filename)
   FnP <- construct.file.path(
     v = v,
-    filename = FixPlotName(make.names(filename)), suffix = suffix, extension = extension,
+    filename = FixPlotName(filename), suffix = suffix, extension = extension,
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
 
