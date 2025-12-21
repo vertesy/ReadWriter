@@ -791,6 +791,8 @@ write.simple.tsv <- function(
     separator = "\t", extension = "tsv",
     filename = substitute(input_df),
     suffix = NULL,
+    # prefix = NULL,
+    # subfolder = NULL,
     manual_file_name = NULL,
     manual_directory = NULL,
     row_names = TRUE,
