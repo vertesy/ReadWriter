@@ -617,6 +617,8 @@ write.simplest <- function(vec = LETTERS[1:11], append = TRUE, header = NULL, pr
       file = file_path, append = TRUE
     )
   }
+  message(file_path)
+  message(file_path)
 
   write(kppws(prefix, header), file = file_path, append = TRUE)
   write.table(vec,
