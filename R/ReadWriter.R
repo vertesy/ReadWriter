@@ -592,7 +592,7 @@ read.simple.xlsx <- function(
 #' @param header A string to be added to the header line (before the vector). Default: `NULL`.
 #' @param prefix A prefix to the header. Default: `kppws(substitute(vec), idate())`.
 #' @param file_path A string specifying the file path where the vector will be written. Default:
-#' `"/groups/knoblich/Projects/connectomics/Analysis/__clipboard.txt"`.
+#' path stored in `path_write_simplest` global variable, otherwise `"./__clipboard.txt"`.
 #'
 #' @examples
 #' \dontrun{
@@ -603,7 +603,7 @@ read.simple.xlsx <- function(
 #'
 #' @export
 write.simplest <- function(vec = LETTERS[1:11], append = TRUE, header = NULL, prefix = kppws(substitute(vec), idate()),
-                           file_path = "/groups/knoblich/Projects/connectomics/Analysis/__clipboard.txt") {
+                           file_path = get0("path_write_simplest", ifnotfound = "./__clipboard.txt")) {
   stopifnot(
     is.vector(vec),
     is.character(file_path),

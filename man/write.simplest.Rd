@@ -9,7 +9,7 @@ write.simplest(
   append = TRUE,
   header = NULL,
   prefix = kppws(substitute(vec), idate()),
-  file_path = "/groups/knoblich/Projects/connectomics/Analysis/__clipboard.txt"
+  file_path = get0("path_write_simplest", ifnotfound = "./__clipboard.txt")
 )
 }
 \arguments{
@@ -22,7 +22,7 @@ write.simplest(
 \item{prefix}{A prefix to the header. Default: \code{kppws(substitute(vec), idate())}.}
 
 \item{file_path}{A string specifying the file path where the vector will be written. Default:
-\code{"/groups/knoblich/Projects/connectomics/Analysis/__clipboard.txt"}.}
+path stored in \code{path_write_simplest} global variable, otherwise \code{"./__clipboard.txt"}.}
 }
 \value{
 A message indicating the length of the vector and the file path to which it was written.
