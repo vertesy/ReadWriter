@@ -337,13 +337,9 @@ read.simple.tsv <- function(
   iprint("New variable dim: ", dim(read_in) - 0:1)
 
   # if (wRownames) { read_in = FirstCol2RowNames(read_in, as.df = !asTibble ) }
-  if (wRownames) {
-    read_in <- column.2.row.names(read_in, as_df = !asTibble)
-  }
+  if (wRownames) read_in <- column.2.row.names(read_in, as_df = !asTibble)
+  if (NaReplace) read_in <- as.data.frame(gtools::na.replace(read_in, replace = 0))
 
-  if (NaReplace) {
-    read_in <- as.data.frame(gtools::na.replace(read_in, replace = 0))
-  }
   return(read_in)
 }
 
@@ -386,13 +382,9 @@ read.simple.csv <- function(
   iprint("New variable dim: ", dim(read_in) - 0:1)
 
   # if (wRownames) { read_in = FirstCol2RowNames(read_in) }
-  if (wRownames) {
-    read_in <- column.2.row.names(read_in, as_df = !asTibble)
-  }
+  if (wRownames) read_in <- column.2.row.names(read_in, as_df = !asTibble)
+  if (NaReplace) read_in <- as.data.frame(gtools::na.replace(read_in, replace = 0))
 
-  if (NaReplace) {
-    read_in <- as.data.frame(gtools::na.replace(read_in, replace = 0))
-  }
   return(read_in)
 }
 
@@ -470,12 +462,10 @@ read.simple.ssv <- function(
   pfn <- Stringendo::kollapse(...) # merge path and filename
   read_in <- suppressWarnings(readr::read_delim(pfn, delim = sep_, col_names = colnames, col_types = coltypes))
   iprint("New variable dim: ", dim(read_in) - 0:1)
-  if (wRownames) {
-    read_in <- FirstCol2RowNames(read_in)
-  }
-  if (NaReplace) {
-    read_in <- as.data.frame(gtools::na.replace(read_in, replace = 0))
-  }
+
+  if (wRownames) read_in <- column.2.row.names(read_in, as_df = !asTibble)
+  if (NaReplace) read_in <- as.data.frame(gtools::na.replace(read_in, replace = 0))
+
   return(read_in)
 }
 
