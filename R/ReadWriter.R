@@ -759,6 +759,7 @@ write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix
 #' working directory. You can pass the path and variable separately (in order); they will be concatenated
 #' to the filename. If `col.names = NA` and `row.names = TRUE`, a blank column name is added,
 #' which is the convention used for CSV files to be read by spreadsheets.
+#' It can also write CSV files if you set the separator to ',' or ';'.
 #' @param input_df Your data frame with row and column names.
 #' @param separator Field separator, such as ',' for CSV.
 #' @param filename The base name for the output file. Default: Name of the input data frame.
@@ -825,12 +826,8 @@ write.simple.tsv <- function(
     paste0("Length (of your vector): ", length(input_df))
   }
   iprint(printme)
-  if (o) {
-    system(paste0("open ", FnP), wait = FALSE)
-  }
-  if (gzip) {
-    system(paste0("gzip ", FnP), wait = FALSE)
-  }
+  if (o) system(paste0("open ", FnP), wait = FALSE)
+  if (gzip) system(paste0("gzip ", FnP), wait = FALSE)
 }
 
 
@@ -910,6 +907,7 @@ write.simple.append <- function(
 #' @param manual_directory Directory to save the file in, overrides default directory. Default: NULL.
 #' @param o Logical; if TRUE, opens the file after writing using the system's default application.
 #'          Default: FALSE.
+#' @param gzip Compress the file after saving? Default: FALSE.
 #' @param TabColor Color for the tabs in Excel. Default: 'darkgoldenrod1'.
 #' @param Creator The creator of the Excel document. Default: ''.
 #' @param HeaderCex Font size for the header. Default: 12.
@@ -940,7 +938,7 @@ write.simple.xlsx <- function(
     suffix = NULL,
     manual_file_name = NULL,
     manual_directory = NULL,
-    o = FALSE,
+    o = FALSE, gzip = FALSE,
     TabColor = "darkgoldenrod1", HeaderLineColor = "darkolivegreen3",
     HeaderCex = 12, Creator = "",
     HeaderCharStyle = c("bold", "italic", "underline")[1],
@@ -984,9 +982,9 @@ write.simple.xlsx <- function(
   # Output assertion
   stopifnot(file.exists(FnP))
 
-  if (o) {
-    system(paste0("open ", fix_special_characters_bash(FnP)), wait = FALSE)
-  }
+  if (o) system(paste0("open ", fix_special_characters_bash(FnP)), wait = FALSE)
+  if (gzip) system(paste0("gzip ", fix_special_characters_bash(FnP)), wait = FALSE)
+
 } # fun
 
 

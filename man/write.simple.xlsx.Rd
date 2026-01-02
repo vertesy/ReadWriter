@@ -12,6 +12,7 @@ write.simple.xlsx(
   manual_file_name = NULL,
   manual_directory = NULL,
   o = FALSE,
+  gzip = FALSE,
   TabColor = "darkgoldenrod1",
   HeaderLineColor = "darkolivegreen3",
   HeaderCex = 12,
@@ -41,6 +42,8 @@ Default: Derived using \code{substitute(named_list)}.}
 
 \item{o}{Logical; if TRUE, opens the file after writing using the system's default application.
 Default: FALSE.}
+
+\item{gzip}{Compress the file after saving? Default: FALSE.}
 
 \item{TabColor}{Color for the tabs in Excel. Default: 'darkgoldenrod1'.}
 

@@ -54,6 +54,7 @@ file will be located in the directory specified at the beginning of the script o
 working directory. You can pass the path and variable separately (in order); they will be concatenated
 to the filename. If \code{col.names = NA} and \code{row.names = TRUE}, a blank column name is added,
 which is the convention used for CSV files to be read by spreadsheets.
+It can also write CSV files if you set the separator to ',' or ';'.
 }
 \examples{
 YourDataFrameWithRowAndColumnNames <- cbind("A" = rnorm(100), "B" = rpois(100, 8))
