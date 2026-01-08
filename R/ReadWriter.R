@@ -988,6 +988,146 @@ write.simple.xlsx <- function(
 } # fun
 
 
+# ____________________________________________________________________________________________ ----
+## New addition: markdown ------------------------------------------------------------------------------
+
+
+# _________________________________________________________________________________________________
+#' @title as.simple.md.table
+#'
+#' @description Convert a data.frame / matrix-like object to minimal GitHub-flavored Markdown
+#' table lines (header, separator, body). Pure formatter; does not write to disk.
+#'
+#' @param input_df Your data frame / matrix-like object.
+#' @param row_names Include row names as the first column? Default: TRUE.
+#' @param row_name_colname Column name for row names. Default: ''.
+#'
+#' @return Character vector of Markdown lines.
+#'
+#' @export
+as.simple.md.table <- function(
+    input_df,
+    row_names = TRUE,
+    row_name_colname = "") {
+
+  stopifnot(
+    !missing(input_df),
+    isTRUE(row_names) || identical(row_names, FALSE),
+    is.character(row_name_colname), length(row_name_colname) == 1, !is.na(row_name_colname)
+  )
+
+  esc_md_table_cell <- function(x) {
+    x <- as.character(x)
+    x[is.na(x)] <- ""
+    x <- gsub("\\\\", "\\\\\\\\", x, perl = TRUE)   # escape backslash
+    x <- gsub("\\|", "\\\\|", x, perl = TRUE)       # escape pipe
+    x <- gsub("\r\n|\n|\r", "<br>", x, perl = TRUE) # preserve line breaks
+    x <- gsub("\t", " ", x, perl = TRUE)            # tabs to spaces
+    x
+  }
+
+  df <- if (is.data.frame(input_df)) input_df else as.data.frame(input_df, check.names = FALSE)
+
+  if (isTRUE(row_names)) {
+    rn <- rownames(df)
+    if (is.null(rn)) rn <- seq_len(NROW(df))
+    df <- cbind(setNames(data.frame(rn, stringsAsFactors = FALSE), row_name_colname), df)
+  }
+
+  collapse_row <- function(x) paste(x, collapse = " | ")
+
+  headers <- colnames(df)
+  if (is.null(headers)) headers <- rep("", NCOL(df))
+
+  c(
+    collapse_row(esc_md_table_cell(headers)),
+    collapse_row(rep("--", length(headers))),
+    if (NROW(df)) apply(df, 1, function(r) collapse_row(esc_md_table_cell(r))) else character(0)
+  )
+}
+
+
+# _________________________________________________________________________________________________
+#' @title write.simple.md.table
+#'
+#' @description Write an R data.frame / matrix-like object to disk as a minimal GitHub-flavored
+#' Markdown table (.md).
+#'
+#' @param input_df Your data frame / matrix-like object.
+#' @param filename The base name for the output file. Default: Name of the input data frame.
+#' @param extension File extension. Default: 'md'.
+#' @param suffix A suffix added to the filename. Default: NULL.
+#' @param manual_file_name Specify full filename if you do not want to name it after the variable.
+#' @param manual_directory Specify the directory where the file should be saved.
+#' @param row_names Include row names as the first column? Default: TRUE.
+#' @param row_name_colname Column name for row names. Default: ''.
+#' @param o Open the file after saving? Default: FALSE.
+#' @param v Print path if verbose? Default: TRUE.
+#' @param ... Additional arguments passed to the kollapse() function used for the file name.
+#'
+#' @examples
+#' df <- data.frame(
+#'   Name = c("Alice", "Bob | The Builder", NA, "Eve\nNewline"),
+#'   Age  = c(30, 25, 28, NA),
+#'   Note = c("Loves R\\Markdown", "Enjoys building\tthings", "No special chars", "Line1\r\nLine2"),
+#'   stringsAsFactors = FALSE,
+#'   check.names = FALSE
+#' )
+#' write.simple.md.table(df, manual_file_name = "example_table.md", row_names = TRUE)
+#'
+#' @export
+write.simple.md.table <- function(
+    input_df,
+    extension = "md",
+    filename = substitute(input_df),
+    suffix = NULL,
+    manual_file_name = NULL,
+    manual_directory = NULL,
+    row_names = TRUE,
+    row_name_colname = "",
+    o = FALSE,
+    v = TRUE,
+    ...) {
+
+  stopifnot(
+    !missing(input_df),
+    is.character(extension), length(extension) == 1, nzchar(extension),
+    isTRUE(row_names) || identical(row_names, FALSE),
+    is.character(row_name_colname), length(row_name_colname) == 1, !is.na(row_name_colname),
+    isTRUE(o) || identical(o, FALSE),
+    isTRUE(v) || identical(v, FALSE)
+  )
+
+  md_lines <- as.simple.md.table(
+    input_df,
+    row_names = row_names,
+    row_name_colname = row_name_colname
+  )
+
+  # Safe, scalar filename (avoid kollapse() vector explosions)
+  fname <- Stringendo::kollapse(..., print = FALSE)
+  if (length(fname) != 1 || is.na(fname) || nchar(fname) < 2) fname <- as.character(filename)[1]
+  fname <- substr(as.character(fname)[1], 1, 180)
+
+  FnP <- construct.file.path(
+    v = v,
+    filename = FixPlotName(make.names(fname)),
+    suffix = suffix,
+    extension = extension,
+    manual_file_name = manual_file_name,
+    manual_directory = manual_directory
+  )
+
+  dir.create(dirname(FnP), recursive = TRUE, showWarnings = FALSE)
+  writeLines(md_lines, con = FnP, useBytes = TRUE)
+
+  iprint(paste0("Dim: ", paste(dim(as.data.frame(input_df)), collapse = " x ")))
+  if (isTRUE(o)) system(paste0("open ", FnP), wait = FALSE)
+
+  invisible(FnP)
+}
+
+
 
 # ____________________________________________________________________________________________ ----
 ## Reexport files ------------------------------------------------------------------------------
