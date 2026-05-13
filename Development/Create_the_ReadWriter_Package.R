@@ -46,7 +46,6 @@ devtools::check_man(repository.dir)
 checkres <- devtools::check(repository.dir, cran = FALSE)
 
 
-
 # Automated Codebase linting to tidyverse style ------------------------------------------------
 styler::style_pkg(repository.dir)
 
@@ -89,7 +88,7 @@ file.edit(paste0(repository.dir, "/R/list.of.functions.in.", package.name, ".det
 file.edit(paste0(repository.dir, "/README.md"))
 file.remove(paste0(repository.dir, "/R/list.of.functions.in.", package.name, ".det.md"))
 
-r$PackageTools()
+d$PackageTools()
 PackageTools::copy_github_badge("active") # Add badge to readme via clipboard
 file.edit(paste0(repository.dir, "README.md"))
 
