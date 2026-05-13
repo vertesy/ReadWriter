@@ -860,7 +860,6 @@ write.simple.tsv <- function(
 write.simple.append <- function(
     input_df, filename = substitute(input_df), suffix = NULL, extension = "tsv",
     manualFileName = NULL, manualDirectory = NULL, o = FALSE, v = TRUE) {
-
   stopifnot(
     is.null(suffix) || is.character(suffix),
     is.character(extension),
@@ -984,7 +983,6 @@ write.simple.xlsx <- function(
 
   if (o) system(paste0("open ", fix_special_characters_bash(FnP)), wait = FALSE)
   if (gzip) system(paste0("gzip ", fix_special_characters_bash(FnP)), wait = FALSE)
-
 } # fun
 
 
@@ -1009,7 +1007,6 @@ as.simple.md.table <- function(
     input_df,
     row_names = TRUE,
     row_name_colname = "") {
-
   stopifnot(
     !missing(input_df),
     isTRUE(row_names) || identical(row_names, FALSE),
@@ -1019,10 +1016,10 @@ as.simple.md.table <- function(
   esc_md_table_cell <- function(x) {
     x <- as.character(x)
     x[is.na(x)] <- ""
-    x <- gsub("\\\\", "\\\\\\\\", x, perl = TRUE)   # escape backslash
-    x <- gsub("\\|", "\\\\|", x, perl = TRUE)       # escape pipe
+    x <- gsub("\\\\", "\\\\\\\\", x, perl = TRUE) # escape backslash
+    x <- gsub("\\|", "\\\\|", x, perl = TRUE) # escape pipe
     x <- gsub("\r\n|\n|\r", "<br>", x, perl = TRUE) # preserve line breaks
-    x <- gsub("\t", " ", x, perl = TRUE)            # tabs to spaces
+    x <- gsub("\t", " ", x, perl = TRUE) # tabs to spaces
     x
   }
 
@@ -1068,7 +1065,7 @@ as.simple.md.table <- function(
 #' @examples
 #' df <- data.frame(
 #'   Name = c("Alice", "Bob | The Builder", NA, "Eve\nNewline"),
-#'   Age  = c(30, 25, 28, NA),
+#'   Age = c(30, 25, 28, NA),
 #'   Note = c("Loves R\\Markdown", "Enjoys building\tthings", "No special chars", "Line1\r\nLine2"),
 #'   stringsAsFactors = FALSE,
 #'   check.names = FALSE
@@ -1088,7 +1085,6 @@ write.simple.md.table <- function(
     o = FALSE,
     v = TRUE,
     ...) {
-
   stopifnot(
     !missing(input_df),
     is.character(extension), length(extension) == 1, nzchar(extension),
