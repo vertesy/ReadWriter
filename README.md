@@ -5,8 +5,14 @@ Complements the new [CodeAndRoll2](https://github.com/vertesy/CodeAndRoll2).
 
 ## News
 
-- The underlying `gdata` removed `read.xls`, and this is resolved in `v1.0.0` by using `openxlsx`.
-- As of 11/2023 you may need `install_github(repo = "vertesy/ReadWriter@main")` instead of `install_github(repo = "vertesy/ReadWriter")` to install the package on some platforms.
+### !!! Installation NEWS 
+#### `qs` dependency
+- Until I update the code to [`qs2`]([url](https://github.com/qsbase/qs2)), you have to install `qs` [from github]([url](https://github.com/qsbase/qs)):
+`remotes::install_cran("qs", type = "source", configure.args = "--with-simd=AVX2")`
+- Unfortunately as of R4.6.0 `qs` is reportedy fails to install on R4.6.x on Windows.
+- Solution: **Use R4.5.x until I can upgrade the package**
+
+<!-- - On some platforms, as of 11/2023 you may need `install_github(repo = "vertesy/ReadWriter@main")` instead of `install_github(repo = "vertesy/ReadWriter")` to install the package. -->
 
 <br><br>
 
