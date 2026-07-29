@@ -959,7 +959,7 @@ write.simple.xlsx <- function(
   )
 
   # assign row names if required
-  if (!has_row_names) {
+  if (isFALSE(has_row_names)) {
     assignRownames <- function(x) column.2.row.names(df, rowname_column = rowname_column, make_names = TRUE)
     named_list <- lapply(named_list, assignRownames)
     message("Converting column ", rowname_column, " to row names: ", head(rownames(named_list[[1]])))
