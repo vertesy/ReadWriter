@@ -48,7 +48,7 @@ Markdown table (.md).
 \examples{
 df <- data.frame(
   Name = c("Alice", "Bob | The Builder", NA, "Eve\nNewline"),
-  Age  = c(30, 25, 28, NA),
+  Age = c(30, 25, 28, NA),
   Note = c("Loves R\\\\Markdown", "Enjoys building\tthings", "No special chars", "Line1\r\nLine2"),
   stringsAsFactors = FALSE,
   check.names = FALSE

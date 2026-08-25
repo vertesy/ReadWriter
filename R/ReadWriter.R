@@ -6,7 +6,6 @@
 # devtools::document('~/GitHub/Packages/ReadWriter');
 
 
-
 # ____________________________________________________________________________________________ ----
 ## Aux -------------------------------------------------------------------------------------------------
 
@@ -107,7 +106,6 @@ column.2.row.names <- function(tibble, rowname_column = 1,
 }
 
 
-
 # _________________________________________________________________________________________________
 #' @title FirstCol2RowNames
 #'
@@ -177,12 +175,13 @@ FirstCol2RowNames.as.df <- function(Tibble, rownamecol = 1, make_names = FALSE) 
 #'   extension = "txt"
 #' )
 construct.file.path <- function(
-    filename = NULL,
-    suffix = NULL,
-    extension = NULL,
-    manual_file_name = NULL,
-    manual_directory = NULL,
-    v = TRUE) {
+  filename = NULL,
+  suffix = NULL,
+  extension = NULL,
+  manual_file_name = NULL,
+  manual_directory = NULL,
+  v = TRUE
+) {
   if (!is.null(filename)) filename <- as.character(filename) # unclear why thus bf needed.
 
   # Input argument assertions
@@ -304,7 +303,6 @@ read.simple.table <- function(..., colnames = TRUE, coltypes = NULL) {
 }
 
 
-
 # _________________________________________________________________________________________________
 #' @title read.simple.tsv
 #' @description Read in a file with Excel-style data: row names in column 1,
@@ -330,8 +328,9 @@ read.simple.table <- function(..., colnames = TRUE, coltypes = NULL) {
 #' @importFrom readr read_tsv
 #' @importFrom gtools na.replace
 read.simple.tsv <- function(
-    ..., sep_ = "\t", colnames = TRUE, wRownames = TRUE,
-    coltypes = NULL, NaReplace = TRUE, asTibble = FALSE) {
+  ..., sep_ = "\t", colnames = TRUE, wRownames = TRUE,
+  coltypes = NULL, NaReplace = TRUE, asTibble = FALSE
+) {
   pfn <- Stringendo::kollapse(...) # merge path and filename
   read_in <- suppressWarnings(readr::read_tsv(pfn, col_names = colnames, col_types = coltypes))
   iprint("New variable dim: ", dim(read_in) - 0:1)
@@ -342,8 +341,6 @@ read.simple.tsv <- function(
 
   return(read_in)
 }
-
-
 
 
 # _________________________________________________________________________________________________
@@ -371,8 +368,9 @@ read.simple.tsv <- function(
 #' @importFrom readr read_csv
 #' @importFrom gtools na.replace
 read.simple.csv <- function(
-    ..., colnames = TRUE, coltypes = NULL, wRownames = TRUE,
-    NaReplace = TRUE, asTibble = FALSE, nmax = Inf) {
+  ..., colnames = TRUE, coltypes = NULL, wRownames = TRUE,
+  NaReplace = TRUE, asTibble = FALSE, nmax = Inf
+) {
   # browser()
   pfn <- Stringendo::kollapse(...) # merge path and filename
   read_in <- suppressWarnings(readr::read_csv(pfn,
@@ -457,8 +455,9 @@ read.simple.csv.named.vector <- function(file, sep = ";", col_names = FALSE,
 #' @importFrom readr read_delim
 #' @importFrom gtools na.replace
 read.simple.ssv <- function(
-    ..., sep_ = " ", colnames = TRUE, wRownames = TRUE, NaReplace = TRUE,
-    coltypes = NULL) {
+  ..., sep_ = " ", colnames = TRUE, wRownames = TRUE, NaReplace = TRUE,
+  coltypes = NULL
+) {
   pfn <- Stringendo::kollapse(...) # merge path and filename
   read_in <- suppressWarnings(readr::read_delim(pfn, delim = sep_, col_names = colnames, col_types = coltypes))
   iprint("New variable dim: ", dim(read_in) - 0:1)
@@ -468,7 +467,6 @@ read.simple.ssv <- function(
 
   return(read_in)
 }
-
 
 
 # _________________________________________________________________________________________________
@@ -499,7 +497,6 @@ read.simple.tsv.named.vector <- function(...) {
 }
 
 
-
 # _________________________________________________________________________________________________
 #' @title Read a multi-sheet XLSX easily
 #'
@@ -524,10 +521,11 @@ read.simple.tsv.named.vector <- function(...) {
 #' @export
 
 read.simple.xlsx <- function(
-    pfn = Stringendo::kollapse(...), which_sheets,
-    col_names = TRUE, row_names = FALSE,
-    trim_ws = TRUE,
-    ...) {
+  pfn = Stringendo::kollapse(...), which_sheets,
+  col_names = TRUE, row_names = FALSE,
+  trim_ws = TRUE,
+  ...
+) {
   # Assertions for input arguments
   stopifnot(is.character(pfn), length(pfn) > 0)
   if (!missing(which_sheets)) stopifnot(is.numeric(which_sheets) | is.character(which_sheets))
@@ -689,7 +687,6 @@ write.simple <- function(input_df, filename = substitute(input_df), suffix = NUL
 }
 
 
-
 # _________________________________________________________________________________________________
 #' @title Write Simple Vector
 #'
@@ -780,20 +777,21 @@ write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix
 #'
 #' @export
 write.simple.tsv <- function(
-    input_df,
-    separator = "\t", extension = "tsv",
-    filename = substitute(input_df),
-    suffix = NULL,
-    # prefix = NULL,
-    # subfolder = NULL,
-    manual_file_name = NULL,
-    manual_directory = NULL,
-    row_names = TRUE,
-    col_names = NA,
-    gzip = FALSE,
-    o = FALSE,
-    v = TRUE,
-    ...) {
+  input_df,
+  separator = "\t", extension = "tsv",
+  filename = substitute(input_df),
+  suffix = NULL,
+  # prefix = NULL,
+  # subfolder = NULL,
+  manual_file_name = NULL,
+  manual_directory = NULL,
+  row_names = TRUE,
+  col_names = NA,
+  gzip = FALSE,
+  o = FALSE,
+  v = TRUE,
+  ...
+) {
   #
   if (row_names == FALSE) {
     col_names <- TRUE
@@ -831,8 +829,6 @@ write.simple.tsv <- function(
 }
 
 
-
-
 # _________________________________________________________________________________________________
 #' @title Write Simple Append
 #'
@@ -858,8 +854,9 @@ write.simple.tsv <- function(
 #' }
 #' @export
 write.simple.append <- function(
-    input_df, filename = substitute(input_df), suffix = NULL, extension = "tsv",
-    manualFileName = NULL, manualDirectory = NULL, o = FALSE, v = TRUE) {
+  input_df, filename = substitute(input_df), suffix = NULL, extension = "tsv",
+  manualFileName = NULL, manualDirectory = NULL, o = FALSE, v = TRUE
+) {
   stopifnot(
     is.null(suffix) || is.character(suffix),
     is.character(extension),
@@ -882,7 +879,6 @@ write.simple.append <- function(
     system(paste0("open ", FnP), wait = FALSE)
   }
 }
-
 
 
 # _________________________________________________________________________________________________
@@ -931,19 +927,20 @@ write.simple.append <- function(
 #' @export write.simple.xlsx
 
 write.simple.xlsx <- function(
-    named_list,
-    rowname_column = 1, #  'gene' # for Seurat df.markers
-    filename = substitute(named_list),
-    suffix = NULL,
-    manual_file_name = NULL,
-    manual_directory = NULL,
-    o = FALSE, gzip = FALSE,
-    TabColor = "darkgoldenrod1", HeaderLineColor = "darkolivegreen3",
-    HeaderCex = 12, Creator = "",
-    HeaderCharStyle = c("bold", "italic", "underline")[1],
-    has_row_names = TRUE,
-    FreezeFirstRow = TRUE, FreezeFirstCol = FALSE,
-    v = TRUE) {
+  named_list,
+  rowname_column = 1, #  'gene' # for Seurat df.markers
+  filename = substitute(named_list),
+  suffix = NULL,
+  manual_file_name = NULL,
+  manual_directory = NULL,
+  o = FALSE, gzip = FALSE,
+  TabColor = "darkgoldenrod1", HeaderLineColor = "darkolivegreen3",
+  HeaderCex = 12, Creator = "",
+  HeaderCharStyle = c("bold", "italic", "underline")[1],
+  has_row_names = TRUE,
+  FreezeFirstRow = TRUE, FreezeFirstCol = FALSE,
+  v = TRUE
+) {
   # Assertions for input arguments
   stopifnot(
     is.list(named_list),
@@ -1004,9 +1001,10 @@ write.simple.xlsx <- function(
 #'
 #' @export
 as.simple.md.table <- function(
-    input_df,
-    row_names = TRUE,
-    row_name_colname = "") {
+  input_df,
+  row_names = TRUE,
+  row_name_colname = ""
+) {
   stopifnot(
     !missing(input_df),
     isTRUE(row_names) || identical(row_names, FALSE),
@@ -1074,17 +1072,18 @@ as.simple.md.table <- function(
 #'
 #' @export
 write.simple.md.table <- function(
-    input_df,
-    extension = "md",
-    filename = substitute(input_df),
-    suffix = NULL,
-    manual_file_name = NULL,
-    manual_directory = NULL,
-    row_names = TRUE,
-    row_name_colname = "",
-    o = FALSE,
-    v = TRUE,
-    ...) {
+  input_df,
+  extension = "md",
+  filename = substitute(input_df),
+  suffix = NULL,
+  manual_file_name = NULL,
+  manual_directory = NULL,
+  row_names = TRUE,
+  row_name_colname = "",
+  o = FALSE,
+  v = TRUE,
+  ...
+) {
   stopifnot(
     !missing(input_df),
     is.character(extension), length(extension) == 1, nzchar(extension),
@@ -1122,7 +1121,6 @@ write.simple.md.table <- function(
 
   invisible(FnP)
 }
-
 
 
 # ____________________________________________________________________________________________ ----

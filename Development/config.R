@@ -3,7 +3,7 @@
 
 DESCRIPTION <- list(
   package.name = "ReadWriter",
-  version = "1.6.7",
+  version = "1.6.9",
   title = "ReadWriter",
   description = "ReadWriter is a set of R functions to read and write files conveniently. Builds on Stringendo and complements CodeAndRoll2.",
 

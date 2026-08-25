@@ -1,8 +1,6 @@
 # _________________________________________________________________________________________________
 
 
-
-
 # _________________________________________________________________________________________________
 #' @title read.simple.xls
 #' @description Read multi-sheet Excel files. `row_namePos = NULL` for automatic
@@ -51,7 +49,6 @@ read.simple.xls <- function(pfn = kollapse(...), row_namePos = NULL, ..., header
   lapply(ExpData, function(x) print(dimnames(x)))
   return(ExpData)
 }
-
 
 
 # _________________________________________________________________________________________________
@@ -126,7 +123,6 @@ read.simple.xls <- function(pfn = kollapse(...), row_namePos = NULL, ..., header
 #'
 
 
-
 # _________________________________________________________________________________________________
 #' @title convert.tsv.data
 #' @description Fix NA issues in data frames imported by the new read.simple.tsv.
@@ -145,7 +141,6 @@ convert.tsv.data <- function(df_by_read.simple.tsv, digitz = 2, na_rep = 0) {
   try(iprint("Replaced NA values:", SNA, "or", percentage_formatter(SNA / length(DAT))), silent = TRUE)
   gtools::na.replace(round(DAT, digits = digitz), replace = na_rep)
 }
-
 
 
 # _________________________________________________________________________________________________
