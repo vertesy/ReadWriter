@@ -1,5 +1,5 @@
 ## List of Functions in ReadWriter.R (22) 
-Updated: 2026/08/25 16:40
+Updated: 2026/08/25 17:02
 - #### 1 `column.2.row.names()`
 Convert a Column to Row Names in a Tibble or DataFrame. Converts the first column (or a specified column) of a data frame or tibble into row names.  This function differs from `tibble::column_to_rownames` in that it takes column names or indices,  offers the option to sanitize row names using `make.names`, and provides a warning if there are  duplicated values in the row name column. 
 
