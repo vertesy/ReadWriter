@@ -129,7 +129,7 @@ FirstCol2RowNames <- function(Tibble, rownamecol = 1, make_names = FALSE, as.df 
   }
 
   rownames(Tibble) <- row.names
-  iprint("Rownames", head(row.names), "...")
+  Stringendo::iprint("Rownames", head(row.names), "...")
 
   return(Tibble)
 }
@@ -230,7 +230,7 @@ construct.file.path <- function(
 read.simple.vec <- function(...) {
   pfn <- Stringendo::kollapse(...) # merge path and filename
   read_in <- as.vector(unlist(read.table(pfn, stringsAsFactors = FALSE, sep = "\n")))
-  iprint(length(read_in), "elements")
+  Stringendo::iprint(length(read_in), "elements")
   return(read_in)
 }
 
@@ -268,7 +268,7 @@ read.simple_char_list <- function(...) {
   pfn <- Stringendo::kollapse(...) # merge path and filename
   read_in <- unlist(read.table(pfn, stringsAsFactors = FALSE))
   # iprint("New variable head: ", what(read_in))
-  iprint("New variable head: ", is(read_in), "range", range(read_in))
+  Stringendo::iprint("New variable head: ", is(read_in), "range", range(read_in))
   return(read_in)
 }
 
@@ -297,7 +297,7 @@ read.simple.table <- function(..., colnames = TRUE, coltypes = NULL) {
   pfn <- Stringendo::kollapse(...) # merge path and filename
   # read_in = read.table( pfn , stringsAsFactors = FALSE, sep = "\t", header = colnames )
   read_in <- readr::read_tsv(pfn, col_names = colnames, col_types = coltypes)
-  iprint("New variable dim: ", dim(read_in))
+  Stringendo::iprint("New variable dim: ", dim(read_in))
   read_in <- as.data.frame(gtools::na.replace(data.matrix(read_in), replace = 0))
   return(read_in)
 }
@@ -333,7 +333,7 @@ read.simple.tsv <- function(
 ) {
   pfn <- Stringendo::kollapse(...) # merge path and filename
   read_in <- suppressWarnings(readr::read_tsv(pfn, col_names = colnames, col_types = coltypes))
-  iprint("New variable dim: ", dim(read_in) - 0:1)
+  Stringendo::iprint("New variable dim: ", dim(read_in) - 0:1)
 
   # if (wRownames) { read_in = FirstCol2RowNames(read_in, as.df = !asTibble ) }
   if (wRownames) read_in <- column.2.row.names(read_in, as_df = !asTibble)
@@ -377,7 +377,7 @@ read.simple.csv <- function(
     col_names = colnames, col_types = coltypes,
     n_max = nmax
   ))
-  iprint("New variable dim: ", dim(read_in) - 0:1)
+  Stringendo::iprint("New variable dim: ", dim(read_in) - 0:1)
 
   # if (wRownames) { read_in = FirstCol2RowNames(read_in) }
   if (wRownames) read_in <- column.2.row.names(read_in, as_df = !asTibble)
@@ -425,7 +425,7 @@ read.simple.csv.named.vector <- function(file, sep = ";", col_names = FALSE,
 
   vect <- df[[value_col]]
   names(vect) <- df[[name_col]]
-  message("New vectors length is: ", length(vect), "e.g. ", kppc(head(vect)), " ...")
+  message("New vectors length is: ", length(vect), "e.g. ", Stringendo::kppc(head(vect)), " ...")
 
   return(vect)
 }
@@ -460,7 +460,7 @@ read.simple.ssv <- function(
 ) {
   pfn <- Stringendo::kollapse(...) # merge path and filename
   read_in <- suppressWarnings(readr::read_delim(pfn, delim = sep_, col_names = colnames, col_types = coltypes))
-  iprint("New variable dim: ", dim(read_in) - 0:1)
+  Stringendo::iprint("New variable dim: ", dim(read_in) - 0:1)
 
   if (wRownames) read_in <- column.2.row.names(read_in, as_df = !asTibble)
   if (NaReplace) read_in <- as.data.frame(gtools::na.replace(read_in, replace = 0))
@@ -492,7 +492,7 @@ read.simple.tsv.named.vector <- function(...) {
   read_in <- readr::read_tsv(pfn)
   vect <- read_in[[2]]
   names(vect) <- read_in[[1]]
-  iprint("New vectors length is: ", length(vect))
+  Stringendo::iprint("New vectors length is: ", length(vect))
   return(vect)
 }
 
@@ -590,7 +590,7 @@ read.simple.xlsx <- function(
 #' @return A message indicating the length of the vector and the file path to which it was written.
 #'
 #' @export
-write.simplest <- function(vec = LETTERS[1:11], append = TRUE, header = NULL, prefix = kppws(substitute(vec), idate()),
+write.simplest <- function(vec = LETTERS[1:11], append = TRUE, header = NULL, prefix = Stringendo::kppws(substitute(vec), Stringendo::idate()),
                            file_path = get0("path_write_simplest", ifnotfound = "./__clipboard.txt")) {
   stopifnot(
     is.vector(vec),
@@ -608,19 +608,19 @@ write.simplest <- function(vec = LETTERS[1:11], append = TRUE, header = NULL, pr
   message(file_path)
   message(file_path)
 
-  write(kppws(prefix, header), file = file_path, append = TRUE)
+  write(Stringendo::kppws(prefix, header), file = file_path, append = TRUE)
   write.table(vec,
     file = file_path, sep = "\n", row.names = FALSE, col.names = FALSE,
     quote = FALSE, append = append
   )
-  message("Vector of length ", length(vec), " e.g.: ", kppc(head(vec)), ".")
+  message("Vector of length ", length(vec), " e.g.: ", Stringendo::kppc(head(vec)), ".")
 
   message("\nsubl ", file_path)
 
-  if (ifExistsAndTrue("onCBE")) {
+  if (Stringendo::ifExistsAndTrue("onCBE")) {
     attach <- paste0("smb://storage.imp.ac.at", dirname(file_path))
     message("\nAttach in Finder:\n", attach, "\n")
-    message("open ", spps("/Volumes/", basename(attach)))
+    message("open ", Stringendo::spps("/Volumes/", basename(attach)))
   }
 
   # guessed_local_path <- gsub(
@@ -673,7 +673,7 @@ write.simple <- function(input_df, filename = substitute(input_df), suffix = NUL
 
   FnP <- construct.file.path(
     v = v,
-    filename = FixPlotName(make.names(filename)), suffix = suffix, extension = extension,
+    filename = Stringendo::FixPlotName(make.names(filename)), suffix = suffix, extension = extension,
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
 
@@ -683,7 +683,7 @@ write.simple <- function(input_df, filename = substitute(input_df), suffix = NUL
   if (o) {
     system(paste0("open ", FnP), wait = FALSE)
   }
-  iprint("Length: ", length(input_df))
+  Stringendo::iprint("Length: ", length(input_df))
 }
 
 
@@ -730,7 +730,7 @@ write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix
   if (make_names) filename <- make.names(filename)
   FnP <- construct.file.path(
     v = v,
-    filename = FixPlotName(filename), suffix = suffix, extension = extension,
+    filename = Stringendo::FixPlotName(filename), suffix = suffix, extension = extension,
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
 
@@ -806,7 +806,7 @@ write.simple.tsv <- function(
 
   FnP <- construct.file.path(
     v = v,
-    filename = FixPlotName(make.names(fname)), suffix = suffix, extension = extension,
+    filename = Stringendo::FixPlotName(make.names(fname)), suffix = suffix, extension = extension,
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
   # print(FnP)
@@ -823,7 +823,7 @@ write.simple.tsv <- function(
   } else {
     paste0("Length (of your vector): ", length(input_df))
   }
-  iprint(printme)
+  Stringendo::iprint(printme)
   if (o) system(paste0("open ", FnP), wait = FALSE)
   if (gzip) system(paste0("gzip ", FnP), wait = FALSE)
 }
@@ -867,7 +867,7 @@ write.simple.append <- function(
 
   FnP <- construct.file.path(
     v = v,
-    filename = FixPlotName(make.names(filename)), suffix = suffix, extension = extension,
+    filename = Stringendo::FixPlotName(make.names(filename)), suffix = suffix, extension = extension,
     manualFileName = manualFileName, manualDirectory = manualDirectory
   )
 
@@ -964,7 +964,7 @@ write.simple.xlsx <- function(
 
   FnP <- construct.file.path(
     v = v,
-    filename = FixPlotName(make.names(filename)), suffix = suffix, extension = "xlsx",
+    filename = Stringendo::FixPlotName(make.names(filename)), suffix = suffix, extension = "xlsx",
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
 
@@ -978,8 +978,8 @@ write.simple.xlsx <- function(
   # Output assertion
   stopifnot(file.exists(FnP))
 
-  if (o) system(paste0("open ", fix_special_characters_bash(FnP)), wait = FALSE)
-  if (gzip) system(paste0("gzip ", fix_special_characters_bash(FnP)), wait = FALSE)
+  if (o) system(paste0("open ", Stringendo::fix_special_characters_bash(FnP)), wait = FALSE)
+  if (gzip) system(paste0("gzip ", Stringendo::fix_special_characters_bash(FnP)), wait = FALSE)
 } # fun
 
 
@@ -1106,7 +1106,7 @@ write.simple.md.table <- function(
 
   FnP <- construct.file.path(
     v = v,
-    filename = FixPlotName(make.names(fname)),
+    filename = Stringendo::FixPlotName(make.names(fname)),
     suffix = suffix,
     extension = extension,
     manual_file_name = manual_file_name,
@@ -1116,7 +1116,7 @@ write.simple.md.table <- function(
   dir.create(dirname(FnP), recursive = TRUE, showWarnings = FALSE)
   writeLines(md_lines, con = FnP, useBytes = TRUE)
 
-  iprint(paste0("Dim: ", paste(dim(as.data.frame(input_df)), collapse = " x ")))
+  Stringendo::iprint(paste0("Dim: ", paste(dim(as.data.frame(input_df)), collapse = " x ")))
   if (isTRUE(o)) system(paste0("open ", FnP), wait = FALSE)
 
   invisible(FnP)
@@ -1152,11 +1152,11 @@ qs.2.table <- function(path, out_file = c("tsv", "csv", "csv2", "excel")[1]) {
   data <- qs:qread(path)
 
   # Determine the output file extension and write the file based on the output format
-  path_out <- ppp(base_filename, out_file)
+  path_out <- Stringendo::ppp(base_filename, out_file)
 
   if (out_file == "excel") {
     # out_path <- ppp(base_filename, "xlsx")
-    ppp(base_filename, out_file)
+    Stringendo::ppp(base_filename, out_file)
     ReadWriter::write.simple.xlsx(data, out_path)
   }
 

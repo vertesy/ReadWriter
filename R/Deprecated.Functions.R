@@ -20,14 +20,14 @@
 #'  \code{\link[gdata]{read.xls}}
 #' @export
 # #' @importFrom gdata read.xls sheetNames
-read.simple.xls <- function(pfn = kollapse(...), row_namePos = NULL, ..., header_ = TRUE, WhichSheets) {
+read.simple.xls <- function(pfn = Stringendo::kollapse(...), row_namePos = NULL, ..., header_ = TRUE, WhichSheets) {
   .Deprecated("read.simple.xlsx")
 
   if (!require("gdata")) {
     print("Please install gdata: install.packages('gdata')")
   }
   if (grepl("^~/", pfn)) {
-    iprint("You cannot use the ~/ in the file path! It is replaced by '~/'.")
+    Stringendo::iprint("You cannot use the ~/ in the file path! It is replaced by '~/'.")
     pfn <- gsub(pattern = "^~/", replacement = "~/", x = pfn)
   } else {
     print(pfn)
@@ -36,14 +36,14 @@ read.simple.xls <- function(pfn = kollapse(...), row_namePos = NULL, ..., header
   # merge path and filename
   TheSheetNames <- gdata::sheetNames(pfn, verbose = FALSE)
   NrSheets <- length(TheSheetNames)
-  iprint(NrSheets, "sheets in the file.")
+  Stringendo::iprint(NrSheets, "sheets in the file.")
   # ExpData = CodeAndRoll2::list.fromNames(TheSheetNames)
   ExpData <- as.list(TheSheetNames)
   names(ExpData) <- TheSheetNames
 
   RangeOfSheets <- if (missing(WhichSheets)) 1:NrSheets else WhichSheets
   for (i in RangeOfSheets) {
-    iprint("sheet", i)
+    Stringendo::iprint("sheet", i)
     # ExpData[[i]] = gdata::read.xls(pfn, sheet = i, row.names = row_namePos, header = header_)
   } # for
   lapply(ExpData, function(x) print(dimnames(x)))
@@ -138,7 +138,7 @@ convert.tsv.data <- function(df_by_read.simple.tsv, digitz = 2, na_rep = 0) {
 
   DAT <- data.matrix(df_by_read.simple.tsv)
   SNA <- sum(is.na(DAT))
-  try(iprint("Replaced NA values:", SNA, "or", percentage_formatter(SNA / length(DAT))), silent = TRUE)
+  try(Stringendo::iprint("Replaced NA values:", SNA, "or", Stringendo::percentage_formatter(SNA / length(DAT))), silent = TRUE)
   gtools::na.replace(round(DAT, digits = digitz), replace = na_rep)
 }
 
