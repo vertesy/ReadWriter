@@ -442,6 +442,7 @@ read.simple.csv.named.vector <- function(file, sep = ";", col_names = FALSE,
 #' @param wRownames With row names? Default: TRUE.
 #' @param NaReplace Replace NA values? Default: TRUE.
 #' @param coltypes What type of variables are in columns? Auto-guessing can be very slow. Default: NULL.
+#' @param asTibble Load as tibble or data frame? Default: FALSE (load as data frame).
 #' @examples
 #' \dontrun{
 #' if (interactive()) {
@@ -456,7 +457,7 @@ read.simple.csv.named.vector <- function(file, sep = ";", col_names = FALSE,
 #' @importFrom gtools na.replace
 read.simple.ssv <- function(
   ..., sep_ = " ", colnames = TRUE, wRownames = TRUE, NaReplace = TRUE,
-  coltypes = NULL
+  coltypes = NULL, asTibble = FALSE
 ) {
   pfn <- Stringendo::kollapse(...) # merge path and filename
   read_in <- suppressWarnings(readr::read_delim(pfn, delim = sep_, col_names = colnames, col_types = coltypes))
@@ -957,7 +958,7 @@ write.simple.xlsx <- function(
 
   # assign row names if required
   if (isFALSE(has_row_names)) {
-    assignRownames <- function(x) column.2.row.names(df, rowname_column = rowname_column, make_names = TRUE)
+    assignRownames <- function(x) column.2.row.names(x, rowname_column = rowname_column, make_names = TRUE)
     named_list <- lapply(named_list, assignRownames)
     message("Converting column ", rowname_column, " to row names: ", head(rownames(named_list[[1]])))
   }
@@ -1143,34 +1144,24 @@ write.simple.md.table <- function(
 
 qs.2.table <- function(path, out_file = c("tsv", "csv", "csv2", "excel")[1]) {
   # Ensure that the file exists and is a .qs file
-  stopifnot(file.exists(path), stringi::stri_detect(str = path, regex = "\\.qs$"))
+  stopifnot(file.exists(path), grepl("\\.qs$", path))
 
   # Ensure out_file is one of the allowed choices
   out_file <- match.arg(out_file, c("tsv", "csv", "csv2", "excel"))
 
   # Read in the .qs file
-  data <- qs:qread(path)
+  data <- qs::qread(path)
 
-  # Determine the output file extension and write the file based on the output format
-  path_out <- Stringendo::ppp(base_filename, out_file)
+  # Split into directory + base filename (without extension); write.simple.tsv()/
+  # write.simple.xlsx() append the correct extension themselves.
+  out_dir <- dirname(path)
+  base_filename <- sub("\\.qs$", "", basename(path))
 
-  if (out_file == "excel") {
-    # out_path <- ppp(base_filename, "xlsx")
-    Stringendo::ppp(base_filename, out_file)
-    ReadWriter::write.simple.xlsx(data, out_path)
-  }
-
-  if (out_file == "tsv") {
-    ReadWriter::write.simple.tsv(data, path_out, separator = "\t")
-  } else if (out_file == "csv") {
-    ReadWriter::write.simple.tsv(data, path_out, separator = ",")
-  } else if (out_file == "csv2") {
-    out_path <- paste0(base_filename, ".csv")
-    ReadWriter::write.simple.tsv(data, path_out, separator = ";")
+  if (out_file %in% c("tsv", "csv", "csv2")) {
+    sep <- switch(out_file, tsv = "\t", csv = ",", csv2 = ";")
+    ReadWriter::write.simple.tsv(data, manual_file_name = base_filename, manual_directory = out_dir, separator = sep)
   } else if (out_file == "excel") {
-    out_path <- paste0(base_filename, ".xlsx")
-    ReadWriter::write.simple.xlsx(data, out_path)
+    payload <- if (is.data.frame(data) || is.matrix(data)) list(data) else data
+    ReadWriter::write.simple.xlsx(payload, manual_file_name = base_filename, manual_directory = out_dir)
   }
-
-  message("File saved as: ", out_path)
 }
