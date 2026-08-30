@@ -36,7 +36,7 @@ column.2.row.names <- function(tibble, rowname_column = 1,
                                warn = TRUE,
                                overwrite = TRUE,
                                ...) {
-  "This is the function that should be used from 11.2023"
+  # This is the function that should be used from 11.2023
 
   # Assertions
   stopifnot(
@@ -94,6 +94,8 @@ column.2.row.names <- function(tibble, rowname_column = 1,
   # Setting the row names
   if (overwrite) {
     message("Overwriting row names.")
+    # Clear existing row names first, so setting the new ones can't collide
+    # with the old set (data.frame rownames<- errors on duplicates otherwise).
     rownames(tibble) <- NULL
     rownames(tibble) <- row_names
   } else {
@@ -469,13 +471,13 @@ read.simple.ssv <- function(
     coltypes = NULL) {
   pfn <- Stringendo::kollapse(...) # merge path and filename
   read_in <- suppressWarnings(readr::read_delim(pfn, delim = sep_, col_names = colnames, col_types = coltypes))
-  iprint("New variable dim: ", dim(read_in) - 0:1)
-  if (wRownames) {
-    read_in <- FirstCol2RowNames(read_in)
-  }
-  if (NaReplace) {
-    read_in <- as.data.frame(gtools::na.replace(read_in, replace = 0))
-  }
+  Stringendo::iprint("New variable dim: ", dim(read_in) - 0:1)
+
+  # NOTE: BUG -- 'asTibble' is not a parameter of this function (unlike read.simple.tsv/.csv);
+  # this errors with "object 'asTibble' not found" whenever wRownames = TRUE (the default).
+  if (wRownames) read_in <- column.2.row.names(read_in, as_df = !asTibble)
+  if (NaReplace) read_in <- as.data.frame(gtools::na.replace(read_in, replace = 0))
+
   return(read_in)
 }
 
@@ -792,7 +794,7 @@ write.simple.tsv <- function(
     col_names <- TRUE
   }
 
-  " write.simple.tsv should have background compression as a feature #14 "
+  # TODO: write.simple.tsv should have background compression as a feature #14
 
   if (separator %in% c(",", ";")) extension <- "csv"
 
@@ -956,7 +958,9 @@ write.simple.xlsx <- function(
   )
 
   # assign row names if required
-  if (!has_row_names) {
+  if (isFALSE(has_row_names)) {
+    # NOTE: BUG -- uses 'df' (undefined here) instead of the lambda's own 'x';
+    # errors with "object 'df' not found" whenever has_row_names = FALSE.
     assignRownames <- function(x) column.2.row.names(df, rowname_column = rowname_column, make_names = TRUE)
     named_list <- lapply(named_list, assignRownames)
     message("Converting column ", rowname_column, " to row names: ", head(rownames(named_list[[1]])))
@@ -1004,6 +1008,12 @@ write.simple.xlsx <- function(
 #'
 
 qs.2.table <- function(path, out_file = c("tsv", "csv", "csv2", "excel")[1]) {
+  # NOTE: BUG -- this function does not currently work for any input:
+  #  - `qs:qread` uses a single colon (invalid); should be `qs::qread`.
+  #  - `stringi::stri_detect` is not a real stringi function (need stri_detect_regex).
+  #  - `base_filename` and `out_path` are used below but never defined/assigned
+  #    on most code paths -- see the tsv/csv/csv2/excel branches further down.
+
   # Ensure that the file exists and is a .qs file
   stopifnot(file.exists(path), stringi::stri_detect(str = path, regex = "\\.qs$"))
 
