@@ -10,11 +10,12 @@ License: GPL-3 + file LICENSE
 BugReports: https://github.com/vertesy/ReadWriter/issues
 Depends: 
     Stringendo (>= 0.5.0)
-Imports: 
+Imports:
     gtools,
     openxlsx,
     qs,
-    readr
+    readr,
+    stringi
 Encoding: UTF-8
 Packaged: 2024-07-14 12:49:22.339709
 Roxygen: list(markdown = TRUE)

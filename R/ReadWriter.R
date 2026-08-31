@@ -36,7 +36,7 @@ column.2.row.names <- function(tibble, rowname_column = 1,
                                warn = TRUE,
                                overwrite = TRUE,
                                ...) {
-  "This is the function that should be used from 11.2023"
+  # This is the function that should be used from 11.2023
 
   # Assertions
   stopifnot(
@@ -94,6 +94,8 @@ column.2.row.names <- function(tibble, rowname_column = 1,
   # Setting the row names
   if (overwrite) {
     message("Overwriting row names.")
+    # Clear existing row names first, so setting the new ones can't collide
+    # with the old set (data.frame rownames<- errors on duplicates otherwise).
     rownames(tibble) <- NULL
     rownames(tibble) <- row_names
   } else {
@@ -452,6 +454,7 @@ read.simple.csv.named.vector <- function(file, sep = ";", col_names = FALSE,
 #' @param wRownames With row names? Default: TRUE.
 #' @param NaReplace Replace NA values? Default: TRUE.
 #' @param coltypes What type of variables are in columns? Auto-guessing can be very slow. Default: NULL.
+#' @param asTibble Load as tibble or data frame? Default: FALSE (load as data frame).
 #' @examples
 #' \dontrun{
 #' if (interactive()) {
@@ -465,17 +468,16 @@ read.simple.csv.named.vector <- function(file, sep = ";", col_names = FALSE,
 #' @importFrom readr read_delim
 #' @importFrom gtools na.replace
 read.simple.ssv <- function(
-    ..., sep_ = " ", colnames = TRUE, wRownames = TRUE, NaReplace = TRUE,
-    coltypes = NULL) {
+  ..., sep_ = " ", colnames = TRUE, wRownames = TRUE, NaReplace = TRUE,
+  coltypes = NULL, asTibble = FALSE
+) {
   pfn <- Stringendo::kollapse(...) # merge path and filename
   read_in <- suppressWarnings(readr::read_delim(pfn, delim = sep_, col_names = colnames, col_types = coltypes))
-  iprint("New variable dim: ", dim(read_in) - 0:1)
-  if (wRownames) {
-    read_in <- FirstCol2RowNames(read_in)
-  }
-  if (NaReplace) {
-    read_in <- as.data.frame(gtools::na.replace(read_in, replace = 0))
-  }
+  Stringendo::iprint("New variable dim: ", dim(read_in) - 0:1)
+
+  if (wRownames) read_in <- column.2.row.names(read_in, as_df = !asTibble)
+  if (NaReplace) read_in <- as.data.frame(gtools::na.replace(read_in, replace = 0))
+
   return(read_in)
 }
 
@@ -792,7 +794,7 @@ write.simple.tsv <- function(
     col_names <- TRUE
   }
 
-  " write.simple.tsv should have background compression as a feature #14 "
+  # TODO: write.simple.tsv should have background compression as a feature #14
 
   if (separator %in% c(",", ";")) extension <- "csv"
 
@@ -956,8 +958,8 @@ write.simple.xlsx <- function(
   )
 
   # assign row names if required
-  if (!has_row_names) {
-    assignRownames <- function(x) column.2.row.names(df, rowname_column = rowname_column, make_names = TRUE)
+  if (isFALSE(has_row_names)) {
+    assignRownames <- function(x) column.2.row.names(x, rowname_column = rowname_column, make_names = TRUE)
     named_list <- lapply(named_list, assignRownames)
     message("Converting column ", rowname_column, " to row names: ", head(rownames(named_list[[1]])))
   }
@@ -1000,38 +1002,37 @@ write.simple.xlsx <- function(
 #' @return The function does not return a value but writes the file to disk in the specified format.
 #'
 #' @importFrom qs qread
-#' @export
+#' @importFrom stringi stri_detect_regex
 #'
+#' @export qs.2.table
 
 qs.2.table <- function(path, out_file = c("tsv", "csv", "csv2", "excel")[1]) {
   # Ensure that the file exists and is a .qs file
-  stopifnot(file.exists(path), stringi::stri_detect(str = path, regex = "\\.qs$"))
+  stopifnot(file.exists(path), stringi::stri_detect_regex(str = path, pattern = "\\.qs$"))
 
   # Ensure out_file is one of the allowed choices
   out_file <- match.arg(out_file, c("tsv", "csv", "csv2", "excel"))
 
   # Read in the .qs file
-  data <- qs:qread(path)
+  data <- qs::qread(path)
 
-  # Determine the output file extension and write the file based on the output format
-  path_out <- ppp(base_filename, out_file)
-
-  if (out_file == "excel") {
-    # out_path <- ppp(base_filename, "xlsx")
-    ppp(base_filename, out_file)
-    ReadWriter::write.simple.xlsx(data, out_path)
-  }
+  # Base name (without extension) shared by all output formats
+  base_filename <- sub("\\.qs$", "", path)
 
   if (out_file == "tsv") {
-    ReadWriter::write.simple.tsv(data, path_out, separator = "\t")
+    ReadWriter::write.simple.tsv(data, manual_file_name = base_filename, separator = "\t")
+    out_path <- paste0(base_filename, ".tsv")
   } else if (out_file == "csv") {
-    ReadWriter::write.simple.tsv(data, path_out, separator = ",")
-  } else if (out_file == "csv2") {
+    ReadWriter::write.simple.tsv(data, manual_file_name = base_filename, separator = ",")
     out_path <- paste0(base_filename, ".csv")
-    ReadWriter::write.simple.tsv(data, path_out, separator = ";")
+  } else if (out_file == "csv2") {
+    ReadWriter::write.simple.tsv(data, manual_file_name = base_filename, separator = ";")
+    out_path <- paste0(base_filename, ".csv")
   } else if (out_file == "excel") {
+    # write.simple.xlsx() expects a list of sheets; wrap a bare table into one.
+    payload <- if (is.data.frame(data) || is.matrix(data)) list(data) else data
+    ReadWriter::write.simple.xlsx(payload, manual_file_name = base_filename)
     out_path <- paste0(base_filename, ".xlsx")
-    ReadWriter::write.simple.xlsx(data, out_path)
   }
 
   message("File saved as: ", out_path)
