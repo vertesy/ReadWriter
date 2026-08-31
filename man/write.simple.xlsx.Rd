@@ -12,7 +12,6 @@ write.simple.xlsx(
   manual_file_name = NULL,
   manual_directory = NULL,
   o = FALSE,
-  gzip = FALSE,
   TabColor = "darkgoldenrod1",
   HeaderLineColor = "darkolivegreen3",
   HeaderCex = 12,
@@ -21,7 +20,8 @@ write.simple.xlsx(
   has_row_names = TRUE,
   FreezeFirstRow = TRUE,
   FreezeFirstCol = FALSE,
-  v = TRUE
+  v = TRUE,
+  gzip = FALSE
 )
 }
 \arguments{
@@ -43,8 +43,6 @@ Default: Derived using \code{substitute(named_list)}.}
 \item{o}{Logical; if TRUE, opens the file after writing using the system's default application.
 Default: FALSE.}
 
-\item{gzip}{Compress the file after saving? Default: FALSE.}
-
 \item{TabColor}{Color for the tabs in Excel. Default: 'darkgoldenrod1'.}
 
 \item{HeaderLineColor}{Color for the header line. Default: 'darkolivegreen3'.}
@@ -63,6 +61,8 @@ Default: 'bold'.}
 \item{FreezeFirstCol}{Logical; if TRUE, freezes the first column in Excel. Default: FALSE.}
 
 \item{v}{Print path if verbose? Default: TRUE.}
+
+\item{gzip}{Compress the file after saving? Default: FALSE.}
 }
 \description{
 Write out a list of matrices or data frames with row and column names

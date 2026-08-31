@@ -196,6 +196,7 @@ construct.file.path <- function(
 
   fname <- if (!is.null(manual_file_name)) manual_file_name else Stringendo::sppp(filename, suffix)
   out_dir <- if (!is.null(manual_directory)) manual_directory else getwd()
+  if (!dir.exists(out_dir)) dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
   stopifnot(dir.exists(out_dir))
 
   # Construct the full file path
@@ -442,6 +443,7 @@ read.simple.csv.named.vector <- function(file, sep = ";", col_names = FALSE,
 #' @param wRownames With row names? Default: TRUE.
 #' @param NaReplace Replace NA values? Default: TRUE.
 #' @param coltypes What type of variables are in columns? Auto-guessing can be very slow. Default: NULL.
+#' @param asTibble Load as tibble or data frame? Default: FALSE (load as data frame).
 #' @examples
 #' \dontrun{
 #' if (interactive()) {
@@ -456,7 +458,7 @@ read.simple.csv.named.vector <- function(file, sep = ";", col_names = FALSE,
 #' @importFrom gtools na.replace
 read.simple.ssv <- function(
   ..., sep_ = " ", colnames = TRUE, wRownames = TRUE, NaReplace = TRUE,
-  coltypes = NULL
+  coltypes = NULL, asTibble = FALSE
 ) {
   pfn <- Stringendo::kollapse(...) # merge path and filename
   read_in <- suppressWarnings(readr::read_delim(pfn, delim = sep_, col_names = colnames, col_types = coltypes))
@@ -698,13 +700,12 @@ write.simple <- function(input_df, filename = substitute(input_df), suffix = NUL
 #' @param filename The base name for the output file. Default: Name of the input vector.
 #' @param suffix An optional suffix to add to the filename. Default: NULL.
 #' @param extension File extension to use. Default: 'vec'.
-#' @param make_names If TRUE, applies `make.names` to the filename. Generally safer, but it can,
-#' e.g.: inadvarently change "_myFile" to "X_myFile". Default: TRUE.
-#' Default: TRUE.
 #' @param manual_file_name Manually defined filename, overrides automatic naming. Default: NULL.
 #' @param manual_directory Directory to save the file in, overrides default directory. Default: NULL.
 #' @param o If TRUE, opens the file after writing on OS X using 'system(open ...)'. Default: FALSE.
 #' @param v Print path if verbose? Default: TRUE.
+#' @param make_names If TRUE, applies `make.names` to the filename. Generally safer, but it can,
+#' e.g.: inadvarently change "_myFile" to "X_myFile". Default: TRUE.
 #'
 #' @return Outputs a .vec file and optionally prints the length of the input vector.
 #' @examples
@@ -715,8 +716,8 @@ write.simple <- function(input_df, filename = substitute(input_df), suffix = NUL
 #' }
 #' @export
 write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix = NULL, extension = "vec",
-                             make_names = TRUE, manual_file_name = NULL, manual_directory = NULL, o = FALSE,
-                             v = TRUE) {
+                             manual_file_name = NULL, manual_directory = NULL, o = FALSE,
+                             v = TRUE, make_names = TRUE) {
   # Input argument assertions
   stopifnot(
     is.vector(input_vec),
@@ -902,7 +903,6 @@ write.simple.append <- function(
 #' @param manual_directory Directory to save the file in, overrides default directory. Default: NULL.
 #' @param o Logical; if TRUE, opens the file after writing using the system's default application.
 #'          Default: FALSE.
-#' @param gzip Compress the file after saving? Default: FALSE.
 #' @param TabColor Color for the tabs in Excel. Default: 'darkgoldenrod1'.
 #' @param Creator The creator of the Excel document. Default: ''.
 #' @param HeaderCex Font size for the header. Default: 12.
@@ -913,6 +913,7 @@ write.simple.append <- function(
 #' @param FreezeFirstRow Logical; if TRUE, freezes the first row in Excel. Default: TRUE.
 #' @param FreezeFirstCol Logical; if TRUE, freezes the first column in Excel. Default: FALSE.
 #' @param v Print path if verbose? Default: TRUE.
+#' @param gzip Compress the file after saving? Default: FALSE.
 #'
 #' @examples
 #' \dontrun{
@@ -933,13 +934,13 @@ write.simple.xlsx <- function(
   suffix = NULL,
   manual_file_name = NULL,
   manual_directory = NULL,
-  o = FALSE, gzip = FALSE,
+  o = FALSE,
   TabColor = "darkgoldenrod1", HeaderLineColor = "darkolivegreen3",
   HeaderCex = 12, Creator = "",
   HeaderCharStyle = c("bold", "italic", "underline")[1],
   has_row_names = TRUE,
   FreezeFirstRow = TRUE, FreezeFirstCol = FALSE,
-  v = TRUE
+  v = TRUE, gzip = FALSE
 ) {
   # Assertions for input arguments
   stopifnot(

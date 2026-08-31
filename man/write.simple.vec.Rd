@@ -9,11 +9,11 @@ write.simple.vec(
   filename = substitute(input_vec),
   suffix = NULL,
   extension = "vec",
-  make_names = TRUE,
   manual_file_name = NULL,
   manual_directory = NULL,
   o = FALSE,
-  v = TRUE
+  v = TRUE,
+  make_names = TRUE
 )
 }
 \arguments{
@@ -25,10 +25,6 @@ write.simple.vec(
 
 \item{extension}{File extension to use. Default: 'vec'.}
 
-\item{make_names}{If TRUE, applies \code{make.names} to the filename. Generally safer, but it can,
-e.g.: inadvarently change "_myFile" to "X_myFile". Default: TRUE.
-Default: TRUE.}
-
 \item{manual_file_name}{Manually defined filename, overrides automatic naming. Default: NULL.}
 
 \item{manual_directory}{Directory to save the file in, overrides default directory. Default: NULL.}
@@ -36,6 +32,9 @@ Default: TRUE.}
 \item{o}{If TRUE, opens the file after writing on OS X using 'system(open ...)'. Default: FALSE.}
 
 \item{v}{Print path if verbose? Default: TRUE.}
+
+\item{make_names}{If TRUE, applies \code{make.names} to the filename. Generally safer, but it can,
+e.g.: inadvarently change "_myFile" to "X_myFile". Default: TRUE.}
 }
 \value{
 Outputs a .vec file and optionally prints the length of the input vector.
