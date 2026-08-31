@@ -464,7 +464,10 @@ read.simple.ssv <- function(
   Stringendo::iprint("New variable dim: ", dim(read_in) - 0:1)
 
   if (wRownames) read_in <- column.2.row.names(read_in, as_df = !asTibble)
-  if (NaReplace) read_in <- as.data.frame(gtools::na.replace(read_in, replace = 0))
+  if (NaReplace) {
+    read_in <- gtools::na.replace(read_in, replace = 0)
+    if (!asTibble) read_in <- as.data.frame(read_in)
+  }
 
   return(read_in)
 }
@@ -961,6 +964,7 @@ write.simple.xlsx <- function(
     assignRownames <- function(x) column.2.row.names(x, rowname_column = rowname_column, make_names = TRUE)
     named_list <- lapply(named_list, assignRownames)
     message("Converting column ", rowname_column, " to row names: ", head(rownames(named_list[[1]])))
+    has_row_names <- TRUE
   }
 
   FnP <- construct.file.path(

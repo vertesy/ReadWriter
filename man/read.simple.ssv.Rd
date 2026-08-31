@@ -10,7 +10,8 @@ read.simple.ssv(
   colnames = TRUE,
   wRownames = TRUE,
   NaReplace = TRUE,
-  coltypes = NULL
+  coltypes = NULL,
+  asTibble = FALSE
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ read.simple.ssv(
 \item{NaReplace}{Replace NA values? Default: TRUE.}
 
 \item{coltypes}{What type of variables are in columns? Auto-guessing can be very slow. Default: NULL.}
+
+\item{asTibble}{Load as tibble or data frame? Default: FALSE (load as data frame).}
 }
 \description{
 Space separated values. Read in a file with Excel-style data:
