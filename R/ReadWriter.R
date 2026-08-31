@@ -1029,7 +1029,9 @@ qs.2.table <- function(path, out_file = c("tsv", "csv", "csv2", "excel")[1]) {
     ReadWriter::write.simple.tsv(data, manual_file_name = base_filename, separator = ";")
     out_path <- paste0(base_filename, ".csv")
   } else if (out_file == "excel") {
-    ReadWriter::write.simple.xlsx(data, manual_file_name = base_filename)
+    # write.simple.xlsx() expects a list of sheets; wrap a bare table into one.
+    payload <- if (is.data.frame(data) || is.matrix(data)) list(data) else data
+    ReadWriter::write.simple.xlsx(payload, manual_file_name = base_filename)
     out_path <- paste0(base_filename, ".xlsx")
   }
 
