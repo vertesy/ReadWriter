@@ -9,14 +9,14 @@ read.simple.table(..., colnames = TRUE, coltypes = NULL)
 \arguments{
 \item{...}{Multiple simple variables to parse.}
 
-\item{colnames}{Are there column names? Default: TRUE}
+\item{colnames}{Are there column names? Default: TRUE.}
 
-\item{coltypes}{What type of variables are in columns? Auto-guessing can be very slow. Default: NULL}
+\item{coltypes}{What type of variables are in columns? Auto-guessing can be very slow. Default: NULL.}
 }
 \description{
-Read in a file. default: header defines colnames, no rownames.
-For rownames give the col nr. with rownames, eg. 1 The header should start
-with a TAB / First column name should be empty.
+Read a file. Default: header defines column names, no row names.
+For row names give the column number with row names, e.g., 1. The header should start
+with a TAB; the first column name should be empty.
 }
 \examples{
 \dontrun{

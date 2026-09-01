@@ -12,7 +12,8 @@ write.simple.vec(
   manual_file_name = NULL,
   manual_directory = NULL,
   o = FALSE,
-  v = TRUE
+  v = TRUE,
+  make_names = TRUE
 )
 }
 \arguments{
@@ -30,13 +31,16 @@ write.simple.vec(
 
 \item{o}{If TRUE, opens the file after writing on OS X using 'system(open ...)'. Default: FALSE.}
 
-\item{v}{verbose Print path? Default: TRUE.}
+\item{v}{Print path if verbose? Default: TRUE.}
+
+\item{make_names}{If TRUE, applies \code{make.names} to the filename. Generally safer, but it can,
+e.g.: inadvarently change "_myFile" to "X_myFile". Default: TRUE.}
 }
 \value{
 Outputs a .vec file and optionally prints the length of the input vector.
 }
 \description{
-Writes a vector-like R object to a file as newline separated values (.vec).
+Writes a vector-like R object to a file as newline-separated values (.vec).
 The output filename can be auto-generated from the variable's name or manually specified. The file
 is saved in the specified output directory or the current working directory. The path and variable
 name can be passed separately and will be concatenated to form the filename.

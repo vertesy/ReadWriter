@@ -2,14 +2,14 @@
 % Please edit documentation in R/ReadWriter.R
 \name{write.simplest}
 \alias{write.simplest}
-\title{Append or write a vector to standard file, one element per line.}
+\title{Append or write a vector to a standard file, one element per line.}
 \usage{
 write.simplest(
   vec = LETTERS[1:11],
   append = TRUE,
   header = NULL,
   prefix = kppws(substitute(vec), idate()),
-  file_path = "/groups/knoblich/Projects/connectomics/Analysis/__clipboard.txt"
+  file_path = get0("path_write_simplest", ifnotfound = "./__clipboard.txt")
 )
 }
 \arguments{
@@ -22,13 +22,13 @@ write.simplest(
 \item{prefix}{A prefix to the header. Default: \code{kppws(substitute(vec), idate())}.}
 
 \item{file_path}{A string specifying the file path where the vector will be written. Default:
-\code{"/groups/knoblich/Projects/connectomics/Analysis/__clipboard.txt"}.}
+path stored in \code{path_write_simplest} global variable, otherwise \code{"./__clipboard.txt"}.}
 }
 \value{
 A message indicating the length of the vector and the file path to which it was written.
 }
 \description{
-Alternative to clipboard. This function takes a vector and appends it
+Alternative to the clipboard. This function takes a vector and appends it
 to a specified file.
 }
 \examples{

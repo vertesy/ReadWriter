@@ -30,7 +30,7 @@ write.simple(
 
 \item{o}{If TRUE, opens the file after writing on OS X using 'system(open ...)'. Default: FALSE.}
 
-\item{v}{verbose Print path? Default: TRUE.}
+\item{v}{Print path if verbose? Default: TRUE.}
 }
 \value{
 Outputs a .tsv file and optionally prints the length of the input data frame.

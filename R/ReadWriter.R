@@ -6,7 +6,6 @@
 # devtools::document('~/GitHub/Packages/ReadWriter');
 
 
-
 # ____________________________________________________________________________________________ ----
 ## Aux -------------------------------------------------------------------------------------------------
 
@@ -36,7 +35,7 @@ column.2.row.names <- function(tibble, rowname_column = 1,
                                warn = TRUE,
                                overwrite = TRUE,
                                ...) {
-  # This is the function that should be used from 11.2023
+  "This is the function that should be used from 11.2023"
 
   # Assertions
   stopifnot(
@@ -94,8 +93,6 @@ column.2.row.names <- function(tibble, rowname_column = 1,
   # Setting the row names
   if (overwrite) {
     message("Overwriting row names.")
-    # Clear existing row names first, so setting the new ones can't collide
-    # with the old set (data.frame rownames<- errors on duplicates otherwise).
     rownames(tibble) <- NULL
     rownames(tibble) <- row_names
   } else {
@@ -107,7 +104,6 @@ column.2.row.names <- function(tibble, rowname_column = 1,
 
   return(tibble)
 }
-
 
 
 # _________________________________________________________________________________________________
@@ -133,7 +129,7 @@ FirstCol2RowNames <- function(Tibble, rownamecol = 1, make_names = FALSE, as.df 
   }
 
   rownames(Tibble) <- row.names
-  iprint("Rownames", head(row.names), "...")
+  Stringendo::iprint("Rownames", head(row.names), "...")
 
   return(Tibble)
 }
@@ -179,12 +175,13 @@ FirstCol2RowNames.as.df <- function(Tibble, rownamecol = 1, make_names = FALSE) 
 #'   extension = "txt"
 #' )
 construct.file.path <- function(
-    filename = NULL,
-    suffix = NULL,
-    extension = NULL,
-    manual_file_name = NULL,
-    manual_directory = NULL,
-    v = TRUE) {
+  filename = NULL,
+  suffix = NULL,
+  extension = NULL,
+  manual_file_name = NULL,
+  manual_directory = NULL,
+  v = TRUE
+) {
   if (!is.null(filename)) filename <- as.character(filename) # unclear why thus bf needed.
 
   # Input argument assertions
@@ -199,6 +196,7 @@ construct.file.path <- function(
 
   fname <- if (!is.null(manual_file_name)) manual_file_name else Stringendo::sppp(filename, suffix)
   out_dir <- if (!is.null(manual_directory)) manual_directory else getwd()
+  if (!dir.exists(out_dir)) dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
   stopifnot(dir.exists(out_dir))
 
   # Construct the full file path
@@ -233,7 +231,7 @@ construct.file.path <- function(
 read.simple.vec <- function(...) {
   pfn <- Stringendo::kollapse(...) # merge path and filename
   read_in <- as.vector(unlist(read.table(pfn, stringsAsFactors = FALSE, sep = "\n")))
-  iprint(length(read_in), "elements")
+  Stringendo::iprint(length(read_in), "elements")
   return(read_in)
 }
 
@@ -271,7 +269,7 @@ read.simple_char_list <- function(...) {
   pfn <- Stringendo::kollapse(...) # merge path and filename
   read_in <- unlist(read.table(pfn, stringsAsFactors = FALSE))
   # iprint("New variable head: ", what(read_in))
-  iprint("New variable head: ", is(read_in), "range", range(read_in))
+  Stringendo::iprint("New variable head: ", is(read_in), "range", range(read_in))
   return(read_in)
 }
 
@@ -300,11 +298,10 @@ read.simple.table <- function(..., colnames = TRUE, coltypes = NULL) {
   pfn <- Stringendo::kollapse(...) # merge path and filename
   # read_in = read.table( pfn , stringsAsFactors = FALSE, sep = "\t", header = colnames )
   read_in <- readr::read_tsv(pfn, col_names = colnames, col_types = coltypes)
-  iprint("New variable dim: ", dim(read_in))
+  Stringendo::iprint("New variable dim: ", dim(read_in))
   read_in <- as.data.frame(gtools::na.replace(data.matrix(read_in), replace = 0))
   return(read_in)
 }
-
 
 
 # _________________________________________________________________________________________________
@@ -332,24 +329,19 @@ read.simple.table <- function(..., colnames = TRUE, coltypes = NULL) {
 #' @importFrom readr read_tsv
 #' @importFrom gtools na.replace
 read.simple.tsv <- function(
-    ..., sep_ = "\t", colnames = TRUE, wRownames = TRUE,
-    coltypes = NULL, NaReplace = TRUE, asTibble = FALSE) {
+  ..., sep_ = "\t", colnames = TRUE, wRownames = TRUE,
+  coltypes = NULL, NaReplace = TRUE, asTibble = FALSE
+) {
   pfn <- Stringendo::kollapse(...) # merge path and filename
   read_in <- suppressWarnings(readr::read_tsv(pfn, col_names = colnames, col_types = coltypes))
-  iprint("New variable dim: ", dim(read_in) - 0:1)
+  Stringendo::iprint("New variable dim: ", dim(read_in) - 0:1)
 
   # if (wRownames) { read_in = FirstCol2RowNames(read_in, as.df = !asTibble ) }
-  if (wRownames) {
-    read_in <- column.2.row.names(read_in, as_df = !asTibble)
-  }
+  if (wRownames) read_in <- column.2.row.names(read_in, as_df = !asTibble)
+  if (NaReplace) read_in <- as.data.frame(gtools::na.replace(read_in, replace = 0))
 
-  if (NaReplace) {
-    read_in <- as.data.frame(gtools::na.replace(read_in, replace = 0))
-  }
   return(read_in)
 }
-
-
 
 
 # _________________________________________________________________________________________________
@@ -377,24 +369,21 @@ read.simple.tsv <- function(
 #' @importFrom readr read_csv
 #' @importFrom gtools na.replace
 read.simple.csv <- function(
-    ..., colnames = TRUE, coltypes = NULL, wRownames = TRUE,
-    NaReplace = TRUE, asTibble = FALSE, nmax = Inf) {
+  ..., colnames = TRUE, coltypes = NULL, wRownames = TRUE,
+  NaReplace = TRUE, asTibble = FALSE, nmax = Inf
+) {
   # browser()
   pfn <- Stringendo::kollapse(...) # merge path and filename
   read_in <- suppressWarnings(readr::read_csv(pfn,
     col_names = colnames, col_types = coltypes,
     n_max = nmax
   ))
-  iprint("New variable dim: ", dim(read_in) - 0:1)
+  Stringendo::iprint("New variable dim: ", dim(read_in) - 0:1)
 
   # if (wRownames) { read_in = FirstCol2RowNames(read_in) }
-  if (wRownames) {
-    read_in <- column.2.row.names(read_in, as_df = !asTibble)
-  }
+  if (wRownames) read_in <- column.2.row.names(read_in, as_df = !asTibble)
+  if (NaReplace) read_in <- as.data.frame(gtools::na.replace(read_in, replace = 0))
 
-  if (NaReplace) {
-    read_in <- as.data.frame(gtools::na.replace(read_in, replace = 0))
-  }
   return(read_in)
 }
 
@@ -437,7 +426,7 @@ read.simple.csv.named.vector <- function(file, sep = ";", col_names = FALSE,
 
   vect <- df[[value_col]]
   names(vect) <- df[[name_col]]
-  message("New vectors length is: ", length(vect), "e.g. ", kppc(head(vect)), " ...")
+  message("New vectors length is: ", length(vect), "e.g. ", Stringendo::kppc(head(vect)), " ...")
 
   return(vect)
 }
@@ -482,7 +471,6 @@ read.simple.ssv <- function(
 }
 
 
-
 # _________________________________________________________________________________________________
 #' @title read.simple.tsv.named.vector
 #' @description Read in a file with Excel-style named vectors, names in column 1,
@@ -506,10 +494,9 @@ read.simple.tsv.named.vector <- function(...) {
   read_in <- readr::read_tsv(pfn)
   vect <- read_in[[2]]
   names(vect) <- read_in[[1]]
-  iprint("New vectors length is: ", length(vect))
+  Stringendo::iprint("New vectors length is: ", length(vect))
   return(vect)
 }
-
 
 
 # _________________________________________________________________________________________________
@@ -536,10 +523,11 @@ read.simple.tsv.named.vector <- function(...) {
 #' @export
 
 read.simple.xlsx <- function(
-    pfn = Stringendo::kollapse(...), which_sheets,
-    col_names = TRUE, row_names = FALSE,
-    trim_ws = TRUE
-    , ...) {
+  pfn = Stringendo::kollapse(...), which_sheets,
+  col_names = TRUE, row_names = FALSE,
+  trim_ws = TRUE,
+  ...
+) {
   # Assertions for input arguments
   stopifnot(is.character(pfn), length(pfn) > 0)
   if (!missing(which_sheets)) stopifnot(is.numeric(which_sheets) | is.character(which_sheets))
@@ -594,7 +582,7 @@ read.simple.xlsx <- function(
 #' @param header A string to be added to the header line (before the vector). Default: `NULL`.
 #' @param prefix A prefix to the header. Default: `kppws(substitute(vec), idate())`.
 #' @param file_path A string specifying the file path where the vector will be written. Default:
-#' `"/groups/knoblich/Projects/connectomics/Analysis/__clipboard.txt"`.
+#' path stored in `path_write_simplest` global variable, otherwise `"./__clipboard.txt"`.
 #'
 #' @examples
 #' \dontrun{
@@ -604,8 +592,8 @@ read.simple.xlsx <- function(
 #' @return A message indicating the length of the vector and the file path to which it was written.
 #'
 #' @export
-write.simplest <- function(vec = LETTERS[1:11], append = TRUE, header = NULL, prefix = kppws(substitute(vec), idate()),
-                           file_path = "/groups/knoblich/Projects/connectomics/Analysis/__clipboard.txt") {
+write.simplest <- function(vec = LETTERS[1:11], append = TRUE, header = NULL, prefix = Stringendo::kppws(substitute(vec), Stringendo::idate()),
+                           file_path = get0("path_write_simplest", ifnotfound = "./__clipboard.txt")) {
   stopifnot(
     is.vector(vec),
     is.character(file_path),
@@ -619,20 +607,30 @@ write.simplest <- function(vec = LETTERS[1:11], append = TRUE, header = NULL, pr
       file = file_path, append = TRUE
     )
   }
+  message(file_path)
+  message(file_path)
 
-  write(kppws(prefix, header), file = file_path, append = TRUE)
+  write(Stringendo::kppws(prefix, header), file = file_path, append = TRUE)
   write.table(vec,
     file = file_path, sep = "\n", row.names = FALSE, col.names = FALSE,
     quote = FALSE, append = append
   )
-  message("Vector of length ", length(vec), " e.g.: ", kppc(head(vec)), ", is written to: \n", file_path)
+  message("Vector of length ", length(vec), " e.g.: ", Stringendo::kppc(head(vec)), ".")
 
-  guessed_local_path <- gsub(
-    x = file_path,
-    pattern = "/groups/knoblich/Projects/connectomics/Analysis/",
-    replacement = "/Volumes/Analysis/"
-  )
-  message("open ", guessed_local_path)
+  message("\nsubl ", file_path)
+
+  if (Stringendo::ifExistsAndTrue("onCBE")) {
+    attach <- paste0("smb://storage.imp.ac.at", dirname(file_path))
+    message("\nAttach in Finder:\n", attach, "\n")
+    message("open ", Stringendo::spps("/Volumes/", basename(attach)))
+  }
+
+  # guessed_local_path <- gsub(
+  #   x = file_path,
+  #   pattern = "/groups/knoblich/Projects/connectomics/Analysis/",
+  #   replacement = "/Volumes/Analysis/"
+  # )
+  # message("open ", guessed_local_path)
 }
 
 # write.simplest()
@@ -677,7 +675,7 @@ write.simple <- function(input_df, filename = substitute(input_df), suffix = NUL
 
   FnP <- construct.file.path(
     v = v,
-    filename = FixPlotName(make.names(filename)), suffix = suffix, extension = extension,
+    filename = Stringendo::FixPlotName(make.names(filename)), suffix = suffix, extension = extension,
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
 
@@ -687,9 +685,8 @@ write.simple <- function(input_df, filename = substitute(input_df), suffix = NUL
   if (o) {
     system(paste0("open ", FnP), wait = FALSE)
   }
-  iprint("Length: ", length(input_df))
+  Stringendo::iprint("Length: ", length(input_df))
 }
-
 
 
 # _________________________________________________________________________________________________
@@ -707,6 +704,8 @@ write.simple <- function(input_df, filename = substitute(input_df), suffix = NUL
 #' @param manual_directory Directory to save the file in, overrides default directory. Default: NULL.
 #' @param o If TRUE, opens the file after writing on OS X using 'system(open ...)'. Default: FALSE.
 #' @param v Print path if verbose? Default: TRUE.
+#' @param make_names If TRUE, applies `make.names` to the filename. Generally safer, but it can,
+#' e.g.: inadvarently change "_myFile" to "X_myFile". Default: TRUE.
 #'
 #' @return Outputs a .vec file and optionally prints the length of the input vector.
 #' @examples
@@ -718,7 +717,7 @@ write.simple <- function(input_df, filename = substitute(input_df), suffix = NUL
 #' @export
 write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix = NULL, extension = "vec",
                              manual_file_name = NULL, manual_directory = NULL, o = FALSE,
-                             v = TRUE) {
+                             v = TRUE, make_names = TRUE) {
   # Input argument assertions
   stopifnot(
     is.vector(input_vec),
@@ -729,9 +728,10 @@ write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix
     is.logical(o)
   )
 
+  if (make_names) filename <- make.names(filename)
   FnP <- construct.file.path(
     v = v,
-    filename = FixPlotName(make.names(filename)), suffix = suffix, extension = extension,
+    filename = Stringendo::FixPlotName(filename), suffix = suffix, extension = extension,
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
 
@@ -757,6 +757,7 @@ write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix
 #' working directory. You can pass the path and variable separately (in order); they will be concatenated
 #' to the filename. If `col.names = NA` and `row.names = TRUE`, a blank column name is added,
 #' which is the convention used for CSV files to be read by spreadsheets.
+#' It can also write CSV files if you set the separator to ',' or ';'.
 #' @param input_df Your data frame with row and column names.
 #' @param separator Field separator, such as ',' for CSV.
 #' @param filename The base name for the output file. Default: Name of the input data frame.
@@ -777,24 +778,27 @@ write.simple.vec <- function(input_vec, filename = substitute(input_vec), suffix
 #'
 #' @export
 write.simple.tsv <- function(
-    input_df,
-    separator = "\t", extension = "tsv",
-    filename = substitute(input_df),
-    suffix = NULL,
-    manual_file_name = NULL,
-    manual_directory = NULL,
-    row_names = TRUE,
-    col_names = NA,
-    gzip = FALSE,
-    o = FALSE,
-    v = TRUE,
-    ...) {
+  input_df,
+  separator = "\t", extension = "tsv",
+  filename = substitute(input_df),
+  suffix = NULL,
+  # prefix = NULL,
+  # subfolder = NULL,
+  manual_file_name = NULL,
+  manual_directory = NULL,
+  row_names = TRUE,
+  col_names = NA,
+  gzip = FALSE,
+  o = FALSE,
+  v = TRUE,
+  ...
+) {
   #
   if (row_names == FALSE) {
     col_names <- TRUE
   }
 
-  # TODO: write.simple.tsv should have background compression as a feature #14
+  " write.simple.tsv should have background compression as a feature #14 "
 
   if (separator %in% c(",", ";")) extension <- "csv"
 
@@ -803,7 +807,7 @@ write.simple.tsv <- function(
 
   FnP <- construct.file.path(
     v = v,
-    filename = FixPlotName(make.names(fname)), suffix = suffix, extension = extension,
+    filename = Stringendo::FixPlotName(make.names(fname)), suffix = suffix, extension = extension,
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
   # print(FnP)
@@ -820,16 +824,10 @@ write.simple.tsv <- function(
   } else {
     paste0("Length (of your vector): ", length(input_df))
   }
-  iprint(printme)
-  if (o) {
-    system(paste0("open ", FnP), wait = FALSE)
-  }
-  if (gzip) {
-    system(paste0("gzip ", FnP), wait = FALSE)
-  }
+  Stringendo::iprint(printme)
+  if (o) system(paste0("open ", FnP), wait = FALSE)
+  if (gzip) system(paste0("gzip ", FnP), wait = FALSE)
 }
-
-
 
 
 # _________________________________________________________________________________________________
@@ -856,11 +854,11 @@ write.simple.tsv <- function(
 #' }
 #' }
 #' @export
-write.simple.append <- function(input_df, filename = substitute(input_df), suffix = NULL, extension = "tsv",
-                                manualFileName = NULL, manualDirectory = NULL, o = FALSE,
-                                v = TRUE) {
+write.simple.append <- function(
+  input_df, filename = substitute(input_df), suffix = NULL, extension = "tsv",
+  manualFileName = NULL, manualDirectory = NULL, o = FALSE, v = TRUE
+) {
   stopifnot(
-    # is.data.frame(input_df),
     is.null(suffix) || is.character(suffix),
     is.character(extension),
     is.null(manualFileName) || is.character(manualFileName),
@@ -870,7 +868,7 @@ write.simple.append <- function(input_df, filename = substitute(input_df), suffi
 
   FnP <- construct.file.path(
     v = v,
-    filename = FixPlotName(make.names(filename)), suffix = suffix, extension = extension,
+    filename = Stringendo::FixPlotName(make.names(filename)), suffix = suffix, extension = extension,
     manualFileName = manualFileName, manualDirectory = manualDirectory
   )
 
@@ -882,7 +880,6 @@ write.simple.append <- function(input_df, filename = substitute(input_df), suffi
     system(paste0("open ", FnP), wait = FALSE)
   }
 }
-
 
 
 # _________________________________________________________________________________________________
@@ -916,6 +913,7 @@ write.simple.append <- function(input_df, filename = substitute(input_df), suffi
 #' @param FreezeFirstRow Logical; if TRUE, freezes the first row in Excel. Default: TRUE.
 #' @param FreezeFirstCol Logical; if TRUE, freezes the first column in Excel. Default: FALSE.
 #' @param v Print path if verbose? Default: TRUE.
+#' @param gzip Compress the file after saving? Default: FALSE.
 #'
 #' @examples
 #' \dontrun{
@@ -926,23 +924,24 @@ write.simple.append <- function(input_df, filename = substitute(input_df), suffi
 #' }
 #' @seealso
 #'   \code{\link[openxlsx]{write.xlsx}}
-#' @export
 #' @importFrom openxlsx write.xlsx createStyle
+#' @export write.simple.xlsx
 
 write.simple.xlsx <- function(
-    named_list,
-    rowname_column = 1, #  'gene' # for Seurat df.markers
-    filename = substitute(named_list),
-    suffix = NULL,
-    manual_file_name = NULL,
-    manual_directory = NULL,
-    o = FALSE,
-    TabColor = "darkgoldenrod1", HeaderLineColor = "darkolivegreen3",
-    HeaderCex = 12, Creator = "",
-    HeaderCharStyle = c("bold", "italic", "underline")[1],
-    has_row_names = TRUE,
-    FreezeFirstRow = TRUE, FreezeFirstCol = FALSE,
-    v = TRUE) {
+  named_list,
+  rowname_column = 1, #  'gene' # for Seurat df.markers
+  filename = substitute(named_list),
+  suffix = NULL,
+  manual_file_name = NULL,
+  manual_directory = NULL,
+  o = FALSE,
+  TabColor = "darkgoldenrod1", HeaderLineColor = "darkolivegreen3",
+  HeaderCex = 12, Creator = "",
+  HeaderCharStyle = c("bold", "italic", "underline")[1],
+  has_row_names = TRUE,
+  FreezeFirstRow = TRUE, FreezeFirstCol = FALSE,
+  v = TRUE, gzip = FALSE
+) {
   # Assertions for input arguments
   stopifnot(
     is.list(named_list),
@@ -966,7 +965,7 @@ write.simple.xlsx <- function(
 
   FnP <- construct.file.path(
     v = v,
-    filename = FixPlotName(make.names(filename)), suffix = suffix, extension = "xlsx",
+    filename = Stringendo::FixPlotName(make.names(filename)), suffix = suffix, extension = "xlsx",
     manual_file_name = manual_file_name, manual_directory = manual_directory
   )
 
@@ -980,11 +979,149 @@ write.simple.xlsx <- function(
   # Output assertion
   stopifnot(file.exists(FnP))
 
-  if (o) {
-    system(paste0("open ", fix_special_characters_bash(FnP)), wait = FALSE)
-  }
+  if (o) system(paste0("open ", Stringendo::fix_special_characters_bash(FnP)), wait = FALSE)
+  if (gzip) system(paste0("gzip ", Stringendo::fix_special_characters_bash(FnP)), wait = FALSE)
 } # fun
 
+
+# ____________________________________________________________________________________________ ----
+## New addition: markdown ------------------------------------------------------------------------------
+
+
+# _________________________________________________________________________________________________
+#' @title as.simple.md.table
+#'
+#' @description Convert a data.frame / matrix-like object to minimal GitHub-flavored Markdown
+#' table lines (header, separator, body). Pure formatter; does not write to disk.
+#'
+#' @param input_df Your data frame / matrix-like object.
+#' @param row_names Include row names as the first column? Default: TRUE.
+#' @param row_name_colname Column name for row names. Default: ''.
+#'
+#' @return Character vector of Markdown lines.
+#'
+#' @export
+as.simple.md.table <- function(
+  input_df,
+  row_names = TRUE,
+  row_name_colname = ""
+) {
+  stopifnot(
+    !missing(input_df),
+    isTRUE(row_names) || identical(row_names, FALSE),
+    is.character(row_name_colname), length(row_name_colname) == 1, !is.na(row_name_colname)
+  )
+
+  esc_md_table_cell <- function(x) {
+    x <- as.character(x)
+    x[is.na(x)] <- ""
+    x <- gsub("\\\\", "\\\\\\\\", x, perl = TRUE) # escape backslash
+    x <- gsub("\\|", "\\\\|", x, perl = TRUE) # escape pipe
+    x <- gsub("\r\n|\n|\r", "<br>", x, perl = TRUE) # preserve line breaks
+    x <- gsub("\t", " ", x, perl = TRUE) # tabs to spaces
+    x
+  }
+
+  df <- if (is.data.frame(input_df)) input_df else as.data.frame(input_df, check.names = FALSE)
+
+  if (isTRUE(row_names)) {
+    rn <- rownames(df)
+    if (is.null(rn)) rn <- seq_len(NROW(df))
+    df <- cbind(setNames(data.frame(rn, stringsAsFactors = FALSE), row_name_colname), df)
+  }
+
+  collapse_row <- function(x) paste(x, collapse = " | ")
+
+  headers <- colnames(df)
+  if (is.null(headers)) headers <- rep("", NCOL(df))
+
+  c(
+    collapse_row(esc_md_table_cell(headers)),
+    collapse_row(rep("--", length(headers))),
+    if (NROW(df)) apply(df, 1, function(r) collapse_row(esc_md_table_cell(r))) else character(0)
+  )
+}
+
+
+# _________________________________________________________________________________________________
+#' @title write.simple.md.table
+#'
+#' @description Write an R data.frame / matrix-like object to disk as a minimal GitHub-flavored
+#' Markdown table (.md).
+#'
+#' @param input_df Your data frame / matrix-like object.
+#' @param filename The base name for the output file. Default: Name of the input data frame.
+#' @param extension File extension. Default: 'md'.
+#' @param suffix A suffix added to the filename. Default: NULL.
+#' @param manual_file_name Specify full filename if you do not want to name it after the variable.
+#' @param manual_directory Specify the directory where the file should be saved.
+#' @param row_names Include row names as the first column? Default: TRUE.
+#' @param row_name_colname Column name for row names. Default: ''.
+#' @param o Open the file after saving? Default: FALSE.
+#' @param v Print path if verbose? Default: TRUE.
+#' @param ... Additional arguments passed to the kollapse() function used for the file name.
+#'
+#' @examples
+#' df <- data.frame(
+#'   Name = c("Alice", "Bob | The Builder", NA, "Eve\nNewline"),
+#'   Age = c(30, 25, 28, NA),
+#'   Note = c("Loves R\\Markdown", "Enjoys building\tthings", "No special chars", "Line1\r\nLine2"),
+#'   stringsAsFactors = FALSE,
+#'   check.names = FALSE
+#' )
+#' write.simple.md.table(df, manual_file_name = "example_table.md", row_names = TRUE)
+#'
+#' @export
+write.simple.md.table <- function(
+  input_df,
+  extension = "md",
+  filename = substitute(input_df),
+  suffix = NULL,
+  manual_file_name = NULL,
+  manual_directory = NULL,
+  row_names = TRUE,
+  row_name_colname = "",
+  o = FALSE,
+  v = TRUE,
+  ...
+) {
+  stopifnot(
+    !missing(input_df),
+    is.character(extension), length(extension) == 1, nzchar(extension),
+    isTRUE(row_names) || identical(row_names, FALSE),
+    is.character(row_name_colname), length(row_name_colname) == 1, !is.na(row_name_colname),
+    isTRUE(o) || identical(o, FALSE),
+    isTRUE(v) || identical(v, FALSE)
+  )
+
+  md_lines <- as.simple.md.table(
+    input_df,
+    row_names = row_names,
+    row_name_colname = row_name_colname
+  )
+
+  # Safe, scalar filename (avoid kollapse() vector explosions)
+  fname <- Stringendo::kollapse(..., print = FALSE)
+  if (length(fname) != 1 || is.na(fname) || nchar(fname) < 2) fname <- as.character(filename)[1]
+  fname <- substr(as.character(fname)[1], 1, 180)
+
+  FnP <- construct.file.path(
+    v = v,
+    filename = Stringendo::FixPlotName(make.names(fname)),
+    suffix = suffix,
+    extension = extension,
+    manual_file_name = manual_file_name,
+    manual_directory = manual_directory
+  )
+
+  dir.create(dirname(FnP), recursive = TRUE, showWarnings = FALSE)
+  writeLines(md_lines, con = FnP, useBytes = TRUE)
+
+  Stringendo::iprint(paste0("Dim: ", paste(dim(as.data.frame(input_df)), collapse = " x ")))
+  if (isTRUE(o)) system(paste0("open ", FnP), wait = FALSE)
+
+  invisible(FnP)
+}
 
 
 # ____________________________________________________________________________________________ ----

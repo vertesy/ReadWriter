@@ -7,15 +7,15 @@
 qs.2.table(path, out_file = c("tsv", "csv", "csv2", "excel")[1])
 }
 \arguments{
-\item{path}{A character string specifying the path to the \code{.qs} file. Default: none.}
+\item{path}{A character string specifying the path to the \code{.qs} file. Default: None.}
 
 \item{out_file}{A character string specifying the output file format. One of \code{"tsv"} (default),
-\code{"csv"}, \code{"csv2"} (semicolon-separated), or \code{"excel"}. Default: \code{"tsv"}.}
+\code{"csv"}, \code{"csv2"} (semicolon-separated), or \code{"excel"}.}
 }
 \value{
 The function does not return a value but writes the file to disk in the specified format.
 }
 \description{
-This function reads in a \code{.qs} file and resaves it as either a \code{.tsv}, \code{.csv}, semicolon-separated
+Reads in a \code{.qs} file and resaves it as either a \code{.tsv}, \code{.csv}, semicolon-separated
 \code{.csv} (csv2), or Excel file based on the \code{out_file} argument.
 }

@@ -15,8 +15,8 @@ column.2.row.names(
 )
 }
 \arguments{
-\item{tibble}{A dataframe or tibble without row names.
-Default: No default value, a dataframe must be provided.}
+\item{tibble}{A data frame or tibble without row names.
+Default: No default value; a data frame must be provided.}
 
 \item{rowname_column}{Index of the column to be used as row names.
 Default: 1.}
@@ -24,18 +24,18 @@ Default: 1.}
 \item{make_names}{Boolean indicating whether to call \code{make.names} to sanitize row names.
 Default: FALSE.}
 
-\item{as_df}{Boolean indicating whether to convert the input to a dataframe if it's not already one.
+\item{as_df}{Boolean indicating whether to convert the input to a data frame if it's not already one.
 Default: TRUE.}
 
-\item{warn}{Warn user if row names pre-exist. Default: TRUE.}
+\item{warn}{Warn user if row names preexist. Default: TRUE.}
 
 \item{overwrite}{Overwrite row names if they already exist. Default: TRUE.}
 
-\item{...}{Pass arguments to make.names().}
+\item{...}{Pass arguments to \code{make.names()}.}
 }
 \description{
-Converts the first column (or a specified column) of a dataframe or tibble into row names.
-This function differs from \code{tibble::column_to_rownames} in that it takes column names or indices and
-it offers the option to sanitize row names using \code{make.names}, provides a warning if there are
-duplicated values in the row name column
+Converts the first column (or a specified column) of a data frame or tibble into row names.
+This function differs from \code{tibble::column_to_rownames} in that it takes column names or indices,
+offers the option to sanitize row names using \code{make.names}, and provides a warning if there are
+duplicated values in the row name column.
 }

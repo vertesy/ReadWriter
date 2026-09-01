@@ -1,2 +1,6 @@
 ^ReadWriter\.Rproj$
 ^\.Rproj\.user$
+^\.github$
+^Development$
+^AGENTS\.md$
+^CITATION\.cff$

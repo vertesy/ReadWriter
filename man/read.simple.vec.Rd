@@ -10,9 +10,7 @@ read.simple.vec(...)
 \item{...}{Multiple simple variables to parse.}
 }
 \description{
-read.simple.vec
-
-Read each line of a file to an element of a vector (read in new-line separated values, no header!).
+Read each line of a file to an element of a vector (read in newline-separated values, no header!).
 }
 \examples{
 \dontrun{

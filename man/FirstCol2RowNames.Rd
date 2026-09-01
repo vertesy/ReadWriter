@@ -7,14 +7,14 @@
 FirstCol2RowNames(Tibble, rownamecol = 1, make_names = FALSE, as.df = TRUE)
 }
 \arguments{
-\item{Tibble}{A dataframe without rownames (tibble style)}
+\item{Tibble}{A data frame without row names (tibble style).}
 
-\item{rownamecol}{rowname column, Default: 1}
+\item{rownamecol}{Row name column. Default: 1.}
 
-\item{make_names}{call make.names to remove weird characters, Default: FALSE}
+\item{make_names}{Call \code{make.names} to remove unusual characters. Default: FALSE.}
 
-\item{as.df}{Convert tibble to data frame? Default: TRUE}
+\item{as.df}{Convert tibble to data frame? Default: TRUE.}
 }
 \description{
-Set First Col to Row Names
+Set first column to row names.
 }

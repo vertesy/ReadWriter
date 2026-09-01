@@ -27,8 +27,8 @@ devtools::install_local(repository.dir, upgrade = F)
 
 
 # Test if you can install from github ------------------------------------------------
-remote.path <- file.path(DESCRIPTION$'github.user', package.name)
-pak::pkg_install(remote.path)
+# remote.path <- file.path(DESCRIPTION$'github.user', package.name)
+# pak::pkg_install(remote.path)
 
 devtools::install_github(repo = "vertesy/Seurat.utils", upgrade = F)
 
@@ -44,7 +44,6 @@ devtools::install_github(repo = "vertesy/Seurat.utils", upgrade = F)
 # CMD CHECK ------------------------------------------------
 devtools::check_man(repository.dir)
 checkres <- devtools::check(repository.dir, cran = FALSE)
-
 
 
 # Automated Codebase linting to tidyverse style ------------------------------------------------
@@ -85,11 +84,11 @@ if (F) {
 for (scriptX in ls.scripts.full.path) {
   PackageTools::list_of_funs_to_markdown(scriptX)
 }
-file.edit(paste0(repository.dir, "R/list.of.functions.in.", package.name, ".det.md"))
-file.edit(paste0(repository.dir, "README.md"))
+file.edit(paste0(repository.dir, "/R/list.of.functions.in.", package.name, ".det.md"))
+file.edit(paste0(repository.dir, "/README.md"))
 file.remove(paste0(repository.dir, "/R/list.of.functions.in.", package.name, ".det.md"))
 
-r$PackageTools()
+d$PackageTools()
 PackageTools::copy_github_badge("active") # Add badge to readme via clipboard
 file.edit(paste0(repository.dir, "README.md"))
 
