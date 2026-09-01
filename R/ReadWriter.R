@@ -957,10 +957,12 @@ write.simple.xlsx <- function(
   )
 
   # assign row names if required
+  write_row_names <- has_row_names
   if (isFALSE(has_row_names)) {
     assignRownames <- function(x) column.2.row.names(x, rowname_column = rowname_column, make_names = TRUE)
     named_list <- lapply(named_list, assignRownames)
     message("Converting column ", rowname_column, " to row names: ", head(rownames(named_list[[1]])))
+    write_row_names <- TRUE # the converted identifiers must still be written as the sheet's row names
   }
 
   FnP <- construct.file.path(
@@ -970,7 +972,7 @@ write.simple.xlsx <- function(
   )
 
   openxlsx::write.xlsx(
-    x = named_list, file = FnP, rowNames = has_row_names,
+    x = named_list, file = FnP, rowNames = write_row_names,
     firstRow = FreezeFirstRow, firstCol = FreezeFirstCol,
     headerStyle = hs, tabColour = TabColor,
     colWidths = "auto", creator = Creator
