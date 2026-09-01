@@ -958,7 +958,7 @@ write.simple.xlsx <- function(
 
   # assign row names if required
   if (isFALSE(has_row_names)) {
-    assignRownames <- function(x) column.2.row.names(df, rowname_column = rowname_column, make_names = TRUE)
+    assignRownames <- function(x) column.2.row.names(x, rowname_column = rowname_column, make_names = TRUE)
     named_list <- lapply(named_list, assignRownames)
     message("Converting column ", rowname_column, " to row names: ", head(rownames(named_list[[1]])))
   }
@@ -1139,38 +1139,37 @@ write.simple.md.table <- function(
 #' @return The function does not return a value but writes the file to disk in the specified format.
 #'
 #' @importFrom qs qread
+#' @importFrom stringi stri_detect_regex
 #'
 #' @export qs.2.table
 
 qs.2.table <- function(path, out_file = c("tsv", "csv", "csv2", "excel")[1]) {
   # Ensure that the file exists and is a .qs file
-  stopifnot(file.exists(path), stringi::stri_detect(str = path, regex = "\\.qs$"))
+  stopifnot(file.exists(path), stringi::stri_detect_regex(str = path, pattern = "\\.qs$"))
 
   # Ensure out_file is one of the allowed choices
   out_file <- match.arg(out_file, c("tsv", "csv", "csv2", "excel"))
 
   # Read in the .qs file
-  data <- qs:qread(path)
+  data <- qs::qread(path)
 
-  # Determine the output file extension and write the file based on the output format
-  path_out <- Stringendo::ppp(base_filename, out_file)
-
-  if (out_file == "excel") {
-    # out_path <- ppp(base_filename, "xlsx")
-    Stringendo::ppp(base_filename, out_file)
-    ReadWriter::write.simple.xlsx(data, out_path)
-  }
+  # Base name (without extension) shared by all output formats
+  base_filename <- sub("\\.qs$", "", path)
 
   if (out_file == "tsv") {
-    ReadWriter::write.simple.tsv(data, path_out, separator = "\t")
+    ReadWriter::write.simple.tsv(data, manual_file_name = base_filename, separator = "\t")
+    out_path <- paste0(base_filename, ".tsv")
   } else if (out_file == "csv") {
-    ReadWriter::write.simple.tsv(data, path_out, separator = ",")
-  } else if (out_file == "csv2") {
+    ReadWriter::write.simple.tsv(data, manual_file_name = base_filename, separator = ",")
     out_path <- paste0(base_filename, ".csv")
-    ReadWriter::write.simple.tsv(data, path_out, separator = ";")
+  } else if (out_file == "csv2") {
+    ReadWriter::write.simple.tsv(data, manual_file_name = base_filename, separator = ";")
+    out_path <- paste0(base_filename, ".csv")
   } else if (out_file == "excel") {
+    # write.simple.xlsx() expects a list of sheets; wrap a bare table into one.
+    payload <- if (is.data.frame(data) || is.matrix(data)) list(data) else data
+    ReadWriter::write.simple.xlsx(payload, manual_file_name = base_filename)
     out_path <- paste0(base_filename, ".xlsx")
-    ReadWriter::write.simple.xlsx(data, out_path)
   }
 
   message("File saved as: ", out_path)
