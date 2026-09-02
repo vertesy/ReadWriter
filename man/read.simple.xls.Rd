@@ -5,7 +5,7 @@
 \title{read.simple.xls}
 \usage{
 read.simple.xls(
-  pfn = kollapse(...),
+  pfn = Stringendo::kollapse(...),
   row_namePos = NULL,
   ...,
   header_ = TRUE,
