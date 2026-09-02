@@ -1,4 +1,4 @@
-# AGENTS.md
+
 
 ## Overview
 ReadWriter is an R package providing convenience functions for reading from and writing to text-based data files. The package aims to streamline common I/O tasks and complements other tools in the `@vertesy` ecosystem.
@@ -9,6 +9,12 @@ ReadWriter is an R package providing convenience functions for reading from and 
 - `Development/` – scripts used to build or maintain the package; not installed with the package.
 - `DESCRIPTION` – package metadata and dependency declarations.
 - `README.md` – installation instructions and a high-level overview.
+
+
+
+### Update the Source, Not Just the Documentation
+
+Documentations rebuilt and overwritten from upstream sources: `.Rd` files from roxygen annotations and DESCRIPTION and NAMESPACE from  `config.R` by `PackageTools::document_and_create_package()` relying on  `devtools::document()`  when I manually, regularly run `/Development/MYPACKAGE/Development/Create_the_MYPACKAGE_Package.R")`. Thus  always update the upstream sources first, then fix the downstream documentations correspondingly.
 
 ## Dependencies
 - Requires the `@vertesy` package [`Stringendo` (>=0.5.0)](https://github.com/vertesy/Stringendo) and CRAN packages `gtools`, `openxlsx`, `qs`, and `readr`.
@@ -23,6 +29,10 @@ ReadWriter is an R package providing convenience functions for reading from and 
 - Run `R -q -e "devtools::document()"` to regenerate Rd files before committing.
 - Verify the package with `R -q -e "devtools::check(document = FALSE)"`; checks should pass with no errors.
 - There is currently no automated test suite. Manual testing of new functionality is encouraged.
+- In `/Development/MYPACKAGE/Development/Create_the_MYPACKAGE_Package.R")`, `PackageTools::document_and_create_package()` recreates an R package’s metadata and documentation from a configuration file. It runs `devtools::document()` to regenerate package documentation, including the DESCRIPTION and NAMESPACE. 
+
+
 
 ## Getting started
+
 New contributors should read `README.md` for installation details and review `R/ReadWriter.R` to understand available functions. For broader context and utility helpers, explore the `Stringendo` package and other repositories in the `@vertesy` organization.

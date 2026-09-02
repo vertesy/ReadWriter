@@ -14,7 +14,7 @@ DESCRIPTION <- list(
   license = "GPL-3 + file LICENSE",
   depends = "Stringendo (>= 0.5.0)",
   remotes =  "github::vertesy/Stringendo",
-  imports = "qs, openxlsx, gtools, readr",
+  imports = "qs, openxlsx, gtools, readr, stringi",
   suggests = ""
 )
 
