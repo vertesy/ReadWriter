@@ -8,7 +8,7 @@ write.simplest(
   vec = LETTERS[1:11],
   append = TRUE,
   header = NULL,
-  prefix = kppws(substitute(vec), idate()),
+  prefix = Stringendo::kppws(substitute(vec), Stringendo::idate()),
   file_path = get0("path_write_simplest", ifnotfound = "./__clipboard.txt")
 )
 }
