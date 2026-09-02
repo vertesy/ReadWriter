@@ -44,7 +44,7 @@ devtools::install_local(repository.dir, upgrade = F)
 # remote.path <- file.path(DESCRIPTION$'github.user', package.name)
 # pak::pkg_install(remote.path)
 
-devtools::install_github(repo = "vertesy/Seurat.utils", upgrade = F)
+devtools::install_github(repo = "vertesy/ReadWriter", upgrade = F)
 
 # unload(package.name)
 # require(package.name, character.only = TRUE)
@@ -91,7 +91,6 @@ if (F) {
     PackageTools::add_importFrom_statements(scriptX, exclude_packages = excluded.packages)
   }
 }
-
 
 # Generate the list of functions ------------------------------------------------
 (ls.scripts.full.path <- list.files(file.path(repository.dir, "R"), full.names = T, pattern = '.R$'))
