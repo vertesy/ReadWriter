@@ -1157,15 +1157,19 @@ qs.2.table <- function(path, out_file = c("tsv", "csv", "csv2", "excel")[1]) {
 
   # Base name (without extension) shared by all output formats
   base_filename <- sub("\\.qs$", "", path)
+  # Split into directory + extensionless file name so absolute paths in `path`
+  # are preserved (construct.file.path() would otherwise prepend getwd()).
+  out_dir <- dirname(base_filename)
+  out_name <- basename(base_filename)
 
   if (out_file == "tsv") {
-    ReadWriter::write.simple.tsv(data, manual_file_name = base_filename, separator = "\t")
+    ReadWriter::write.simple.tsv(data, manual_file_name = out_name, manual_directory = out_dir, separator = "\t")
     out_path <- paste0(base_filename, ".tsv")
   } else if (out_file == "csv") {
-    ReadWriter::write.simple.tsv(data, manual_file_name = base_filename, separator = ",")
+    ReadWriter::write.simple.tsv(data, manual_file_name = out_name, manual_directory = out_dir, separator = ",")
     out_path <- paste0(base_filename, ".csv")
   } else if (out_file == "csv2") {
-    ReadWriter::write.simple.tsv(data, manual_file_name = base_filename, separator = ";")
+    ReadWriter::write.simple.tsv(data, manual_file_name = out_name, manual_directory = out_dir, separator = ";")
     out_path <- paste0(base_filename, ".csv")
   } else if (out_file == "excel") {
     # write.simple.xlsx() expects a list of sheets; wrap a bare table into one.
